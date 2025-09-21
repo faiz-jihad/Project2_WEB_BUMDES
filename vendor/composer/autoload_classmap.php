@@ -3094,11 +3094,14 @@ return array(
     'League\\Uri\\UriTemplate\\VariableBagTest' => $vendorDir . '/league/uri/UriTemplate/VariableBagTest.php',
     'League\\Uri\\UriTest' => $vendorDir . '/league/uri/UriTest.php',
     'League\\Uri\\WsTest' => $vendorDir . '/league/uri/WsTest.php',
+<<<<<<< HEAD
     'Mckenziearts\\Notify\\Exceptions\\MissingPresetNotificationException' => $vendorDir . '/mckenziearts/laravel-notify/src/Exceptions/MissingPresetNotificationException.php',
     'Mckenziearts\\Notify\\Facades\\LaravelNotify' => $vendorDir . '/mckenziearts/laravel-notify/src/Facades/LaravelNotify.php',
     'Mckenziearts\\Notify\\LaravelNotify' => $vendorDir . '/mckenziearts/laravel-notify/src/LaravelNotify.php',
     'Mckenziearts\\Notify\\LaravelNotifyServiceProvider' => $vendorDir . '/mckenziearts/laravel-notify/src/LaravelNotifyServiceProvider.php',
     'Mckenziearts\\Notify\\Storage\\Session' => $vendorDir . '/mckenziearts/laravel-notify/src/Storage/Session.php',
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
     'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',

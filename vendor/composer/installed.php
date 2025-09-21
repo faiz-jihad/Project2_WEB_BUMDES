@@ -517,6 +517,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+<<<<<<< HEAD
         'mckenziearts/laravel-notify' => array(
             'pretty_version' => 'v2.7',
             'version' => '2.7.0.0',
@@ -526,6 +527,8 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'mockery/mockery' => array(
             'pretty_version' => '1.6.12',
             'version' => '1.6.12.0',

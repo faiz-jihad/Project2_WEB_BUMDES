@@ -2490,6 +2490,7 @@
             "install-path": "../league/uri-interfaces"
         },
         {
+<<<<<<< HEAD
             "name": "mckenziearts/laravel-notify",
             "version": "v2.7",
             "version_normalized": "2.7.0.0",
@@ -2563,6 +2564,8 @@
             "install-path": "../mckenziearts/laravel-notify"
         },
         {
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
             "name": "mockery/mockery",
             "version": "1.6.12",
             "version_normalized": "1.6.12.0",

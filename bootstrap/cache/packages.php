@@ -20,6 +20,7 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
+<<<<<<< HEAD
   'mckenziearts/laravel-notify' => 
   array (
     'aliases' => 
@@ -31,6 +32,8 @@
       0 => 'Mckenziearts\\Notify\\LaravelNotifyServiceProvider',
     ),
   ),
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
   'nesbot/carbon' => 
   array (
     'providers' => 

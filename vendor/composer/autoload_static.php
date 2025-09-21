@@ -38,7 +38,10 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         '493c6aea52f6009bab023b26c21a386a' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/functions.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '062a54fe8f6f91078b197f2922521dd9' => __DIR__ . '/..' . '/laravel/pint/overrides/Runner/Parallel/ProcessFactory.php',
+<<<<<<< HEAD
         '38ea50801e981fa2297115e1c44a148b' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/helpers.php',
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'c72349b1fe8d0deeedd3a52e8aa814d8' => __DIR__ . '/..' . '/mockery/mockery/library/helpers.php',
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
@@ -121,7 +124,10 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             'Monolog\\' => 8,
             'Mockery\\' => 8,
+<<<<<<< HEAD
             'Mckenziearts\\Notify\\' => 20,
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         ),
         'L' => 
         array (
@@ -395,10 +401,13 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
+<<<<<<< HEAD
         'Mckenziearts\\Notify\\' => 
         array (
             0 => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src',
         ),
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'League\\Uri\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/uri',
@@ -3628,11 +3637,14 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'League\\Uri\\UriTemplate\\VariableBagTest' => __DIR__ . '/..' . '/league/uri/UriTemplate/VariableBagTest.php',
         'League\\Uri\\UriTest' => __DIR__ . '/..' . '/league/uri/UriTest.php',
         'League\\Uri\\WsTest' => __DIR__ . '/..' . '/league/uri/WsTest.php',
+<<<<<<< HEAD
         'Mckenziearts\\Notify\\Exceptions\\MissingPresetNotificationException' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Exceptions/MissingPresetNotificationException.php',
         'Mckenziearts\\Notify\\Facades\\LaravelNotify' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Facades/LaravelNotify.php',
         'Mckenziearts\\Notify\\LaravelNotify' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/LaravelNotify.php',
         'Mckenziearts\\Notify\\LaravelNotifyServiceProvider' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/LaravelNotifyServiceProvider.php',
         'Mckenziearts\\Notify\\Storage\\Session' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Storage/Session.php',
+=======
+>>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',
