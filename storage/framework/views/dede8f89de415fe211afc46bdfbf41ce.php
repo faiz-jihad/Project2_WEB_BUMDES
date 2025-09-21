@@ -11,3 +11,4 @@
     <p>This is the welcome page.</p>
 </body>
 </html>
+<?php /**PATH C:\laragon\www\belajar_laravel\resources\views/welcome.blade.php ENDPATH**/ ?>
