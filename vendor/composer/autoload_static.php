@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
+class ComposerStaticInit8e50bbe16252ac389cb2a4ed1d876c39
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -15,8 +15,8 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
@@ -37,11 +37,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         '7f7ac2ddea9cc3fb4b2cc201d63dbc10' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Log/functions.php',
         '493c6aea52f6009bab023b26c21a386a' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/functions.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '062a54fe8f6f91078b197f2922521dd9' => __DIR__ . '/..' . '/laravel/pint/overrides/Runner/Parallel/ProcessFactory.php',
-<<<<<<< HEAD
         '38ea50801e981fa2297115e1c44a148b' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/helpers.php',
-=======
->>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'c72349b1fe8d0deeedd3a52e8aa814d8' => __DIR__ . '/..' . '/mockery/mockery/library/helpers.php',
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
@@ -114,6 +110,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
             'Psr\\Clock\\' => 10,
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
+            'Phiki\\' => 6,
         ),
         'N' => 
         array (
@@ -124,10 +121,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             'Monolog\\' => 8,
             'Mockery\\' => 8,
-<<<<<<< HEAD
             'Mckenziearts\\Notify\\' => 20,
-=======
->>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         ),
         'L' => 
         array (
@@ -385,6 +379,10 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
+        'Phiki\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phiki/phiki/src',
+        ),
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
@@ -401,13 +399,10 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-<<<<<<< HEAD
         'Mckenziearts\\Notify\\' => 
         array (
             0 => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src',
         ),
-=======
->>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'League\\Uri\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/uri',
@@ -1715,6 +1710,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'Illuminate\\Cache\\RedisTaggedCache' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/RedisTaggedCache.php',
         'Illuminate\\Cache\\Repository' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/Repository.php',
         'Illuminate\\Cache\\RetrievesMultipleKeys' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/RetrievesMultipleKeys.php',
+        'Illuminate\\Cache\\SessionStore' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/SessionStore.php',
         'Illuminate\\Cache\\TagSet' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/TagSet.php',
         'Illuminate\\Cache\\TaggableStore' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/TaggableStore.php',
         'Illuminate\\Cache\\TaggedCache' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Cache/TaggedCache.php',
@@ -2033,6 +2029,8 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'Illuminate\\Database\\Eloquent\\Attributes\\UseEloquentBuilder' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Attributes/UseEloquentBuilder.php',
         'Illuminate\\Database\\Eloquent\\Attributes\\UseFactory' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Attributes/UseFactory.php',
         'Illuminate\\Database\\Eloquent\\Attributes\\UsePolicy' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Attributes/UsePolicy.php',
+        'Illuminate\\Database\\Eloquent\\Attributes\\UseResource' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Attributes/UseResource.php',
+        'Illuminate\\Database\\Eloquent\\Attributes\\UseResourceCollection' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/Attributes/UseResourceCollection.php',
         'Illuminate\\Database\\Eloquent\\BroadcastableModelEventOccurred' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/BroadcastableModelEventOccurred.php',
         'Illuminate\\Database\\Eloquent\\BroadcastsEvents' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/BroadcastsEvents.php',
         'Illuminate\\Database\\Eloquent\\BroadcastsEventsAfterCommit' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Eloquent/BroadcastsEventsAfterCommit.php',
@@ -3637,14 +3635,11 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'League\\Uri\\UriTemplate\\VariableBagTest' => __DIR__ . '/..' . '/league/uri/UriTemplate/VariableBagTest.php',
         'League\\Uri\\UriTest' => __DIR__ . '/..' . '/league/uri/UriTest.php',
         'League\\Uri\\WsTest' => __DIR__ . '/..' . '/league/uri/WsTest.php',
-<<<<<<< HEAD
         'Mckenziearts\\Notify\\Exceptions\\MissingPresetNotificationException' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Exceptions/MissingPresetNotificationException.php',
         'Mckenziearts\\Notify\\Facades\\LaravelNotify' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Facades/LaravelNotify.php',
         'Mckenziearts\\Notify\\LaravelNotify' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/LaravelNotify.php',
         'Mckenziearts\\Notify\\LaravelNotifyServiceProvider' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/LaravelNotifyServiceProvider.php',
         'Mckenziearts\\Notify\\Storage\\Session' => __DIR__ . '/..' . '/mckenziearts/laravel-notify/src/Storage/Session.php',
-=======
->>>>>>> 77db7c117e84032e1d2eaf880966279ffd64fec6
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',
@@ -4967,6 +4962,103 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'Phiki\\Adapters\\CommonMark\\CodeBlockRenderer' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/CodeBlockRenderer.php',
+        'Phiki\\Adapters\\CommonMark\\PhikiExtension' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/PhikiExtension.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\AnnotationsTransformer' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/AnnotationsTransformer.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\Annotations\\Annotation' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/Annotations/Annotation.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\Annotations\\AnnotationRange' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/Annotations/AnnotationRange.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\Annotations\\AnnotationRangeKind' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/Annotations/AnnotationRangeKind.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\Annotations\\AnnotationType' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/Annotations/AnnotationType.php',
+        'Phiki\\Adapters\\CommonMark\\Transformers\\MetaTransformer' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/CommonMark/Transformers/MetaTransformer.php',
+        'Phiki\\Adapters\\Laravel\\Components\\Code' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/Laravel/Components/Code.php',
+        'Phiki\\Adapters\\Laravel\\Facades\\Phiki' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/Laravel/Facades/Phiki.php',
+        'Phiki\\Adapters\\Laravel\\PhikiServiceProvider' => __DIR__ . '/..' . '/phiki/phiki/src/Adapters/Laravel/PhikiServiceProvider.php',
+        'Phiki\\Contracts\\ExtensionInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/ExtensionInterface.php',
+        'Phiki\\Contracts\\GrammarRepositoryInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/GrammarRepositoryInterface.php',
+        'Phiki\\Contracts\\HasContentNameInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/HasContentNameInterface.php',
+        'Phiki\\Contracts\\InjectionMatcherInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/InjectionMatcherInterface.php',
+        'Phiki\\Contracts\\InjectionSelectorParserInputInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/InjectionSelectorParserInputInterface.php',
+        'Phiki\\Contracts\\PatternInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/PatternInterface.php',
+        'Phiki\\Contracts\\RequiresGrammarInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/RequiresGrammarInterface.php',
+        'Phiki\\Contracts\\RequiresThemesInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/RequiresThemesInterface.php',
+        'Phiki\\Contracts\\ThemeRepositoryInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/ThemeRepositoryInterface.php',
+        'Phiki\\Contracts\\TransformerInterface' => __DIR__ . '/..' . '/phiki/phiki/src/Contracts/TransformerInterface.php',
+        'Phiki\\Environment' => __DIR__ . '/..' . '/phiki/phiki/src/Environment.php',
+        'Phiki\\Exceptions\\FailedToInitializePatternSearchException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/FailedToInitializePatternSearchException.php',
+        'Phiki\\Exceptions\\FailedToSetSearchPositionException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/FailedToSetSearchPositionException.php',
+        'Phiki\\Exceptions\\GenericPatternException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/GenericPatternException.php',
+        'Phiki\\Exceptions\\InvalidThemeException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/InvalidThemeException.php',
+        'Phiki\\Exceptions\\MissingRequiredGrammarKeyException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/MissingRequiredGrammarKeyException.php',
+        'Phiki\\Exceptions\\UnreachableException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/UnreachableException.php',
+        'Phiki\\Exceptions\\UnrecognisedGrammarException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/UnrecognisedGrammarException.php',
+        'Phiki\\Exceptions\\UnrecognisedReferenceException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/UnrecognisedReferenceException.php',
+        'Phiki\\Exceptions\\UnrecognisedThemeException' => __DIR__ . '/..' . '/phiki/phiki/src/Exceptions/UnrecognisedThemeException.php',
+        'Phiki\\Grammar\\BeginEndPattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/BeginEndPattern.php',
+        'Phiki\\Grammar\\BeginWhilePattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/BeginWhilePattern.php',
+        'Phiki\\Grammar\\Capture' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Capture.php',
+        'Phiki\\Grammar\\CollectionPattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/CollectionPattern.php',
+        'Phiki\\Grammar\\EndPattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/EndPattern.php',
+        'Phiki\\Grammar\\Grammar' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Grammar.php',
+        'Phiki\\Grammar\\GrammarParser' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/GrammarParser.php',
+        'Phiki\\Grammar\\GrammarRepository' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/GrammarRepository.php',
+        'Phiki\\Grammar\\IncludePattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/IncludePattern.php',
+        'Phiki\\Grammar\\Injections\\Composite' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Composite.php',
+        'Phiki\\Grammar\\Injections\\Expression' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Expression.php',
+        'Phiki\\Grammar\\Injections\\Filter' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Filter.php',
+        'Phiki\\Grammar\\Injections\\Group' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Group.php',
+        'Phiki\\Grammar\\Injections\\Injection' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Injection.php',
+        'Phiki\\Grammar\\Injections\\Operator' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Operator.php',
+        'Phiki\\Grammar\\Injections\\Path' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Path.php',
+        'Phiki\\Grammar\\Injections\\Prefix' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Prefix.php',
+        'Phiki\\Grammar\\Injections\\Scope' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Scope.php',
+        'Phiki\\Grammar\\Injections\\Selector' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/Injections/Selector.php',
+        'Phiki\\Grammar\\MatchPattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/MatchPattern.php',
+        'Phiki\\Grammar\\MatchedInjection' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/MatchedInjection.php',
+        'Phiki\\Grammar\\MatchedPattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/MatchedPattern.php',
+        'Phiki\\Grammar\\ParsedGrammar' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/ParsedGrammar.php',
+        'Phiki\\Grammar\\WhilePattern' => __DIR__ . '/..' . '/phiki/phiki/src/Grammar/WhilePattern.php',
+        'Phiki\\Highlighting\\Highlighter' => __DIR__ . '/..' . '/phiki/phiki/src/Highlighting/Highlighter.php',
+        'Phiki\\Output\\Html\\PendingHtmlOutput' => __DIR__ . '/..' . '/phiki/phiki/src/Output/Html/PendingHtmlOutput.php',
+        'Phiki\\Phast\\ClassList' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/ClassList.php',
+        'Phiki\\Phast\\Element' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/Element.php',
+        'Phiki\\Phast\\Literal' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/Literal.php',
+        'Phiki\\Phast\\Properties' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/Properties.php',
+        'Phiki\\Phast\\Root' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/Root.php',
+        'Phiki\\Phast\\Text' => __DIR__ . '/..' . '/phiki/phiki/src/Phast/Text.php',
+        'Phiki\\Phiki' => __DIR__ . '/..' . '/phiki/phiki/src/Phiki.php',
+        'Phiki\\Support\\Arr' => __DIR__ . '/..' . '/phiki/phiki/src/Support/Arr.php',
+        'Phiki\\Support\\Regex' => __DIR__ . '/..' . '/phiki/phiki/src/Support/Regex.php',
+        'Phiki\\Support\\Str' => __DIR__ . '/..' . '/phiki/phiki/src/Support/Str.php',
+        'Phiki\\Tests\\Adapters\\Laravel\\TestCase' => __DIR__ . '/..' . '/phiki/phiki/src/Tests/Adapters/Laravel/TestCase.php',
+        'Phiki\\TextMate\\AttributedScopeStack' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/AttributedScopeStack.php',
+        'Phiki\\TextMate\\LineTokens' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/LineTokens.php',
+        'Phiki\\TextMate\\LocalStackElement' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/LocalStackElement.php',
+        'Phiki\\TextMate\\PatternSearcher' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/PatternSearcher.php',
+        'Phiki\\TextMate\\ScopeStack' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/ScopeStack.php',
+        'Phiki\\TextMate\\StateStack' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/StateStack.php',
+        'Phiki\\TextMate\\Tokenizer' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/Tokenizer.php',
+        'Phiki\\TextMate\\WhileStackElement' => __DIR__ . '/..' . '/phiki/phiki/src/TextMate/WhileStackElement.php',
+        'Phiki\\Theme\\ParsedTheme' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/ParsedTheme.php',
+        'Phiki\\Theme\\Scope' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/Scope.php',
+        'Phiki\\Theme\\ScopeMatchResult' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/ScopeMatchResult.php',
+        'Phiki\\Theme\\Theme' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/Theme.php',
+        'Phiki\\Theme\\ThemeParser' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/ThemeParser.php',
+        'Phiki\\Theme\\ThemeRepository' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/ThemeRepository.php',
+        'Phiki\\Theme\\TokenColor' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/TokenColor.php',
+        'Phiki\\Theme\\TokenColorMatchResult' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/TokenColorMatchResult.php',
+        'Phiki\\Theme\\TokenSettings' => __DIR__ . '/..' . '/phiki/phiki/src/Theme/TokenSettings.php',
+        'Phiki\\Token\\HighlightedToken' => __DIR__ . '/..' . '/phiki/phiki/src/Token/HighlightedToken.php',
+        'Phiki\\Token\\Token' => __DIR__ . '/..' . '/phiki/phiki/src/Token/Token.php',
+        'Phiki\\Transformers\\AbstractTransformer' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/AbstractTransformer.php',
+        'Phiki\\Transformers\\AddClassesTransformer' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/AddClassesTransformer.php',
+        'Phiki\\Transformers\\Concerns\\RequiresGrammar' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Concerns/RequiresGrammar.php',
+        'Phiki\\Transformers\\Concerns\\RequiresThemes' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Concerns/RequiresThemes.php',
+        'Phiki\\Transformers\\Decorations\\CodeDecoration' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Decorations/CodeDecoration.php',
+        'Phiki\\Transformers\\Decorations\\DecorationTransformer' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Decorations/DecorationTransformer.php',
+        'Phiki\\Transformers\\Decorations\\GutterDecoration' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Decorations/GutterDecoration.php',
+        'Phiki\\Transformers\\Decorations\\LineDecoration' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Decorations/LineDecoration.php',
+        'Phiki\\Transformers\\Decorations\\PreDecoration' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Decorations/PreDecoration.php',
+        'Phiki\\Transformers\\Meta' => __DIR__ . '/..' . '/phiki/phiki/src/Transformers/Meta.php',
         'PhpOption\\LazyOption' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/LazyOption.php',
         'PhpOption\\None' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/None.php',
         'PhpOption\\Option' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Option.php',
@@ -6916,9 +7008,9 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8e50bbe16252ac389cb2a4ed1d876c39::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8e50bbe16252ac389cb2a4ed1d876c39::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit8e50bbe16252ac389cb2a4ed1d876c39::$classMap;
 
         }, null, ClassLoader::class);
     }
