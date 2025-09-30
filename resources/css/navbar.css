@@ -1,0 +1,108 @@
+/* public/css/navbar.css */
+
+/* ==============================
+   Variables
+============================== */
+:root {
+    --primary-green: #00c851;
+    --primary-green-dark: #009432;
+    --danger-red: #dc3545;
+    --danger-red-light: #ffe6e6;
+    --hover-bg: #f0f9f4;
+    --transition-speed: 0.3s;
+}
+
+/* ==============================
+   Navbar Links
+============================== */
+.nav-link {
+    position: relative;
+    transition: all var(--transition-speed) ease;
+}
+
+/* Active state */
+.nav-link.active {
+    color: var(--primary-green) !important;
+    font-weight: 700;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: var(--primary-green);
+    border-radius: 2px;
+    transition: width var(--transition-speed) ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-green-dark) !important;
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 40%;
+}
+
+/* Focus (accessibility) */
+.nav-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 200, 81, 0.3);
+    border-radius: 4px;
+}
+
+/* ==============================
+   Profile Icon
+============================== */
+.profile-icon {
+    transition: transform var(--transition-speed) ease, color var(--transition-speed) ease;
+    text-decoration: none;
+}
+
+.profile-icon:hover {
+    transform: scale(1.2);
+    color: var(--primary-green) !important;
+}
+
+.profile-icon:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 200, 81, 0.3);
+    border-radius: 50%;
+}
+
+/* ==============================
+   Dropdown
+============================== */
+.dropdown-menu {
+    border-radius: 10px;
+    border: none;
+    padding: 0.5rem 0;
+    min-width: 200px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-item {
+    padding: 0.6rem 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--hover-bg);
+    color: var(--primary-green);
+    padding-left: 1.5rem;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: var(--danger-red-light);
+    color: var(--danger-red) !important;
+}
+
+/* Remove default arrow */
+.dropdown-toggle::after {
+    display: none;
+}

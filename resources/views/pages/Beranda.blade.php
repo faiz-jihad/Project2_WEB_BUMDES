@@ -114,17 +114,25 @@
                     </form>
 
                     <!-- Logo Section -->
-                    <div class="bg-white rounded-3 shadow-sm d-flex margin-top:20 align-items-center justify-content-center gap-4 p-3 mt-4 mx-auto flex-wrap"
+                    <div class="bg-white rounded-3 shadow-sm d-flex flex-wrap align-items-center justify-content-center gap-4 p-3 mt-4 mx-auto"
                         style="max-width: 650px;">
                         <img src="{{ asset('images/bumn.png') }}" alt="BUMN" class="img-fluid"
-                            style="height:40px;object-fit:contain;" />
+                            style="height:40px;object-fit:contain;max-width:100%;" />
                         <img src="{{ asset('images/bumdes.jpg') }}" alt="Madusari Logo" class="img-fluid"
-                            style="height:60px;object-fit:contain;" />
+                            style="height:60px;object-fit:contain;max-width:100%;" />
                         <img src="{{ asset('images/ikatan.jpg') }}" alt="Agribisnis" class="img-fluid"
-                            style="height:70px;object-fit:contain;" />
+                            style="height:70px;object-fit:contain;max-width:100%;" />
                         <img src="{{ asset('images/masyarakat.jpg') }}" alt="Pemuda" class="img-fluid"
-                            style="height:60px;object-fit:contain;" />
+                            style="height:60px;object-fit:contain;max-width:100%;" />
                     </div>
+                    <style>
+                        @media (max-width: 576px) {
+                            .bg-white.rounded-3.shadow-sm.d-flex.flex-wrap img {
+                                height: 32px !important;
+                                margin-bottom: 8px;
+                            }
+                        }
+                    </style>
                 </div>
             </div>
 

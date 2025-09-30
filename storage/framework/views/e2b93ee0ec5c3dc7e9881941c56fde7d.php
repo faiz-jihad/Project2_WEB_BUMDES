@@ -1,5 +1,5 @@
-<!-- partials/navbar.blade.php -->
 
+<link rel="stylesheet" href="<?php echo e(asset('css/navbar.css')); ?>">
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
     <div class="container">
         <!-- Logo -->
@@ -35,54 +35,48 @@
             </ul>
         </div>
 
-        <!-- Profile/Account -->
-        <a href="#" class="text-dark fs-3 ms-3 profile-icon">
-            <i class="bi bi-person-circle"></i>
-        </a>
+        <!-- Profile/Account Dropdown -->
+        <div class="dropdown ms-3">
+            <a href="#" class="text-dark fs-3 profile-icon dropdown-toggle" id="dropdownProfile" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownProfile">
+                <?php if(auth()->guard()->check()): ?>
+                    <li>
+                        <a class="dropdown-item" href="/profile">
+                            <i class="bi bi-person me-2"></i>Profil Saya
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/orders">
+                            <i class="bi bi-bag-check me-2"></i>Pesanan Saya
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/settings">
+                            <i class="bi bi-gear me-2"></i>Pengaturan
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="/logout">
+                            <i class="bi bi-box-arrow-right me-2"></i>Keluar
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li>
+                        <a class="dropdown-item" href="/login">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/register">
+                            <i class="bi bi-person-plus me-2"></i>Daftar
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
     </div>
 </nav>
-
-<?php $__env->startPush('styles'); ?>
-<style>
-    /* Aktif */
-    .nav-link.active {
-        color: #00c851 !important;
-        font-weight: 700;
-        position: relative;
-    }
-
-    .nav-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40%;
-        height: 3px;
-        background: #00c851;
-        border-radius: 2px;
-    }
-
-    /* Hover dengan transisi */
-    .nav-link {
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .nav-link:hover {
-        color: #009432 !important;
-        transform: translateY(-2px);
-    }
-
-    /* Efek hover untuk profile */
-    .profile-icon {
-        transition: transform 0.3s ease, color 0.3s ease;
-    }
-
-    .profile-icon:hover {
-        transform: scale(1.2);
-        color: #00c851 !important;
-    }
-</style>
-<?php $__env->stopPush(); ?>
 <?php /**PATH C:\laragon\www\belajar_laravel\resources\views/layouts/navbar.blade.php ENDPATH**/ ?>
