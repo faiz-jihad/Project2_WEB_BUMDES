@@ -106,3 +106,71 @@
 .dropdown-toggle::after {
     display: none;
 }
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(0, 200, 81, 0.3);
+    border-color: var(--primary-green);
+}
+
+.Login-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Hover efek */
+.Login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(13, 110, 253, 0.25);
+    background: linear-gradient(90deg, #0d6efd, #0a58ca);
+}
+
+/* Ripple effect */
+.Login-btn::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    display: block;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(1);
+    transition: transform 0.5s, opacity 1s;
+}
+
+.Login-btn:active::after {
+    opacity: 1;
+    transform: scale(20);
+    transition: 0s;
+}
+
+/* Animasi dropdown */
+.user-dropdown {
+    transform: translateY(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+}
+
+/* Saat dropdown dibuka */
+.show > .user-dropdown {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hover effect untuk item */
+.user-dropdown .dropdown-item {
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+.user-dropdown .dropdown-item:hover {
+    background-color: #f0f2f5;
+    transform: translateX(3px);
+}
+.user-dropdown .dropdown-item:active {
+    background-color: #e2e6ea;
+    transform: translateX(1px);
+}

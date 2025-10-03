@@ -11,7 +11,8 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo e(asset('css/navbar.css')); ?>">
 
-    <title>Beranda</title>
+    <title><?php echo $__env->yieldContent('title', config('app.name')); ?></title>
+
 </head>
 
 <body>

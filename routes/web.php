@@ -1,38 +1,44 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\produkController;
+use App\Http\Controllers\Auth\LoginController;
 
-// Redirect root ke /Beranda
-Route::redirect('/', '/Beranda');
+Route::get('/Beranda', [HomeController::class, 'index'])->name('beranda');
 
-// Halaman Beranda (hanya bisa diakses setelah login & verifikasi email)
-Route::get('/Beranda', function () {
-    return view('pages.Beranda'); // Pastikan file: resources/views/pages/Beranda.blade.php
-})->middleware(['auth', 'verified'])->name('Beranda');
 
 Route::get('/about', function () {
-    return view('pages.about'); // Pastikan file: resources/views/pages/about.blade.php
+    return view('pages.about');
 })->name('about');
 
 Route::get('/contact', function () {
-    return view('pages.contact'); // Pastikan file: resources/views/pages/contact.blade.php
 })->name('contact');
 
 Route::get('/services', function () {
-    return view('pages.services'); // Pastikan file: resources/views/pages/services.blade.php
+    return view('pages.services');
 })->name('services');
 
-// Grup route dengan middleware auth
+// Add your routes here
+
+Route::get('/akun', function () {
+    // Your Akun logic
+})->name('akun');
+
+Route::get('/settings', function () {
+    // Your Settings logic
+})->name('settings');
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+
+Route::get('produk',[produkController::class,'index']);
 Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Logout (harus POST)
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
 // Include default auth routes (login, register, dll)

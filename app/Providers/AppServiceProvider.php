@@ -11,9 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+
     }
 
+    public const HOME = '/Beranda';
     /**
      * Bootstrap any application services.
      */

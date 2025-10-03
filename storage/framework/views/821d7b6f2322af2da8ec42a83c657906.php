@@ -7,6 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Bumdes Madusari Bayalangu Kidul</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+        <link rel="stylesheet" href="<?php echo e(asset('css/navbar.css')); ?>" />
         <style>
             /* Custom Styles */
             .nav-link.active {
@@ -85,6 +87,7 @@
                 border-radius: 2rem;
             }
         </style>
+        <?php $__env->startSection('title', 'Home Page'); ?>
     </head>
 
     <body>
@@ -275,19 +278,19 @@
             <div class="row g-4">
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                        <img src="https://i.ibb.co/bWsyqYR/rice.jpg" class="card-img-top" alt="Beras" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="card-img-top" alt="Beras" />
                         <div class="card-price">Beras<br>10.000</div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                        <img src="https://i.ibb.co/Jpzh53z/lele.jpg" class="card-img-top" alt="Lele" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="card-img-top" alt="Lele" />
                         <div class="card-price">Lele<br>10.000</div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4">
                     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                        <img src="https://i.ibb.co/8cT6FvD/plant.jpg" class="card-img-top" alt="Tanaman Hias" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="card-img-top" alt="Tanaman Hias" />
                         <div class="card-price">Tanaman Hias<br>10.000</div>
                     </div>
                 </div>
@@ -300,13 +303,13 @@
             <div id="fotoKegiatanCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner rounded-3 shadow-sm" style="max-height: 380px; overflow: hidden;">
                     <div class="carousel-item active">
-                        <img src="<?php echo e(asset('images/gbr.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
                     </div>
                     <div class="carousel-item active">
-                        <img src="<?php echo e(asset('images/gbr2.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
                     </div>
                     <div class="carousel-item active">
-                        <img src="<?php echo e(asset('images/gbr3.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
+                        <img src="<?php echo e(asset('images/bg2.jpg')); ?>" class="d-block w-100" alt="Penanaman Pohon" />
                     </div>
                     <!-- Tambah slide berikutnya kalau ada -->
                 </div>

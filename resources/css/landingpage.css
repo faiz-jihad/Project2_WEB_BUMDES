@@ -495,4 +495,13 @@ body {
     align-items: center;
   }
 
-  .footer ⬤
+    .footer-links {
+        justify-content: center;
+    }
+    .footer-map-wrapper {
+        flex: 0 0 100%;
+        max-width: 300px;
+        margin-bottom: 1rem;
+    }
+
+}
