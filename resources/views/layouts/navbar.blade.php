@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Responsif</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -14,19 +15,17 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
-
-    <title>Navbar Responsif</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm py-2">
-        <div class="container px-4"> <!-- Tambah padding container -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
+        <div class="container px-4">
 
-            <!-- Logo -->
+            <!-- Logo + Brand Name -->
             <a class="navbar-brand d-flex align-items-center me-4" href="/">
                 <img src="{{ asset('images/bumdes.jpg') }}" alt="Logo" width="50" height="35"
                     class="d-inline-block align-text-top me-2">
-                <span class="fw-bold"></span>
+                <span class="fw-bold text-dark"></span>
             </a>
 
             <!-- Toggler -->
@@ -40,19 +39,19 @@
                 <!-- Left Menu -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-2">
-                        <a class="nav-link active" aria-current="page" href="/Beranda">Home</a>
+                        <a class="nav-link {{ request()->is('Beranda') ? 'active' : '' }}" href="/Beranda">Home</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="/produk">Produk</a>
+                        <a class="nav-link {{ request()->is('produk') ? 'active' : '' }}" href="/produk">Produk</a>
                     </li>
                     <li class="nav-item dropdown mx-2">
-                        <a class="nav-link dropdown-toggle" href="#" id="beritaDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle {{ request()->is('about*') ? 'active' : '' }}" href="#"
+                            id="beritaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Berita
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="beritaDropdown">
+                        <ul class="dropdown-menu shadow border-0 rounded-3" aria-labelledby="beritaDropdown">
                             <li><a class="dropdown-item" href="/about">Berita Utama</a></li>
-                            <li><a class="dropdown-item" href="#">Event Desa</a></li>
+                            <li><a class="dropdown-item" href="#">Program Desa</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -60,48 +59,38 @@
                         </ul>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="/keranjang">
+                        <a class="nav-link {{ request()->is('keranjang') ? 'active' : '' }}" href="/keranjang">
                             <i class="bi bi-cart4 me-1"></i> Keranjang
                         </a>
                     </li>
                 </ul>
 
                 <!-- Right Menu (Auth) -->
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     @guest
-                        <!-- Jika belum login -->
-                        <li class="nav-item ms-2">
-                            <a href="{{ route('login') }}" class="btn btn-primary rounded-pill px-3 py-1 shadow-sm"
-                                style="font-size: 0.9rem;">
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}"
+                                class="btn btn-primary rounded-pill px-3 py-1 shadow-sm d-flex align-items-center">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Login
                             </a>
                         </li>
                     @endguest
 
                     @auth
-                        <!-- Jika sudah login -->
                         <li class="nav-item dropdown ms-3">
-                            <!-- Toggle hanya icon -->
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-person-circle fs-4"></i>
                             </a>
-
-                            <!-- Dropdown -->
-                            <ul class="dropdown-menu dropdown-menu-end user-dropdown shadow border-0 rounded-3 py-2"
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 py-2"
                                 aria-labelledby="userDropdown" style="min-width: 220px;">
-
-                                <!-- Nama user -->
                                 <li class="dropdown-header text-center">
                                     <div class="fw-bold">{{ Auth::user()->name }}</div>
                                     <small class="text-muted">Online</small>
                                 </li>
-
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-
-                                <!-- Menu -->
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center" href="{{ route('akun') }}">
                                         <i class="bi bi-person-circle me-2 text-primary"></i> Akun Saya
@@ -112,11 +101,9 @@
                                         <i class="bi bi-gear me-2 text-secondary"></i> Settings
                                     </a>
                                 </li>
-
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
@@ -133,7 +120,7 @@
         </div>
     </nav>
 
-    {{-- <!-- Bootstrap JS -->
+    {{-- <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script> --}}

@@ -7,7 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\produkController;
 use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/Beranda', [HomeController::class, 'index'])->name('beranda');
+Route::get('/Beranda', [HomeController::class, 'index'])->name('Beranda');
 
 
 Route::get('/about', function () {
@@ -21,7 +21,6 @@ Route::get('/services', function () {
     return view('pages.services');
 })->name('services');
 
-// Add your routes here
 
 Route::get('/akun', function () {
     // Your Akun logic
