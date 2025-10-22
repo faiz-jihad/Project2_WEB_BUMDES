@@ -1,0 +1,7 @@
+.nav-link {
+  @apply text-slate-700 hover:text-primary transition duration-200 relative;
+}
+.nav-link.active::after {
+  content: '';
+  @apply absolute left-0 -bottom-1 w-full h-[2px] bg-primary rounded-full;
+}

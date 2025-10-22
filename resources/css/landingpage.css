@@ -1,0 +1,507 @@
+/* Reset and base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: #fff;
+  color: #222;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 1140px;
+  width: 95%;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  padding: 1rem 0;
+  border-bottom: 1px solid #e1e1e1;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-section {
+  flex-shrink: 0;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.nav-link {
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+  font-size: 1rem;
+  padding-bottom: 2px;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #10b981; /* Green for active or hover */
+  outline: none;
+}
+
+.nav-link.active {
+  color: #10b981;
+  font-weight: 700;
+  border-bottom: 2px solid #10b981;
+}
+
+.user-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.user-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin: 2rem auto;
+  max-width: 1140px;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(75%);
+  border-radius: 1rem;
+}
+
+.hero-text {
+  position: absolute;
+  top: 30%;
+  left: 5%;
+  color: white;
+  max-width: 500px;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.hero-search {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.6rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  font-size: 1rem;
+}
+
+.hero-search::placeholder {
+  color: #a8a8a8;
+}
+
+/* Hero Partners Logos */
+.hero-partners {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background-color: #fff;
+  padding: 0.8rem 0;
+  margin: -2.5rem auto 2rem auto;
+  width: fit-content;
+  border-radius: 0.8rem;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+}
+
+.hero-partners img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Section Titles */
+.section-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #222222;
+}
+
+/* News Section */
+.news-section {
+  margin-bottom: 3rem;
+}
+
+.news-carousel-wrapper {
+  position: relative;
+}
+
+.news-carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 1rem;
+}
+
+.news-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.news-carousel::-webkit-scrollbar-thumb {
+  background-color: #10b981;
+  border-radius: 4px;
+}
+
+.news-card {
+  flex: 0 0 300px;
+  background: #fff;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease-in-out;
+}
+
+.news-card:focus,
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+}
+
+.news-image {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.news-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.8rem;
+  flex-grow: 1;
+}
+
+/* Carousel buttons for news */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #10b981;
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+  user-select: none;
+  z-index: 5;
+}
+
+.carousel-btn:hover,
+.carousel-btn:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.prev-btn {
+  left: -15px;
+}
+
+.next-btn {
+  right: -15px;
+}
+
+/* Partners Section */
+.partners-section {
+  margin-bottom: 3rem;
+}
+
+.partner-logos {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.partner-logos img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  cursor: default;
+}
+
+/* Products Section */
+.products-section {
+  margin-bottom: 3rem;
+}
+
+.product-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card {
+  background-color: #ada28e;
+  border-radius: 0.8rem;
+  width: 300px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+  text-align: left;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:focus,
+.product-card:hover {
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.25);
+}
+
+.product-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 1rem 1.2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.product-price {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Activity / Foto Kegiatan Section */
+.activity-section {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.activity-carousel-wrapper {
+  position: relative;
+}
+
+.activity-carousel {
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 1rem;
+}
+
+.activity-image {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 1rem;
+  display: block;
+}
+
+/* Hidden images in the carousel */
+.activity-image.hidden {
+  display: none;
+}
+
+/* Carousel Buttons for activity */
+.prev-activity-btn,
+.next-activity-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #10b981;
+  border: none;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.8rem;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+  user-select: none;
+  z-index: 5;
+}
+
+.prev-activity-btn:hover,
+.next-activity-btn:hover,
+.prev-activity-btn:focus,
+.next-activity-btn:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.prev-activity-btn {
+  left: 10px;
+}
+
+.next-activity-btn {
+  right: 10px;
+}
+
+/* Footer */
+.footer {
+  background: url("https://placeholder-image-service.onrender.com/image/1200x400?prompt=Wide view of lush green rice fields with blue sky background landscape&id=footerbackground") no-repeat center/cover;
+  padding: 2rem 0;
+  color: #111;
+}
+
+.footer-content {
+  background-color: rgba(255, 255, 255, 0.94);
+  border-radius: 1rem;
+  padding: 1.5rem 1.5rem 2rem 1.5rem;
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.footer-map-wrapper {
+  flex: 0 0 250px;
+}
+
+.footer-map {
+  width: 100%;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+}
+
+.footer-links {
+  display: flex;
+  gap: 3rem;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 120px;
+}
+
+.footer-link {
+  text-decoration: none;
+  font-weight: 600;
+  color: #222;
+  font-size: 1rem;
+  transition: color 0.25s ease;
+}
+
+.footer-link:hover,
+.footer-link:focus {
+  color: #10b981;
+  outline: none;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+  .hero-text {
+    top: 20%;
+    left: 5%;
+    max-width: 90%;
+  }
+
+  .nav {
+    display: none; /* Hide nav on small screens for simplicity */
+  }
+
+  .product-cards,
+  .news-carousel {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+
+  .product-card,
+  .news-card {
+    flex: 0 0 260px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+    .footer-links {
+        justify-content: center;
+    }
+    .footer-map-wrapper {
+        flex: 0 0 100%;
+        max-width: 300px;
+        margin-bottom: 1rem;
+    }
+
+}
