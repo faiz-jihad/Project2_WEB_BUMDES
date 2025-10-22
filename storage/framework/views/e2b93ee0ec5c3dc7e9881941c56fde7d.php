@@ -15,10 +15,10 @@
             <li class="dropdown">
                 <a href="#" class="dropbtn">Berita <i class="bi bi-chevron-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/about">Semua Berita</a></li>
-                    <li><a href="/about">Politik</a></li>
-                    <li><a href="/about">Kesehatan</a></li>
-                    <li><a href="/about">Pariwisata</a></li>
+                    <li><a href="/berita">Semua Berita</a></li>
+                    <li><a href="/kategori/politik">Politik</a></li>
+                    <li><a href="/kategori/kesehatan">Kesehatan</a></li>
+                    <li><a href="/kategori/pariwisata">Pariwisata</a></li>
                 </ul>
             </li>
 
@@ -33,13 +33,13 @@
 
             <!-- Login / User -->
             <?php if(auth()->guard()->guest()): ?>
-                <li><a href="<?php echo e(route('login')); ?>" class="login-btn" style="text-decoration: none">Masuk</a></li>
+                <li><a href="<?php echo e(route('login')); ?>" class="login-btn">Masuk</a></li>
             <?php endif; ?>
 
             <?php if(auth()->guard()->check()): ?>
                 <li class="dropdown user-dropdown">
                     <a href="#" class="dropbtn user-btn">
-                        <img src="<?php echo e(Auth::user()->profile_photo_url ?? asset('img/default-avatar.png')); ?>"
+                        <img src="<?php echo e(Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/default-avatar.png')); ?>"
                             alt="User" />
                         <i class="bi bi-chevron-down"></i>
                     </a>
@@ -49,7 +49,7 @@
                         <li>
                             <form method="POST" action="<?php echo e(route('logout')); ?>">
                                 <?php echo csrf_field(); ?>
-                                <button type="submit"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                                <button type="submit"><i class="bi bi-box-arrow-right"></i> Keluar</button>
                             </form>
                         </li>
                     </ul>
@@ -64,43 +64,32 @@
     </div>
 </nav>
 
+<!-- Icon Library -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
 
-
-    <style>
-     :root {
+<!-- === STYLE === -->
+<style>
+    :root {
         --green: #198754;
         --dark-green: #146c43;
         --yellow: #ffc107;
         --light: #f8fff9;
     }
 
-    /* ======== Navbar Utama ======== */
     .navbar {
         position: fixed;
         top: 0;
         width: 100%;
         height: 90px;
-        background: var(--green);
-        background-image:
-            url('<?php echo e(asset('images/texture-fabric.png')); ?>'),
-            linear-gradient(180deg, var(--green), var(--dark-green));
-        background-repeat: repeat;
-        background-size: 300px, cover;
-        background-blend-mode: overlay;
+        background: linear-gradient(180deg, var(--green), var(--dark-green));
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
         color: white;
         z-index: 1000;
         transition: all 0.3s ease;
     }
 
-    /* Saat discroll */
     .navbar.scrolled {
         background: var(--dark-green);
-        background-image:
-            url('<?php echo e(asset('images/texture-fabric.png')); ?>'),
-            linear-gradient(180deg, var(--dark-green), #0f5132);
-        background-blend-mode: overlay;
     }
 
     .nav-container {
@@ -115,32 +104,6 @@
         z-index: 2;
     }
 
-    /* ======== Tekstur Bergerak Halus (Opsional) ======== */
-    .navbar::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(45deg,
-                rgba(255, 255, 255, 0.03) 0,
-                rgba(255, 255, 255, 0.03) 2px,
-                transparent 2px,
-                transparent 6px);
-        animation: move 10s linear infinite;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    @keyframes move {
-        from {
-            background-position: 0 0;
-        }
-
-        to {
-            background-position: 120px 120px;
-        }
-    }
-
-    /* ======== Logo ======== */
     .nav-logo {
         display: flex;
         align-items: center;
@@ -156,9 +119,9 @@
         height: 48px;
         border-radius: 50%;
         border: 2px solid white;
+        object-fit: cover;
     }
 
-    /* ======== Menu Links ======== */
     .nav-links {
         display: flex;
         align-items: center;
@@ -199,7 +162,7 @@
         width: 100%;
     }
 
-    /* ======== Dropdown ======== */
+    /* Dropdown */
     .dropdown {
         position: relative;
     }
@@ -259,7 +222,7 @@
         display: block;
     }
 
-    /* ======== Search ======== */
+    /* Search */
     .nav-search {
         position: relative;
     }
@@ -281,11 +244,11 @@
         font-size: 16px;
     }
 
-    /* ======== Login Button ======== */
+    /* Login Button */
     .login-btn {
         background: var(--yellow);
         color: var(--green);
-        padding: 12px 24px;
+        padding: 10px 22px;
         border-radius: 12px;
         font-weight: 700;
         text-decoration: none;
@@ -297,7 +260,7 @@
         color: white;
     }
 
-    /* ======== User Dropdown ======== */
+    /* User Dropdown */
     .user-btn {
         display: flex;
         align-items: center;
@@ -319,11 +282,7 @@
         border-radius: 10px;
     }
 
-    .user-menu li {
-        text-align: left;
-    }
-
-    /* ======== Mobile Menu ======== */
+    /* Mobile Menu */
     .menu-toggle {
         display: none;
         font-size: 1.8rem;
@@ -343,7 +302,7 @@
 
         .nav-links {
             position: absolute;
-            top: 70px;
+            top: 90px;
             left: 0;
             width: 100%;
             flex-direction: column;
@@ -371,7 +330,6 @@
 
         .dropdown.open .dropdown-menu {
             display: block;
-            animation: slideDown 0.3s ease;
         }
 
         .dropdown-menu a,
@@ -386,7 +344,6 @@
         }
     }
 
-    /* ======== Animations ======== */
     @keyframes fadeDown {
         from {
             opacity: 0;
@@ -398,32 +355,20 @@
             transform: translateY(0);
         }
     }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-8px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
 </style>
 
-
+<!-- === SCRIPT === -->
 <script>
     const navbar = document.getElementById("navbar");
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
 
-    // Scroll effect
+    // Efek scroll
     window.addEventListener("scroll", () => {
         navbar.classList.toggle("scrolled", window.scrollY > 10);
     });
 
-    // Mobile menu
+    // Toggle menu mobile
     menuToggle.addEventListener("click", () => {
         navLinks.classList.toggle("show");
         menuToggle.innerHTML = navLinks.classList.contains("show") ?
@@ -431,7 +376,7 @@
             '<i class="bi bi-list"></i>';
     });
 
-    // Dropdown (mobile)
+    // Dropdown di mobile
     document.querySelectorAll(".dropdown > .dropbtn").forEach(btn => {
         btn.addEventListener("click", e => {
             if (window.innerWidth <= 900) {

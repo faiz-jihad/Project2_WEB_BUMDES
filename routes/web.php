@@ -14,6 +14,7 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
  use App\Http\Controllers\keranjangController;
+ use App\Http\Controllers\AkunController;
 
 
 
@@ -37,11 +38,9 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-//
-Route::middleware(['auth'])->group(function () {
-    Route::get('/akun', [ProfileController::class, 'index'])->name('akun');
-    Route::post('/akun/update', [ProfileController::class, 'update'])->name('akun.update');
-});
+Route::get('/akun', [AkunController::class, 'index'])->name('akun.index');
+Route::post('/akun/update', [AkunController::class, 'update'])->name('akun.update');
+
 
 // Google OAuth routes (Socialite)
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirect'])->name('socialite.redirect');

@@ -18,9 +18,65 @@
     <link rel="stylesheet" href="{{ asset('css/input.css') }}">
 
     <title>@yield('title', config('app.name'))</title>
+
+    <style>
+        /* === PRELOADER STYLE === */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #198754, #146c43);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 65px;
+            height: 65px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffc107;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- === PRELOADER === -->
+    <div id="preloader">
+        <div class="loader-wrapper">
+            <div class="spinner"></div>
+            <p class="loading-text">Memuat halaman...</p>
+        </div>
+    </div>
+
     <header>
         {{-- NAVBAR --}}
         @include('layouts.navbar')
@@ -29,7 +85,7 @@
     <main>
         {{-- KONTEN --}}
         @yield('content')
-        
+
         {{-- CS Agent --}}
         <script>
             (function() {
@@ -78,6 +134,16 @@
     <!-- Swiper -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/swiper.js') }}"></script>
+
+    <!-- === PRELOADER HIDE === -->
+    <script>
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.classList.add('hide');
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>

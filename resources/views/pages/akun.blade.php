@@ -18,7 +18,7 @@
             <div class="akun-card shadow-lg">
                 <div class="akun-left">
                     <div class="avatar-wrapper">
-                        <img src="{{ $user->avatar ? asset($user->avatar) : asset('images/default-avatar.png') }}"
+                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}"
                             alt="Avatar">
                     </div>
                     <h3>{{ $user->name }}</h3>
@@ -42,7 +42,7 @@
                         <div class="form-group">
                             <label for="avatar">Foto Profil</label>
                             <input type="file" id="avatar" name="avatar" accept="image/*">
-                            <small>Unggah gambar maksimal 2MB</small>
+                            <small>Unggah gambar maksimal 2MB (JPG, PNG)</small>
                         </div>
 
                         <div class="akun-buttons">
@@ -255,3 +255,4 @@
         }
     </style>
 @endsection
+
