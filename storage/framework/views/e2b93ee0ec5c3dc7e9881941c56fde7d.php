@@ -11,7 +11,7 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="/" class="active">Beranda</a></li>
 
-            <!-- Berita Dropdown -->
+            <!-- Berita  -->
             <li class="dropdown">
                 <a href="#" class="dropbtn" aria-expanded="false">Berita <i class="bi bi-chevron-down"></i></a>
                 <ul class="dropdown-menu">
@@ -31,25 +31,37 @@
 
         <!-- Right Icons -->
         <div class="nav-right">
-            <!-- Notification Dropdown -->
+            <!-- Notification  -->
             <div class="dropdown notification-dropdown">
-                <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge"><?php echo e(Auth::user()->unreadNotifications->count() ?? 0); ?></span>
-                </a>
-                <ul class="dropdown-menu notif-menu">
-                    <?php $__empty_1 = true; $__currentLoopData = Auth::user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <li>
-                            <a href="<?php echo e($notification->data['link'] ?? '#'); ?>">
-                                <?php echo e($notification->data['message']); ?>
+                <?php if(auth()->guard()->check()): ?>
+                    <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
+                        <i class="bi bi-bell"></i>
+                        <?php if(Auth::user()->unreadNotifications->count() > 0): ?>
+                            <span class="badge"><?php echo e(Auth::user()->unreadNotifications->count()); ?></span>
+                        <?php endif; ?>
+                    </a>
+                    <ul class="dropdown-menu notif-menu">
+                        <?php $__empty_1 = true; $__currentLoopData = Auth::user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <li>
+                                <a href="<?php echo e($notification->data['link'] ?? '#'); ?>">
+                                    <?php echo e($notification->data['message']); ?>
 
-                            </a>
+                                </a>
+                            </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <li><span class="empty">Tidak ada notifikasi</span></li>
+                        <?php endif; ?>
+                        <li class="text-center mt-2">
+                            <a href="<?php echo e(route('notifikasi.index')); ?>" class="text-success fw-semibold">Lihat Semua</a>
                         </li>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <li><span class="empty">Tidak ada notifikasi</span></li>
-                    <?php endif; ?>
-                </ul>
+                    </ul>
+                <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" class="icon-btn" aria-label="Login untuk notifikasi">
+                        <i class="bi bi-bell"></i>
+                    </a>
+                <?php endif; ?>
             </div>
+
 
             
             <div class="dropdown cart-dropdown">

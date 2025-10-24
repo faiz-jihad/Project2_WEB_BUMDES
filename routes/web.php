@@ -16,6 +16,7 @@ use App\Http\Controllers\keranjangController;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\NotifikasiController;
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
@@ -80,6 +81,12 @@ Route::post('/checkout/proses', [checkoutController::class, 'proses'])->name('ch
 // galeri
 Route::get('/galeri', [GaleriController::class, 'foto'])->name('galeri.index');
 
+// Notif
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::get('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::get('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.readAll');
+});
 
 
 Route::get('/dashboard', [DashboardController::class, 'index']);

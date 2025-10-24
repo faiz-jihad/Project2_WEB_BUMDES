@@ -11,7 +11,7 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="/" class="active">Beranda</a></li>
 
-            <!-- Berita Dropdown -->
+            <!-- Berita  -->
             <li class="dropdown">
                 <a href="#" class="dropbtn" aria-expanded="false">Berita <i class="bi bi-chevron-down"></i></a>
                 <ul class="dropdown-menu">
@@ -31,26 +31,38 @@
 
         <!-- Right Icons -->
         <div class="nav-right">
-            <!-- Notification Dropdown -->
+            <!-- Notification  -->
             <div class="dropdown notification-dropdown">
-                <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge">{{ Auth::user()->unreadNotifications->count() ?? 0 }}</span>
-                </a>
-                <ul class="dropdown-menu notif-menu">
-                    @forelse(Auth::user()->unreadNotifications as $notification)
-                        <li>
-                            <a href="{{ $notification->data['link'] ?? '#' }}">
-                                {{ $notification->data['message'] }}
-                            </a>
+                @auth
+                    <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
+                        <i class="bi bi-bell"></i>
+                        @if (Auth::user()->unreadNotifications->count() > 0)
+                            <span class="badge">{{ Auth::user()->unreadNotifications->count() }}</span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu notif-menu">
+                        @forelse(Auth::user()->unreadNotifications as $notification)
+                            <li>
+                                <a href="{{ $notification->data['link'] ?? '#' }}">
+                                    {{ $notification->data['message'] }}
+                                </a>
+                            </li>
+                        @empty
+                            <li><span class="empty">Tidak ada notifikasi</span></li>
+                        @endforelse
+                        <li class="text-center mt-2">
+                            <a href="{{ route('notifikasi.index') }}" class="text-success fw-semibold">Lihat Semua</a>
                         </li>
-                    @empty
-                        <li><span class="empty">Tidak ada notifikasi</span></li>
-                    @endforelse
-                </ul>
+                    </ul>
+                @else
+                    <a href="{{ route('login') }}" class="icon-btn" aria-label="Login untuk notifikasi">
+                        <i class="bi bi-bell"></i>
+                    </a>
+                @endauth
             </div>
 
-            {{-- Cart Dropdown --}}
+
+            {{-- Cart  --}}
             <div class="dropdown cart-dropdown">
                 <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
                     <i class="bi bi-cart"></i>
