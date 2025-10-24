@@ -9,14 +9,13 @@ use App\Http\Controllers\{
     BeritaController,
     Auth\RegisteredUserController,
     Auth\SocialiteController,
-
 };
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
- use App\Http\Controllers\keranjangController;
- use App\Http\Controllers\AkunController;
-
-
+use App\Http\Controllers\keranjangController;
+use App\Http\Controllers\AkunController;
+use App\Http\Controllers\GaleriController;
+use App\Http\Controllers\CheckoutController;
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
@@ -66,9 +65,20 @@ Route::get('/sensors/latest', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
-Route::get('/keranjang', [keranjangController::class, 'index'])->name('keranjang.index');
-Route::post('/keranjang/tambah', [keranjangController::class, 'tambah'])->name('keranjang.tambah');
-Route::post('/keranjang/hapus', [keranjangController::class, 'hapus'])->name('keranjang.hapus');
+// Keranjang
+Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
+Route::post('/keranjang/hapus', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
+Route::post('/keranjang/update-jumlah', [KeranjangController::class, 'updateJumlah'])->name('keranjang.updateJumlah');
+
+// Menampilkan halaman checkout
+Route::get('/checkout', [checkoutController::class, 'index'])->name('checkout.index');
+
+// Proses pesanan setelah submit form
+Route::post('/checkout/proses', [checkoutController::class, 'proses'])->name('checkout.proses');
+
+// galeri
+Route::get('/galeri', [GaleriController::class, 'foto'])->name('galeri.index');
 
 
 

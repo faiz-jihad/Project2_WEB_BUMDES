@@ -1,4 +1,4 @@
-<!-- === Navbar Hijau Modern & Responsif === -->
+<!-- === Navbar Profesional & Modern === -->
 <nav id="navbar" class="navbar">
     <div class="nav-container">
         <!-- Logo -->
@@ -7,13 +7,13 @@
             <span><strong>BUMDes Madusari</strong></span>
         </a>
 
-        <!-- Menu -->
+        <!-- Menu Links -->
         <ul class="nav-links" id="navLinks">
             <li><a href="/" class="active">Beranda</a></li>
 
-            <!-- Dropdown Berita -->
+            <!-- Berita Dropdown -->
             <li class="dropdown">
-                <a href="#" class="dropbtn">Berita <i class="bi bi-chevron-down"></i></a>
+                <a href="#" class="dropbtn" aria-expanded="false">Berita <i class="bi bi-chevron-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="/berita">Semua Berita</a></li>
                     <li><a href="/kategori/politik">Politik</a></li>
@@ -23,22 +23,78 @@
             </li>
 
             <li><a href="/produk">Produk</a></li>
-            <li><a href="/keranjang">Keranjang</a></li>
 
-            <!-- Search -->
-            <li class="nav-search">
-                <input type="text" placeholder="Cari berita..." id="searchInput" />
-                <i class="bi bi-search"></i>
-            </li>
+            <li><a href="#">Program</a></li>
 
-            <!-- Login / User -->
+            <li><a href="/galeri">Galeri</a></li>
+        </ul>
+
+        <!-- Right Icons -->
+        <div class="nav-right">
+            <!-- Notification Dropdown -->
+            <div class="dropdown notification-dropdown">
+                <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge">{{ Auth::user()->unreadNotifications->count() ?? 0 }}</span>
+                </a>
+                <ul class="dropdown-menu notif-menu">
+                    @forelse(Auth::user()->unreadNotifications as $notification)
+                        <li>
+                            <a href="{{ $notification->data['link'] ?? '#' }}">
+                                {{ $notification->data['message'] }}
+                            </a>
+                        </li>
+                    @empty
+                        <li><span class="empty">Tidak ada notifikasi</span></li>
+                    @endforelse
+                </ul>
+            </div>
+
+            {{-- Cart Dropdown --}}
+            <div class="dropdown cart-dropdown">
+                <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
+                    <i class="bi bi-cart"></i>
+                    <span class="badge">{{ count(session('keranjang', [])) }}</span>
+                </a>
+
+                <ul class="dropdown-menu cart-menu">
+                    @php $keranjang = session('keranjang', []); @endphp
+                    @if (count($keranjang) > 0)
+                        @foreach ($keranjang as $item)
+                            <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
+                                <img src="{{ asset('storage/' . $item['gambar']) }}" alt="{{ $item['nama'] }}"
+                                    class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
+                                <div class="cart-info flex-grow-1">
+                                    <span class="cart-name fw-bold">{{ $item['nama'] }}</span>
+                                    @if ($item['variasi'])
+                                        <span class="cart-variant d-block text-muted"
+                                            style="font-size:0.8rem;">{{ $item['variasi'] }}</span>
+                                    @endif
+                                    <span class="cart-qty text-muted">x{{ $item['jumlah'] }}</span>
+                                    <span class="cart-price text-success fw-bold">Rp
+                                        {{ number_format($item['harga'] * $item['jumlah'], 0, ',', '.') }}</span>
+                                </div>
+                            </li>
+                        @endforeach
+                        <li class="cart-footer d-flex justify-content-between p-2">
+                            <a href="{{ route('keranjang.index') }}" class="btn btn-outline-success btn-sm">Lihat
+                                Keranjang</a>
+                            <a href="{{ route('checkout.index') }}">Checkout</a>
+                        </li>
+                    @else
+                        <li class="empty text-center p-2"><span>Keranjang kosong</span></li>
+                    @endif
+                </ul>
+            </div>
+
+            <!-- User Login / Dropdown -->
             @guest
-                <li><a href="{{ route('login') }}" class="login-btn">Masuk</a></li>
+                <a href="{{ route('login') }}" class="login-btn">Masuk</a>
             @endguest
 
             @auth
-                <li class="dropdown user-dropdown">
-                    <a href="#" class="dropbtn user-btn">
+                <div class="dropdown user-dropdown">
+                    <a href="#" class="dropbtn user-btn" aria-expanded="false">
                         <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
                             alt="User" />
                         <i class="bi bi-chevron-down"></i>
@@ -53,13 +109,13 @@
                             </form>
                         </li>
                     </ul>
-                </li>
+                </div>
             @endauth
-        </ul>
 
-        <!-- Toggle Mobile -->
-        <div class="menu-toggle" id="menuToggle">
-            <i class="bi bi-list"></i>
+            <!-- Mobile Toggle -->
+            <div class="menu-toggle" id="menuToggle">
+                <i class="bi bi-list"></i>
+            </div>
         </div>
     </div>
 </nav>
@@ -76,6 +132,7 @@
         --light: #f8fff9;
     }
 
+    /* Navbar */
     .navbar {
         position: fixed;
         top: 0;
@@ -100,10 +157,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
-        position: relative;
-        z-index: 2;
     }
 
+    /* Logo */
     .nav-logo {
         display: flex;
         align-items: center;
@@ -122,16 +178,12 @@
         object-fit: cover;
     }
 
+    /* Menu Links */
     .nav-links {
         display: flex;
         align-items: center;
         gap: 1.8rem;
         list-style: none;
-        transition: all 0.3s ease;
-    }
-
-    .nav-links li {
-        position: relative;
     }
 
     .nav-links a {
@@ -139,11 +191,8 @@
         text-decoration: none;
         font-weight: 500;
         padding: 6px 0;
+        position: relative;
         transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-        color: var(--yellow);
     }
 
     .nav-links a::after {
@@ -155,6 +204,11 @@
         height: 2px;
         background: var(--yellow);
         transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        color: var(--yellow);
     }
 
     .nav-links a:hover::after,
@@ -171,6 +225,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        cursor: pointer;
     }
 
     .dropdown-menu {
@@ -181,19 +236,14 @@
         background: white;
         color: var(--green);
         border-radius: 10px;
-        min-width: 190px;
+        min-width: 180px;
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
         overflow: hidden;
-        animation: fadeDown 0.25s ease;
-        z-index: 99;
+        transition: all 0.3s ease;
     }
 
-    .dropdown-menu li {
-        border-bottom: 1px solid #eee;
-    }
-
-    .dropdown-menu li:last-child {
-        border-bottom: none;
+    .dropdown:hover .dropdown-menu {
+        display: block;
     }
 
     .dropdown-menu a,
@@ -218,37 +268,95 @@
         color: white;
     }
 
-    .dropdown:hover .dropdown-menu {
-        display: block;
-    }
-
-    /* Search */
-    .nav-search {
+    /* Notification Dropdown */
+    .notification-dropdown {
         position: relative;
     }
 
-    .nav-search input {
-        padding: 8px 35px 8px 14px;
-        border-radius: 25px;
-        border: none;
-        outline: none;
-        font-size: 14px;
+    .notif-menu {
+        display: none;
+        position: absolute;
+        top: 120%;
+        right: 0;
+        width: 250px;
+        max-height: 350px;
+        overflow-y: auto;
+        background: white;
         color: var(--green);
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        z-index: 99;
+        transition: all 0.3s ease;
     }
 
-    .nav-search i {
-        position: absolute;
-        right: 12px;
-        top: 8px;
+    .notification-dropdown.open .notif-menu {
+        display: block;
+    }
+
+    .notif-menu li {
+        border-bottom: 1px solid #eee;
+    }
+
+    .notif-menu li:last-child {
+        border-bottom: none;
+    }
+
+    .notif-menu a {
+        display: block;
+        padding: 10px 15px;
         color: var(--green);
-        font-size: 16px;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .notif-menu a:hover {
+        background: var(--green);
+        color: white;
+    }
+
+    .notif-menu .empty {
+        display: block;
+        padding: 12px 15px;
+        color: #888;
+        font-style: italic;
+        text-align: center;
+    }
+
+    /* Right Icons */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .icon-btn {
+        position: relative;
+        color: white;
+        font-size: 1.3rem;
+        transition: color 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        color: var(--yellow);
+    }
+
+    .badge {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        background: var(--yellow);
+        color: var(--green);
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 50%;
+        padding: 2px 5px;
     }
 
     /* Login Button */
     .login-btn {
         background: var(--yellow);
         color: var(--green);
-        padding: 10px 22px;
+        padding: 8px 18px;
         border-radius: 12px;
         font-weight: 700;
         text-decoration: none;
@@ -268,21 +376,14 @@
     }
 
     .user-btn img {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         border: 2px solid white;
         object-fit: cover;
     }
 
-    .user-menu {
-        right: 0;
-        left: auto;
-        top: 120%;
-        border-radius: 10px;
-    }
-
-    /* Mobile Menu */
+    /* Mobile */
     .menu-toggle {
         display: none;
         font-size: 1.8rem;
@@ -290,16 +391,94 @@
         color: white;
     }
 
+    .cart-dropdown {
+        position: relative;
+    }
+
+    .cart-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 120%;
+        width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+
+    .cart-dropdown.open .cart-menu {
+        display: block;
+    }
+
+    .cart-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .cart-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .cart-info {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+    }
+
+    .cart-name {
+        font-weight: 600;
+    }
+
+    .cart-qty,
+    .cart-price {
+        color: #555;
+    }
+
+    .cart-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .cart-footer .btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .btn-cart {
+        background: #f1f1f1;
+        color: #333;
+    }
+
+    .btn-checkout {
+        background: #198754;
+        color: white;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 15px;
+        font-style: italic;
+        color: #888;
+    }
+
+
     @media (max-width: 900px) {
-        .nav-container {
-            flex-wrap: wrap;
-            padding: 1rem 1.5rem;
-        }
-
-        .menu-toggle {
-            display: block;
-        }
-
         .nav-links {
             position: absolute;
             top: 90px;
@@ -342,6 +521,10 @@
             background: var(--yellow);
             color: var(--green);
         }
+
+        .menu-toggle {
+            display: block;
+        }
     }
 
     @keyframes fadeDown {
@@ -363,20 +546,19 @@
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
 
-    // Efek scroll
+    // Scroll effect
     window.addEventListener("scroll", () => {
         navbar.classList.toggle("scrolled", window.scrollY > 10);
     });
 
-    // Toggle menu mobile
+    // Mobile toggle
     menuToggle.addEventListener("click", () => {
         navLinks.classList.toggle("show");
         menuToggle.innerHTML = navLinks.classList.contains("show") ?
-            '<i class="bi bi-x-lg"></i>' :
-            '<i class="bi bi-list"></i>';
+            '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
     });
 
-    // Dropdown di mobile
+    // Dropdown mobile
     document.querySelectorAll(".dropdown > .dropbtn").forEach(btn => {
         btn.addEventListener("click", e => {
             if (window.innerWidth <= 900) {
@@ -384,5 +566,31 @@
                 btn.parentElement.classList.toggle("open");
             }
         });
+    });
+
+    // Notification
+    const notifBtn = document.querySelector('.notification-dropdown .dropbtn');
+    notifBtn.addEventListener('click', e => {
+        e.preventDefault();
+        notifBtn.parentElement.classList.toggle('open');
+    });
+    document.addEventListener('click', e => {
+        if (!notifBtn.parentElement.contains(e.target)) {
+            notifBtn.parentElement.classList.remove('open');
+        }
+    });
+
+    //CArt
+
+    const cartBtn = document.querySelector('.cart-dropdown .dropbtn');
+    cartBtn.addEventListener('click', e => {
+        e.preventDefault();
+        cartBtn.parentElement.classList.toggle('open');
+    });
+
+    document.addEventListener('click', e => {
+        if (!cartBtn.parentElement.contains(e.target)) {
+            cartBtn.parentElement.classList.remove('open');
+        }
     });
 </script>

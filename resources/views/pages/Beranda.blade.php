@@ -89,24 +89,34 @@
             </div>
         </section>
 
-
         {{-- MODAL PRODUK --}}
-        <section>Pr</section>
         <div class="modal fade" id="produkModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
+
+                    {{-- Header --}}
                     <div class="modal-header">
                         <h5 class="modal-title" id="produkNama"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body d-flex flex-column flex-md-row">
+
+                    {{-- Body --}}
+                    <div class="modal-body d-flex flex-column flex-md-row align-items-start">
+                        {{-- Gambar --}}
                         <img id="produkGambar" class="img-fluid rounded mb-3 mb-md-0 me-md-3" style="max-width: 300px;"
-                            alt="">
-                        <div>
-                            <p id="produkDeskripsi"></p>
+                            alt="Gambar Produk">
+
+                        {{-- Info Produk --}}
+                        <div class="produk-info flex-grow-1">
+                            <p id="produkDeskripsi" class="mb-2"></p>
                             <h5 id="produkHarga" class="text-success fw-bold"></h5>
+                            <div class="mt-3">
+                                {{-- Tombol ke Blade detail produk --}}
+                                <a href="#" id="produkLink" class="btn btn-success">Lihat Detail</a>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -163,21 +173,27 @@
             </div>
         </section>
 
-        {{-- GALERI --}}
+        {{-- GALERI PREVIEW DI BERANDA --}}
         <section class="py-5 bg-light text-center">
             <div class="container">
-                <h2 class="fw-bold text-success mb-4" data-aos="zoom-in">Galeri Kegiatan</h2>
-                <div class="row g-3">
-                    @foreach (['desa1.jpg', 'desa2.jpg', 'desa3.jpg', 'desa4.jpg'] as $img)
-                        <div class="col-md-3" data-aos="zoom-in">
-                            <a href="{{ asset('images/' . $img) }}" data-lightbox="galeri">
-                                <img src="{{ asset('images/' . $img) }}" loading="lazy"
-                                    class="img-fluid rounded-3 shadow-sm hover-scale" alt="Galeri Desa">
+                <h2 class="fw-bold text-success mb-4" data-aos="zoom-in">Galeri Kegiatan Terbaru</h2>
+
+                <div class="galeri-masonry">
+                    @foreach ($galeriHome as $item)
+                        <div class="galeri-item" data-aos="zoom-in">
+                            <a href="{{ asset('storage/' . $item->gambar) }}" data-lightbox="galeri">
+                                <img src="{{ asset('storage/' . $item->gambar) }}" loading="lazy"
+                                    class="img-fluid rounded-3 shadow-sm hover-scale" alt="{{ $item->judul }}">
                             </a>
                         </div>
                     @endforeach
                 </div>
+
+                <div class="mt-4">
+                    <a href="{{ route('galeri.index') }}" class="btn btn-success btn-lg">Lihat Semua Galeri</a>
+                </div>
             </div>
+        </section>
         </section>
 
         {{-- MAP + KONTAK --}}
@@ -215,6 +231,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 
     <script defer>
+        function showProdukModal(produk) {
+            document.getElementById('produkNama').innerText = produk.nama;
+            document.getElementById('produkGambar').src = produk.gambar;
+            document.getElementById('produkDeskripsi').innerText = produk.deskripsi;
+            document.getElementById('produkHarga').innerText = 'Rp ' + produk.harga.toLocaleString('id-ID');
+            document.getElementById('produkLink').href = produk.link;
+
+            const produkModal = new bootstrap.Modal(document.getElementById('produkModal'));
+            produkModal.show();
+        }
+
+
         document.addEventListener("DOMContentLoaded", () => {
             // Hero Slideshow
             const slides = document.querySelectorAll(".slide");
@@ -434,5 +462,79 @@
             transform: translateY(-8px);
             transition: .3s ease;
         }
+
+        /* Modal Produk */
+        #produkModal .modal-content {
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        #produkModal .modal-body {
+            gap: 20px;
+        }
+
+        #produkModal .produk-info p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        #produkModal .produk-info h5 {
+            font-size: 1.2rem;
+        }
+
+        #produkModal .btn-success {
+            background: #198754;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        #produkModal .btn-success:hover {
+            background: #146c43;
+        }
+
+        .galeri-masonry {
+            column-count: 4;
+            column-gap: 1rem;
+        }
+
+        .galeri-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .galeri-item img {
+            width: 100%;
+            display: block;
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .galeri-item:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1200px) {
+            .galeri-masonry {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .galeri-masonry {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .galeri-masonry {
+                column-count: 1;
+            }
+        }
+    </style>
     </style>
 @endsection

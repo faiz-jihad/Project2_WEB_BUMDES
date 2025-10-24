@@ -6,11 +6,16 @@
             <h1 class="produk-title">Produk Unggulan BUMDes Madusari</h1>
             <p class="produk-subtitle">Temukan berbagai produk berkualitas hasil karya masyarakat desa kami.</p>
 
+            <!-- Search -->
+            <div class="search-box mb-4">
+                <input type="text" id="produkSearch" placeholder="Cari produk..." />
+            </div>
+
             <!-- Filter Kategori -->
             <?php
                 $kategoriList = $produk->pluck('kategori')->unique()->filter();
             ?>
-            <div class="filter-buttons">
+            <div class="filter-buttons mb-4">
                 <button class="filter-btn active" data-filter="all">Semua</button>
                 <?php $__currentLoopData = $kategoriList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kategori): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <button class="filter-btn" data-filter="<?php echo e(strtolower($kategori)); ?>">
@@ -20,32 +25,25 @@
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
-            <!-- Grid Produk -->
+            <!-- Grid Produk (Masonry) -->
             <div class="produk-grid">
                 <?php $__empty_1 = true; $__currentLoopData = $produk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <article class="produk-card" data-category="<?php echo e(strtolower($item->kategori)); ?>" data-aos="zoom-in"
-                        data-aos-delay="<?php echo e($loop->index * 50); ?>">
+                    <article class="produk-card" data-category="<?php echo e(strtolower($item->kategori)); ?>"
+                        data-nama="<?php echo e($item->nama); ?>" data-deskripsi="<?php echo e($item->deskripsi); ?>"
+                        data-harga="Rp <?php echo e(number_format($item->harga, 0, ',', '.')); ?>"
+                        data-gambar="<?php echo e($item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg')); ?>">
                         <div class="produk-img">
                             <img src="<?php echo e($item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg')); ?>"
                                 alt="<?php echo e($item->nama); ?>" loading="lazy">
                         </div>
                         <div class="produk-info">
                             <h3><?php echo e($item->nama); ?></h3>
-                            <p><?php echo e(Str::limit($item->deskripsi, 80)); ?></p>
                             <span class="harga">Rp <?php echo e(number_format($item->harga, 0, ',', '.')); ?></span>
-                            <div class="produk-actions">
-                                <button class="produk-btn lihat-detail" data-nama="<?php echo e($item->nama); ?>"
-                                    data-deskripsi="<?php echo e($item->deskripsi); ?>"
-                                    data-harga="Rp <?php echo e(number_format($item->harga, 0, ',', '.')); ?>"
-                                    data-gambar="<?php echo e(asset('storage/' . $item->gambar)); ?>">
-                                    Quick View
-                                </button>
-                                <a href="<?php echo e(route('produk.show', $item->id)); ?>" class="produk-link">Lihat Detail</a>
-                            </div>
+                            <p><?php echo e(Str::limit($item->deskripsi, 100)); ?></p>
                         </div>
                     </article>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <p class="no-produk">Belum ada produk yang tersedia saat ini.</p>
+                    <p class="no-produk text-center">Belum ada produk yang tersedia saat ini.</p>
                 <?php endif; ?>
             </div>
         </div>
@@ -72,24 +70,13 @@
             --green: #198754;
             --green-dark: #146c43;
             --bg: #f8fff9;
-            --text: #333;
         }
 
-        body {
-            background: var(--bg);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* --- Section --- */
+        /* Section */
         .produk-section {
             padding: 120px 20px 80px;
-            text-align: center;
             background: var(--bg);
-        }
-
-        .produk-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            text-align: center;
         }
 
         .produk-title {
@@ -102,16 +89,30 @@
         .produk-subtitle {
             font-size: 1.1rem;
             color: #555;
-            margin-bottom: 45px;
+            margin-bottom: 30px;
         }
 
-        /* --- Filter --- */
+        /* Search */
+        .search-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        /* Filter */
         .filter-buttons {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 50px;
         }
 
         .filter-btn {
@@ -125,101 +126,69 @@
             transition: all 0.3s ease;
         }
 
-        .filter-btn:hover,
-        .filter-btn.active {
+        .filter-btn.active,
+        .filter-btn:hover {
             background: var(--green);
             color: white;
-            transform: translateY(-2px);
         }
 
-        /* --- Grid Produk --- */
+        /* Grid Masonry */
         .produk-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 28px;
-            justify-content: center;
-            align-items: stretch;
-            padding: 0 10px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-auto-rows: 10px;
+            /* Untuk masonry */
+            gap: 16px;
         }
 
         .produk-card {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
             overflow: hidden;
-            max-width: 300px;
-            margin: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
         }
 
         .produk-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
         }
 
         .produk-img img {
             width: 100%;
-            height: 220px;
-            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid #eee;
         }
 
         .produk-info {
+            padding: 10px;
             text-align: left;
-            padding: 16px;
         }
 
         .produk-info h3 {
-            color: var(--green-dark);
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+            font-size: 1rem;
             font-weight: 600;
-        }
-
-        .produk-info p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            min-height: 45px;
-            line-height: 1.4;
+            margin-bottom: 5px;
         }
 
         .harga {
-            color: var(--green-dark);
             font-weight: 700;
+            color: var(--green-dark);
+            font-size: 0.95rem;
             display: block;
-            margin-bottom: 12px;
-            font-size: 1.05rem;
+            margin-bottom: 6px;
         }
 
-        .produk-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
+        .produk-info p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.3;
         }
 
-        .produk-btn,
-        .produk-link {
-            background: var(--green);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
-        }
-
-        .produk-btn:hover,
-        .produk-link:hover {
-            background: var(--green-dark);
-            transform: translateY(-2px);
-        }
-
-        /* --- Modal --- */
+        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -231,47 +200,28 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            transition: opacity 0.3s ease;
         }
 
         .modal.hidden {
-            visibility: hidden;
-            opacity: 0;
+            display: none;
         }
 
         .modal-content {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 700px;
+            width: 90%;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            max-width: 800px;
-            width: 90%;
+            gap: 15px;
             position: relative;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
-            animation: scaleIn 0.3s ease;
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.95);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
         }
 
         .modal-img img {
             width: 100%;
             max-width: 300px;
-            height: 300px;
-            object-fit: cover;
             border-radius: 10px;
-            border: 3px solid var(--green);
         }
 
         .modal-info {
@@ -280,96 +230,43 @@
         }
 
         .modal-info h2 {
-            color: var(--green-dark);
             margin-bottom: 10px;
+            color: var(--green-dark);
         }
 
         .modal-info p {
-            color: #555;
             margin-bottom: 10px;
-            line-height: 1.5;
+            color: #555;
         }
 
         .modal-harga {
             font-weight: 700;
             color: var(--green);
+            margin-bottom: 12px;
             display: block;
-            margin-bottom: 15px;
         }
 
         .modal-btn {
             background: var(--green);
-            color: white;
-            padding: 10px 20px;
+            color: #fff;
+            padding: 8px 18px;
             border-radius: 8px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
             text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .modal-btn:hover {
-            background: var(--green-dark);
         }
 
         .close-btn {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 10px;
+            right: 15px;
             font-size: 24px;
-            cursor: pointer;
-            color: #666;
             background: none;
             border: none;
+            cursor: pointer;
+            color: #555;
         }
 
         .close-btn:hover {
             color: var(--green-dark);
-        }
-
-        /* --- Responsif --- */
-        @media (max-width: 992px) {
-            .produk-grid {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 22px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .produk-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-            }
-
-            .produk-card {
-                max-width: 100%;
-            }
-
-            .produk-info p {
-                font-size: 0.85rem;
-            }
-
-            .produk-actions {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .produk-grid {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-
-            .produk-card {
-                width: 90%;
-                margin: 0 auto;
-            }
-
-            .produk-actions {
-                flex-direction: column;
-                gap: 6px;
-            }
         }
     </style>
 
@@ -377,20 +274,31 @@
         document.addEventListener('DOMContentLoaded', () => {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const produkCards = document.querySelectorAll('.produk-card');
+            const searchInput = document.getElementById('produkSearch');
 
+            // Filter
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     const filter = btn.dataset.filter;
-
                     produkCards.forEach(card => {
-                        const match = filter === 'all' || card.dataset.category === filter;
-                        card.style.display = match ? 'block' : 'none';
+                        card.style.display = (filter === 'all' || card.dataset.category ===
+                            filter) ? 'flex' : 'none';
                     });
                 });
             });
 
+            // Search
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                produkCards.forEach(card => {
+                    const nama = card.dataset.nama.toLowerCase();
+                    card.style.display = (nama.includes(query)) ? 'flex' : 'none';
+                });
+            });
+
+            // Modal
             const modal = document.getElementById('produkModal');
             const modalImg = document.getElementById('modalGambar');
             const modalNama = document.getElementById('modalNama');
@@ -398,20 +306,36 @@
             const modalHarga = document.getElementById('modalHarga');
             const closeBtn = document.querySelector('.close-btn');
 
-            document.querySelectorAll('.lihat-detail').forEach(btn => {
-                btn.addEventListener('click', () => {
+            produkCards.forEach(card => {
+                card.addEventListener('click', () => {
                     modal.classList.remove('hidden');
-                    modalImg.src = btn.dataset.gambar;
-                    modalNama.textContent = btn.dataset.nama;
-                    modalDeskripsi.textContent = btn.dataset.deskripsi;
-                    modalHarga.textContent = btn.dataset.harga;
+                    modalImg.src = card.dataset.gambar;
+                    modalNama.textContent = card.dataset.nama;
+                    modalDeskripsi.textContent = card.dataset.deskripsi;
+                    modalHarga.textContent = card.dataset.harga;
                 });
             });
-
             closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
             modal.addEventListener('click', e => {
                 if (e.target === modal) modal.classList.add('hidden');
             });
+
+            // Masonry layout - adjust row spans
+            function resizeCards() {
+                produkCards.forEach(card => {
+                    const grid = card.parentElement;
+                    const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue(
+                        'grid-auto-rows'));
+                    const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('gap'));
+                    const cardHeight = card.querySelector('.produk-img').offsetHeight + card.querySelector(
+                        '.produk-info').offsetHeight;
+                    const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
+                    card.style.gridRowEnd = "span " + rowSpan;
+                });
+            }
+
+            window.addEventListener('load', resizeCards);
+            window.addEventListener('resize', resizeCards);
         });
     </script>
 <?php $__env->stopSection(); ?>

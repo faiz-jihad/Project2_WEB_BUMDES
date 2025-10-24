@@ -87,27 +87,39 @@
             </div>
         </section>
 
-
         
-        <section>Pr</section>
         <div class="modal fade" id="produkModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
+
+                    
                     <div class="modal-header">
                         <h5 class="modal-title" id="produkNama"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body d-flex flex-column flex-md-row">
+
+                    
+                    <div class="modal-body d-flex flex-column flex-md-row align-items-start">
+                        
                         <img id="produkGambar" class="img-fluid rounded mb-3 mb-md-0 me-md-3" style="max-width: 300px;"
-                            alt="">
-                        <div>
-                            <p id="produkDeskripsi"></p>
+                            alt="Gambar Produk">
+
+                        
+                        <div class="produk-info flex-grow-1">
+                            <p id="produkDeskripsi" class="mb-2"></p>
                             <h5 id="produkHarga" class="text-success fw-bold"></h5>
+                            <div class="mt-3">
+                                
+                                <a href="#" id="produkLink" class="btn btn-success">Lihat Detail</a>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
+
+
 
         
         <section class="py-5 bg-light">
@@ -213,6 +225,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 
     <script defer>
+        function showProdukModal(produk) {
+            document.getElementById('produkNama').innerText = produk.nama;
+            document.getElementById('produkGambar').src = produk.gambar;
+            document.getElementById('produkDeskripsi').innerText = produk.deskripsi;
+            document.getElementById('produkHarga').innerText = 'Rp ' + produk.harga.toLocaleString('id-ID');
+            document.getElementById('produkLink').href = produk.link;
+
+            const produkModal = new bootstrap.Modal(document.getElementById('produkModal'));
+            produkModal.show();
+        }
+
+
         document.addEventListener("DOMContentLoaded", () => {
             // Hero Slideshow
             const slides = document.querySelectorAll(".slide");
@@ -431,6 +455,37 @@
         .hover-float:hover {
             transform: translateY(-8px);
             transition: .3s ease;
+        }
+
+        /* Modal Produk */
+        #produkModal .modal-content {
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        #produkModal .modal-body {
+            gap: 20px;
+        }
+
+        #produkModal .produk-info p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        #produkModal .produk-info h5 {
+            font-size: 1.2rem;
+        }
+
+        #produkModal .btn-success {
+            background: #198754;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        #produkModal .btn-success:hover {
+            background: #146c43;
         }
     </style>
 <?php $__env->stopSection(); ?>
