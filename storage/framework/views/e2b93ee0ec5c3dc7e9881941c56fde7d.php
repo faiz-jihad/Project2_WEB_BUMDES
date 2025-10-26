@@ -24,7 +24,11 @@
 
             <li><a href="/produk">Produk</a></li>
 
-            <li><a href="#">Program</a></li>
+            <?php if(auth()->guard()->check()): ?>
+                <?php if(Auth::user()->role === 'admin'): ?>
+                    <li><a href="/iot">IOT</a></li>
+                <?php endif; ?>
+            <?php endif; ?>
 
             <li><a href="/galeri">Galeri</a></li>
         </ul>

@@ -24,7 +24,11 @@
 
             <li><a href="/produk">Produk</a></li>
 
-            <li><a href="#">Program</a></li>
+            @auth
+                @if (Auth::user()->role === 'admin')
+                    <li><a href="/iot">IOT</a></li>
+                @endif
+            @endauth
 
             <li><a href="/galeri">Galeri</a></li>
         </ul>

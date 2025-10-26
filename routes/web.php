@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     BeritaController,
     Auth\RegisteredUserController,
     Auth\SocialiteController,
+
 };
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
@@ -17,6 +18,11 @@ use App\Http\Controllers\AkunController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotifikasiController;
+use App\Http\Controllers\IotController;
+
+
+Route::get('/iot', [App\Http\Controllers\iotController::class, 'index']);
+
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
@@ -57,10 +63,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
-// Sensor data
-Route::get('/sensors/latest', function () {
-    return \App\Models\SensorData::latest()->first();
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/iot', [iotController::class, 'index']);
 });
+
+
 
 // Berita
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
