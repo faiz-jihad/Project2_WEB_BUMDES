@@ -14,7 +14,7 @@ class BeritaController extends Controller
     public function index()
     {
         // Check if user has role 'penulis'
-        if (auth()->user()->role !== 'penulis') {
+        if (!auth()->check() || auth()->user()->role !== 'penulis') {
             return redirect()->back()->with('error', 'Akses ditolak. Halaman ini hanya untuk penulis.');
         }
 
@@ -76,6 +76,12 @@ class BeritaController extends Controller
             ]);
 
             \Log::info('Berita created successfully:', $berita->toArray());
+
+            // Send notification to admin users
+            $adminUsers = \App\Models\User::where('role', 'admin')->get();
+            foreach ($adminUsers as $admin) {
+                $admin->notify(new \App\Notifications\BeritaCreated($berita, $penulis));
+            }
 
             notify()->success('Berita berhasil ditambahkan!', 'Berhasil');
             return redirect()->back();

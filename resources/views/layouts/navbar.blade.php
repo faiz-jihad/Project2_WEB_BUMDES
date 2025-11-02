@@ -39,7 +39,7 @@
                     <ul class="dropdown-menu notif-menu">
                         @forelse(Auth::user()->unreadNotifications as $notification)
                             <li>
-                                <a href="{{ $notification->data['link'] ?? '#' }}">
+                                <a href="{{ $notification->data['url'] ?? '#' }}">
                                     {{ $notification->data['message'] }}
                                 </a>
                             </li>
@@ -84,6 +84,7 @@
                     </a>
                     <ul class="dropdown-menu user-menu">
                         <li><a href="/akun"><i class="bi bi-person"></i> Akun Saya</a></li>
+                        <li><a href="{{ route('pesanan.index') }}"><i class="bi bi-receipt"></i> Pesanan Saya</a></li>
                         @auth
                             @if (Auth::user()->role === 'penulis')
                                 <li><a href="penulis/berita" <i class="bi bi-newspaper"></i>Dashboard</a></li>

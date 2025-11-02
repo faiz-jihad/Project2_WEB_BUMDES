@@ -71,7 +71,7 @@
             @else
                 <div class="checkout-empty text-center">
                     <img src="{{ asset('images/empty-cart.svg') }}" alt="Kosong" class="empty-img mb-3">
-                    <p>Keranjang kamu masih kosong.</p>
+                    <p>Keranjang kamu masih kosong.</p><br>
                     <a href="{{ route('produk.index') }}" class="btn-lanjut">Lihat Produk</a>
                 </div>
             @endif

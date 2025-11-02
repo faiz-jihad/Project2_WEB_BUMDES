@@ -6,7 +6,6 @@ use App\Http\Controllers\{
     Auth\AuthenticatedSessionController,
     HomeController,
     ProdukController,
-    // BeritaController,
     Auth\RegisteredUserController,
     Auth\SocialiteController,
 };
@@ -18,7 +17,9 @@ use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\IotController;
-use App\Http\Controllers\Penulis\BeritaController;
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\Penulis\BeritaController as PenulisBeritaController;
+use App\Http\Controllers\PesananController;
 
 // Moved to auth middleware group below
 
@@ -68,23 +69,28 @@ Route::middleware('auth')->group(function () {
 
     // Penulis routes - only for penulis role
     Route::middleware('role:penulis')->group(function () {
-        Route::get('/penulis/dashboard', [\App\Http\Controllers\Penulis\BeritaController::class, 'index'])->name('penulis.dashboard');
-        Route::get('/penulis/berita', [\App\Http\Controllers\Penulis\BeritaController::class, 'index'])->name('penulis.berita.index');
-        Route::post('/penulis/berita', [\App\Http\Controllers\Penulis\BeritaController::class, 'store'])->name('penulis.berita.store');
-        Route::put('/penulis/berita/{id}', [\App\Http\Controllers\Penulis\BeritaController::class, 'update'])->name('penulis.berita.update');
+        Route::get('/penulis/dashboard', [PenulisBeritaController::class, 'index'])->name('penulis.dashboard');
+        Route::get('/penulis/berita', [PenulisBeritaController::class, 'index'])->name('penulis.berita.index');
+        Route::post('/penulis/berita', [PenulisBeritaController::class, 'store'])->name('penulis.berita.store');
+        Route::put('/penulis/berita/{id}', [PenulisBeritaController::class, 'update'])->name('penulis.berita.update');
     });
+
+    // Pesanan routes - for authenticated users
+    Route::resource('pesanan', PesananController::class)->except(['create', 'store']);
+    Route::post('/pesanan/{id}/mark-paid', [PesananController::class, 'markAsPaid'])->name('pesanan.mark-paid');
+    Route::get('/pesanan/{id}/nota', [PesananController::class, 'nota'])->name('pesanan.nota');
 });
 
 // Produk routes
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
-Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
+Route::get('/produk/{slug}', [ProdukController::class, 'show'])->name('produk.show');
 
 
 
 // Berita
-Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
-Route::get('/berita/kategori/{slug}', [App\Http\Controllers\BeritaController::class, 'kategori'])->name('berita.kategori');
-Route::get('/berita/{slug}', [App\Http\Controllers\BeritaController::class, 'show'])->name('berita.show');
+Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
+Route::get('/berita/kategori/{slug}', [BeritaController::class, 'kategori'])->name('berita.kategori');
+Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
 // Keranjang
 Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');

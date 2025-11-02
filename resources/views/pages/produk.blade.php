@@ -33,7 +33,7 @@
                         data-nama="{{ $item->nama }}" data-deskripsi="{{ $item->deskripsi }}"
                         data-harga="Rp {{ number_format($item->harga, 0, ',', '.') }}"
                         data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
-                        data-id="{{ $item->id }}">
+                        data-id="{{ $item->id }}" data-slug="{{ $item->slug }}">
                         <div class="produk-img">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
                                 alt="{{ $item->nama }}" loading="lazy">
@@ -408,8 +408,8 @@
                         return;
                     }
                     // Redirect to detail page instead of showing modal
-                    const produkId = card.dataset.id;
-                    window.location.href = `/produk/${produkId}`;
+                    const produkSlug = card.dataset.slug;
+                    window.location.href = `/produk/${produkSlug}`;
                 });
             });
 

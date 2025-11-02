@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Produk extends Model
 {
@@ -14,8 +15,26 @@ class Produk extends Model
         'kategori_id',
         'deskripsi',
         'harga',
-        'gambar'
+        'gambar',
+        'slug'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($produk) {
+            if (empty($produk->slug)) {
+                $produk->slug = Str::slug($produk->nama);
+            }
+        });
+
+        static::updating(function ($produk) {
+            if ($produk->isDirty('nama') && empty($produk->slug)) {
+                $produk->slug = Str::slug($produk->nama);
+            }
+        });
+    }
 
     public function kategoriProduk()
     {

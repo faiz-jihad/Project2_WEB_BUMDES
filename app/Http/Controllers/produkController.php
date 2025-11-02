@@ -20,9 +20,13 @@ class ProdukController extends Controller
     /**
      * Tampilkan detail produk tertentu.
      */
-    public function show($id)
+    public function show($slug)
     {
-        $produk = Produk::findOrFail($id);
+        $produk = Produk::where('slug', $slug)->first();
+
+        if (!$produk) {
+            return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan.');
+        }
 
         return view('pages.detailProduk', compact('produk'));
     }

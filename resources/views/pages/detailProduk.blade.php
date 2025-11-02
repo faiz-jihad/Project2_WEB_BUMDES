@@ -10,6 +10,13 @@
                 <a href="{{ route('produk.index') }}">&larr; Kembali ke Produk</a>
             </div>
 
+            @if (session('error'))
+                <div class="alert alert-danger"
+                    style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                    <strong>Error:</strong> {{ session('error') }}
+                </div>
+            @endif
+
             <div class="produk-detail-grid">
                 <!-- Galeri Gambar -->
                 <div class="produk-detail-img">

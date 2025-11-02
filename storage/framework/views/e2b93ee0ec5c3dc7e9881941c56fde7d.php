@@ -39,7 +39,7 @@
                     <ul class="dropdown-menu notif-menu">
                         <?php $__empty_1 = true; $__currentLoopData = Auth::user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <li>
-                                <a href="<?php echo e($notification->data['link'] ?? '#'); ?>">
+                                <a href="<?php echo e($notification->data['url'] ?? '#'); ?>">
                                     <?php echo e($notification->data['message']); ?>
 
                                 </a>
@@ -85,6 +85,7 @@
                     </a>
                     <ul class="dropdown-menu user-menu">
                         <li><a href="/akun"><i class="bi bi-person"></i> Akun Saya</a></li>
+                        <li><a href="<?php echo e(route('pesanan.index')); ?>"><i class="bi bi-receipt"></i> Pesanan Saya</a></li>
                         <?php if(auth()->guard()->check()): ?>
                             <?php if(Auth::user()->role === 'penulis'): ?>
                                 <li><a href="penulis/berita" <i class="bi bi-newspaper"></i>Dashboard</a></li>
