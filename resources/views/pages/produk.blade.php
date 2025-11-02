@@ -26,13 +26,14 @@
                 @endforeach
             </div>
 
-            <!-- Grid Produk (Masonry) -->
+            <!-- Grid Produk  -->
             <div class="produk-grid">
                 @forelse ($produk as $item)
                     <article class="produk-card" data-category="{{ strtolower($item->kategori) }}"
                         data-nama="{{ $item->nama }}" data-deskripsi="{{ $item->deskripsi }}"
                         data-harga="Rp {{ number_format($item->harga, 0, ',', '.') }}"
-                        data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}">
+                        data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
+                        data-id="{{ $item->id }}">
                         <div class="produk-img">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
                                 alt="{{ $item->nama }}" loading="lazy">
@@ -41,6 +42,18 @@
                             <h3>{{ $item->nama }}</h3>
                             <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
                             <p>{{ Str::limit($item->deskripsi, 100) }}</p>
+                            <div class="produk-actions">
+                                @auth
+                                    <button class="btn-keranjang-icon" data-id="{{ $item->id }}"
+                                        title="Tambah ke Keranjang">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                @else
+                                    <a href="{{ route('login') }}" class="btn-login-icon" title="Login untuk Tambah Keranjang">
+                                        <i class="bi bi-person"></i>
+                                    </a>
+                                @endauth
+                            </div>
                         </div>
                     </article>
                 @empty
@@ -61,7 +74,7 @@
                 <h2 id="modalNama"></h2>
                 <p id="modalDeskripsi"></p>
                 <span id="modalHarga" class="modal-harga"></span>
-                <a href="https://wa.me/6281234567890" target="_blank" class="modal-btn">Hubungi Kami</a>
+                <a href="https://wa.me/6281234567890" target="_blank" class="modal-btn">Beli</a>
             </div>
         </div>
     </div>
@@ -133,13 +146,26 @@
             color: white;
         }
 
-        /* Grid Masonry */
+        /* Grid */
         .produk-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            grid-auto-rows: 10px;
-            /* Untuk masonry */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 16px;
+        }
+
+        /* Responsive Grid */
+        @media (max-width: 768px) {
+            .produk-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .produk-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
         }
 
         .produk-card {
@@ -150,6 +176,7 @@
             cursor: pointer;
             display: flex;
             flex-direction: column;
+            height: 350px;
             transition: transform 0.2s;
         }
 
@@ -158,35 +185,101 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
         }
 
+        .produk-img {
+            height: 200px;
+            overflow: hidden;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px 8px 0 0;
+            background: #f8f8f8;
+        }
+
         .produk-img img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            border-bottom: 1px solid #eee;
         }
 
         .produk-info {
-            padding: 10px;
+            padding: 15px;
             text-align: left;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .produk-info h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
         }
 
         .harga {
             font-weight: 700;
             color: var(--green-dark);
-            font-size: 0.95rem;
+            font-size: 1rem;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
         }
 
         .produk-info p {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #555;
-            line-height: 1.3;
+            line-height: 1.4;
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .produk-actions {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .btn-keranjang-icon {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-keranjang-icon:hover {
+            background: #e0a800;
+            transform: scale(1.1);
+        }
+
+        .btn-keranjang-icon i {
+            font-size: 1.2rem;
+        }
+
+        .btn-login-icon {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login-icon:hover {
+            background: #5a6268;
+            transform: scale(1.1);
+        }
+
+        .btn-login-icon i {
+            font-size: 1.2rem;
         }
 
         /* Modal */
@@ -308,12 +401,77 @@
             const closeBtn = document.querySelector('.close-btn');
 
             produkCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    modal.classList.remove('hidden');
-                    modalImg.src = card.dataset.gambar;
-                    modalNama.textContent = card.dataset.nama;
-                    modalDeskripsi.textContent = card.dataset.deskripsi;
-                    modalHarga.textContent = card.dataset.harga;
+                card.addEventListener('click', (e) => {
+                    // Prevent redirect if clicking on cart button
+                    if (e.target.closest('.btn-keranjang-icon')) {
+                        e.stopPropagation();
+                        return;
+                    }
+                    // Redirect to detail page instead of showing modal
+                    const produkId = card.dataset.id;
+                    window.location.href = `/produk/${produkId}`;
+                });
+            });
+
+            // Add to cart functionality
+            document.querySelectorAll('.btn-keranjang-icon').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const produkId = this.getAttribute('data-id');
+
+                    // Show loading state
+                    this.disabled = true;
+                    this.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+
+                    fetch("{{ route('keranjang.tambah') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                produk_id: produkId,
+                                variasi: null
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            // Reset button state
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-cart-plus"></i>';
+
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: 'Produk berhasil ditambahkan ke keranjang!',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+
+                                // Trigger cart update event for real-time navbar update
+                                document.dispatchEvent(new CustomEvent('cartUpdated'));
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    text: data.message ||
+                                        'Gagal menambahkan produk ke keranjang.'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            // Reset button state
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-cart-plus"></i>';
+
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.'
+                            });
+                        });
                 });
             });
             closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
@@ -321,22 +479,9 @@
                 if (e.target === modal) modal.classList.add('hidden');
             });
 
-            // Masonry layout - adjust row spans
-            function resizeCards() {
-                produkCards.forEach(card => {
-                    const grid = card.parentElement;
-                    const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue(
-                        'grid-auto-rows'));
-                    const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('gap'));
-                    const cardHeight = card.querySelector('.produk-img').offsetHeight + card.querySelector(
-                        '.produk-info').offsetHeight;
-                    const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
-                    card.style.gridRowEnd = "span " + rowSpan;
-                });
-            }
+            // No longer needed with fixed height cards
 
-            window.addEventListener('load', resizeCards);
-            window.addEventListener('resize', resizeCards);
+            // Removed masonry resize logic as we're using fixed height cards now
         });
     </script>
-@endsectiongi
+@endsection

@@ -192,6 +192,7 @@
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const password = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
@@ -204,6 +205,27 @@
             eyeOpen.classList.toggle('d-none', !isPassword);
             eyeClosed.classList.toggle('d-none', isPassword);
         });
+
+        // SweetAlert untuk error messages
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Registrasi Gagal!',
+                text: '{{ $errors->first() }}',
+                confirmButtonColor: '#198754'
+            });
+        @endif
+
+        // SweetAlert untuk success messages
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
     </script>
 
     <!-- Bootstrap Icons -->

@@ -11,76 +11,36 @@
 
 
     <!-- swiper -->
+
     <head>
         <!-- Swiper CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     </head>
     <div class="swiper mySwiper mt-9">
         <div class="swiper-wrapper">
-
-            <div class="swiper-slide">
-                <a href="detail-MotoGp.html" class="block">
-                    <div
-                        class="relative flex flex-col gap-1 justify-end p-3 h-72 rounded-xl bg-[url('/src/img/SW-Olahraga.png')] bg-cover bg-center overflow-hidden">
+            @foreach ($banners as $banner)
+                <div class="swiper-slide">
+                    <a href="detail-MotoGp.html" class="block">
                         <div
-                            class="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0)] rounded-b-xl">
-                        </div>
-                        <div class="relative z-10 mb-3" style="padding-left: 10px;">
-                            <div class="bg-primary text-white text-xs rounded-lg w-fit px-3 py-1 font-normal mt-3">
-                                Kesehatan</div>
-                            <p class="text-3xl font-semibold text-white mt-1">Cara Membuat Badan</p>
-                            <p class="text-3xl font-semibold text-white mt-1">Menjadi Ideal</p>
-                            <div class="flex items-center gap-1 mt-1">
-                                <img src="/src/img/User.png" alt="" class="w-5">
-                                <p class="text-white text-xs">Muhamad Rafli</p>
+                            class="relative flex flex-col gap-1 justify-end p-3 h-72 rounded-xl bg-[url('{{ asset('storage/'. $banner -> berita ->Thumbnail) }}')] bg-cover bg-center overflow-hidden">
+                            <div
+                                class="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0)] rounded-b-xl">
+                            </div>
+                            <div class="relative z-10 mb-3" style="padding-left: 10px;">
+                                <div class="bg-primary text-white text-xs rounded-lg w-fit px-3 py-1 font-normal mt-3">
+                                    {{ $banner->berita->kategori->Judul }}
+                                </div>
+                                <p class="text-3xl font-semibold text-white mt-1">{{ $banner->Berita->Judul }}</p>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <img src="{{ asset('storage/' . $banner->berita->penulis->Avatar) }}" alt="Author"
+                                        class="h-6 w-6 rounded-full">
+                                    <p class="text-green text-xs">{{ $banner->berita->penulis->nama_penulis }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="swiper-slide">
-                <a href="detail-MotoGp.html" class="block">
-                    <div
-                        class="relative flex flex-col gap-1 justify-end p-3 h-72 rounded-xl bg-[url('/src/img/SW-Liburan.png')] bg-cover bg-center overflow-hidden">
-                        <div
-                            class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0)] rounded-b-xl">
-                        </div>
-                        <div class="relative z-10 mb-3" style="padding-left: 10px;">
-                            <div class="bg-primary text-white text-xs rounded-lg w-fit px-3 py-1 font-normal mt-3">
-                                Pariwisata</div>
-                            <p class="text-3xl font-semibold text-white mt-1">Liburan Asik Di Bali</p>
-                            <p class="text-3xl font-semibold text-white mt-1">Di Tahun 2025</p>
-                            <div class="flex items-center gap-1 mt-1">
-                                <img src="/src/img/User.png" alt="" class="w-5">
-                                <p class="text-white text-xs">Muhamad Rafli</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="swiper-slide">
-                <a href="detail-MotoGp.html" class="block">
-                    <div
-                        class="relative flex flex-col gap-1 justify-end p-3 h-72 rounded-xl bg-[url('/src/img/SW-Makanan.png')] bg-cover bg-center overflow-hidden">
-                        <div
-                            class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0)] rounded-b-xl">
-                        </div>
-                        <div class="relative z-10 mb-3" style="padding-left: 10px;">
-                            <div class="bg-primary text-white text-xs rounded-lg w-fit px-3 py-1 font-normal mt-3">
-                                Kesehatan</div>
-                            <p class="text-3xl font-semibold text-white mt-1">7 Rekomendasi Makanan</p>
-                            <p class="text-3xl font-semibold text-white mt-1">Enak dan Sehat</p>
-                            <div class="flex items-center gap-1 mt-1">
-                                <img src="/src/img/User.png" alt="" class="w-5">
-                                <p class="text-white text-xs">Muhamad Rafli</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
+                    </a>
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -343,4 +303,3 @@
 
 
 @endsection
-

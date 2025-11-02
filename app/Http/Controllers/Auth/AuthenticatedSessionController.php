@@ -27,8 +27,50 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        // Arahkan ke halaman beranda atau dashboard
-        return redirect()->intended(route('beranda'));
+        // Migrasi keranjang dari session ke database jika ada
+        $this->migrateCartToDatabase();
+
+        $user = Auth::user();
+
+        // Redirect berdasarkan role
+        if ($user->role === 'admin' || $user->role === 'penulis') {
+            // Jika admin atau penulis, arahkan ke halaman pilihan dashboard
+            return redirect()->route('dashboard.choice');
+        }
+
+        // Arahkan ke halaman beranda untuk user biasa
+        return redirect()->intended(route('beranda'))->with('success', 'Login berhasil! Selamat datang kembali.');
+    }
+
+    /**
+     * Migrasi keranjang dari session ke database
+     */
+    private function migrateCartToDatabase()
+    {
+        $sessionCart = session()->get('keranjang', []);
+
+        if (!empty($sessionCart)) {
+            foreach ($sessionCart as $item) {
+                $existingItem = \App\Models\Keranjang::where('user_id', Auth::id())
+                    ->where('produk_id', $item['id'])
+                    ->where('variasi', $item['variasi'] ?? null)
+                    ->first();
+
+                if ($existingItem) {
+                    $existingItem->update(['jumlah' => $existingItem->jumlah + $item['jumlah']]);
+                } else {
+                    \App\Models\Keranjang::create([
+                        'user_id' => Auth::id(),
+                        'produk_id' => $item['id'],
+                        'jumlah' => $item['jumlah'],
+                        'variasi' => $item['variasi'] ?? null,
+                    ]);
+                }
+            }
+
+            // Hapus keranjang dari session setelah migrasi
+            session()->forget('keranjang');
+        }
     }
 
     /**
@@ -41,7 +83,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        //  login
+        // Arahkan ke halaman login
         return redirect()->route('login');
     }
 }

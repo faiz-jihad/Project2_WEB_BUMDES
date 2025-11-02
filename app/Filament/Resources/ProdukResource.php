@@ -33,9 +33,11 @@ class ProdukResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('kategori')
+                Forms\Components\Select::make('kategori_id')
+                    ->label('Kategori')
+                    ->options(\App\Models\KategoriProduk::pluck('nama_kategori', 'id'))
                     ->required()
-                    ->maxLength(232),
+                    ->searchable(),
 
                 Textarea::make('deskripsi')
                     ->required()
@@ -59,7 +61,9 @@ class ProdukResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nama')->sortable()->searchable(),
-                TextColumn::make('kategori')->sortable(),
+                TextColumn::make('kategoriProduk.nama_kategori')
+                    ->label('Kategori')
+                    ->sortable(),
                 TextColumn::make('harga')->money('IDR', true),
                 TextColumn::make('deskripsi')->limit(50),
                 TextColumn::make('created_at')->date(),

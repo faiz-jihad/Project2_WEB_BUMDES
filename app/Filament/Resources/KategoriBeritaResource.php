@@ -17,6 +17,12 @@ class KategoriBeritaResource extends Resource
     protected static ?string $model = KategoriBerita::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Berita';
+    protected static ?string $navigationLabel = ' Kategori Berita';
+    protected static ?string $pluralModelLabel = ' Kategori Berita';
+
+
+
 
     public static function form(Form $form): Form
     {
@@ -46,7 +52,7 @@ class KategoriBeritaResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                
+
             ])
             ->actions([
                 Tables\Actions\viewAction::make(),

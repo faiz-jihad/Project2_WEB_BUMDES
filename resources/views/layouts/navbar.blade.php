@@ -11,18 +11,10 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="/" class="active">Beranda</a></li>
 
-            <!-- Berita  -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn" aria-expanded="false">Berita <i class="bi bi-chevron-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/berita">Semua Berita</a></li>
-                    <li><a href="/kategori/politik">Politik</a></li>
-                    <li><a href="/kategori/kesehatan">Kesehatan</a></li>
-                    <li><a href="/kategori/pariwisata">Pariwisata</a></li>
-                </ul>
-            </li>
+            <li><a href="/berita">Berita</a></li>
 
             <li><a href="/produk">Produk</a></li>
+
 
             @auth
                 @if (Auth::user()->role === 'admin')
@@ -70,36 +62,11 @@
             <div class="dropdown cart-dropdown">
                 <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
                     <i class="bi bi-cart"></i>
-                    <span class="badge">{{ count(session('keranjang', [])) }}</span>
+                    <span class="badge" id="cartBadge">0</span>
                 </a>
 
-                <ul class="dropdown-menu cart-menu">
-                    @php $keranjang = session('keranjang', []); @endphp
-                    @if (count($keranjang) > 0)
-                        @foreach ($keranjang as $item)
-                            <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
-                                <img src="{{ asset('storage/' . $item['gambar']) }}" alt="{{ $item['nama'] }}"
-                                    class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
-                                <div class="cart-info flex-grow-1">
-                                    <span class="cart-name fw-bold">{{ $item['nama'] }}</span>
-                                    @if ($item['variasi'])
-                                        <span class="cart-variant d-block text-muted"
-                                            style="font-size:0.8rem;">{{ $item['variasi'] }}</span>
-                                    @endif
-                                    <span class="cart-qty text-muted">x{{ $item['jumlah'] }}</span>
-                                    <span class="cart-price text-success fw-bold">Rp
-                                        {{ number_format($item['harga'] * $item['jumlah'], 0, ',', '.') }}</span>
-                                </div>
-                            </li>
-                        @endforeach
-                        <li class="cart-footer d-flex justify-content-between p-2">
-                            <a href="{{ route('keranjang.index') }}" class="btn btn-outline-success btn-sm">Lihat
-                                Keranjang</a>
-                            <a href="{{ route('checkout.index') }}">Checkout</a>
-                        </li>
-                    @else
-                        <li class="empty text-center p-2"><span>Keranjang kosong</span></li>
-                    @endif
+                <ul class="dropdown-menu cart-menu" id="cartMenu">
+                    <li class="empty text-center p-2"><span>Keranjang kosong</span></li>
                 </ul>
             </div>
 
@@ -117,7 +84,11 @@
                     </a>
                     <ul class="dropdown-menu user-menu">
                         <li><a href="/akun"><i class="bi bi-person"></i> Akun Saya</a></li>
-                        <li><a href="{{ route('settings') }}"><i class="bi bi-gear"></i> Pengaturan</a></li>
+                        @auth
+                            @if (Auth::user()->role === 'penulis')
+                                <li><a href="penulis/berita" <i class="bi bi-newspaper"></i>Dashboard</a></li>
+                            @endif
+                        @endauth
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -146,6 +117,9 @@
         --dark-green: #146c43;
         --yellow: #ffc107;
         --light: #f8fff9;
+        --shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        --border-radius: 10px;
+        --transition: all 0.3s ease;
     }
 
     /* Navbar */
@@ -155,14 +129,15 @@
         width: 100%;
         height: 90px;
         background: linear-gradient(180deg, var(--green), var(--dark-green));
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--shadow);
         color: white;
         z-index: 1000;
-        transition: all 0.3s ease;
+        transition: var(--transition);
     }
 
     .navbar.scrolled {
         background: var(--dark-green);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     }
 
     .nav-container {
@@ -173,6 +148,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
+        flex-wrap: wrap;
     }
 
     /* Logo */
@@ -184,6 +160,7 @@
         color: white;
         font-weight: 600;
         font-size: 1.3rem;
+        flex-shrink: 0;
     }
 
     .nav-logo img {
@@ -200,6 +177,10 @@
         align-items: center;
         gap: 1.8rem;
         list-style: none;
+        margin: 0;
+        padding: 0;
+        flex: 1;
+        justify-content: center;
     }
 
     .nav-links a {
@@ -208,7 +189,8 @@
         font-weight: 500;
         padding: 6px 0;
         position: relative;
-        transition: color 0.3s ease;
+        transition: var(--transition);
+        white-space: nowrap;
     }
 
     .nav-links a::after {
@@ -220,6 +202,7 @@
         height: 2px;
         background: var(--yellow);
         transition: width 0.3s ease;
+        border-radius: 1px;
     }
 
     .nav-links a:hover,
@@ -242,6 +225,7 @@
         align-items: center;
         gap: 6px;
         cursor: pointer;
+        transition: var(--transition);
     }
 
     .dropdown-menu {
@@ -251,11 +235,30 @@
         left: 0;
         background: white;
         color: var(--green);
-        border-radius: 10px;
+        border-radius: var(--border-radius);
         min-width: 180px;
+        max-width: 280px;
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: var(--transition);
+        z-index: 1000;
+        /* Responsive positioning */
+        right: auto;
+        transform: none;
+    }
+
+    /* Adjust dropdown position on smaller screens */
+    @media (max-width: 1200px) {
+        .dropdown-menu {
+            min-width: 160px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dropdown-menu {
+            min-width: 140px;
+            max-width: 200px;
+        }
     }
 
     .dropdown:hover .dropdown-menu {
@@ -275,7 +278,8 @@
         font-size: 14px;
         cursor: pointer;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: var(--transition);
+        text-align: left;
     }
 
     .dropdown-menu a:hover,
@@ -294,15 +298,25 @@
         position: absolute;
         top: 120%;
         right: 0;
-        width: 250px;
+        width: 280px;
         max-height: 350px;
         overflow-y: auto;
         background: white;
         color: var(--green);
-        border-radius: 10px;
+        border-radius: var(--border-radius);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        z-index: 99;
-        transition: all 0.3s ease;
+        z-index: 1000;
+        transition: var(--transition);
+        /* Responsive adjustments */
+        max-width: 90vw;
+    }
+
+    /* Adjust notification dropdown on smaller screens */
+    @media (max-width: 480px) {
+        .notif-menu {
+            width: 250px;
+            right: -10px;
+        }
     }
 
     .notification-dropdown.open .notif-menu {
@@ -342,18 +356,22 @@
     .nav-right {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
+        flex-shrink: 0;
     }
 
     .icon-btn {
         position: relative;
         color: white;
         font-size: 1.3rem;
-        transition: color 0.3s ease;
+        transition: var(--transition);
+        padding: 8px;
+        border-radius: 50%;
     }
 
     .icon-btn:hover {
         color: var(--yellow);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .badge {
@@ -366,6 +384,17 @@
         font-weight: bold;
         border-radius: 50%;
         padding: 2px 5px;
+        min-width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .badge:empty,
+    .badge[data-count="0"] {
+        display: none;
     }
 
     /* Login Button */
@@ -376,12 +405,14 @@
         border-radius: 12px;
         font-weight: 700;
         text-decoration: none;
-        transition: 0.3s;
+        transition: var(--transition);
+        white-space: nowrap;
     }
 
     .login-btn:hover {
         background: #e6b800;
         color: white;
+        transform: translateY(-1px);
     }
 
     /* User Dropdown */
@@ -402,9 +433,16 @@
     /* Mobile */
     .menu-toggle {
         display: none;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         cursor: pointer;
         color: white;
+        padding: 6px;
+        border-radius: 4px;
+        transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .cart-dropdown {
@@ -416,14 +454,24 @@
         position: absolute;
         right: 0;
         top: 120%;
-        width: 300px;
+        width: 320px;
         max-height: 400px;
         overflow-y: auto;
         background: white;
-        border-radius: 10px;
+        border-radius: var(--border-radius);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        z-index: 100;
-        transition: all 0.3s ease;
+        z-index: 1000;
+        transition: var(--transition);
+        /* Responsive adjustments */
+        max-width: 90vw;
+    }
+
+    /* Adjust cart dropdown on smaller screens */
+    @media (max-width: 480px) {
+        .cart-menu {
+            width: 280px;
+            right: -10px;
+        }
     }
 
     .cart-dropdown.open .cart-menu {
@@ -495,19 +543,35 @@
 
 
     @media (max-width: 900px) {
+        .nav-container {
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+        }
+
+        .nav-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
         .nav-links {
-            position: absolute;
+            position: fixed;
             top: 90px;
             left: 0;
             width: 100%;
+            height: calc(100vh - 90px);
             flex-direction: column;
             background: var(--green);
-            padding: 20px 0;
-            gap: 1.5rem;
+            padding: 30px 20px;
+            gap: 2rem;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
+            transform: translateY(-20px);
+            transition: var(--transition);
+            overflow-y: auto;
+            z-index: 999;
         }
 
         .nav-links.show {
@@ -516,11 +580,24 @@
             transform: translateY(0);
         }
 
+        .nav-links li {
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-links a {
+            font-size: 1.1rem;
+            padding: 12px 0;
+            display: block;
+        }
+
         .dropdown-menu {
             position: static;
             display: none;
             background: var(--dark-green);
             box-shadow: none;
+            border-radius: 0;
+            margin-top: 10px;
         }
 
         .dropdown.open .dropdown-menu {
@@ -530,6 +607,8 @@
         .dropdown-menu a,
         .dropdown-menu button {
             color: white;
+            justify-content: center;
+            padding: 15px 20px;
         }
 
         .dropdown-menu a:hover,
@@ -538,8 +617,122 @@
             color: var(--green);
         }
 
+        .nav-right {
+            gap: 0.125rem;
+        }
+
+        .icon-btn {
+            font-size: 1.2rem;
+            padding: 6px;
+        }
+
+        .login-btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .user-btn img {
+            width: 35px;
+            height: 35px;
+        }
+
         .menu-toggle {
             display: block;
+            font-size: 1.5rem;
+            padding: 8px;
+        }
+
+        .notif-menu,
+        .cart-menu {
+            width: 100vw;
+            max-width: none;
+            left: 0;
+            right: 0;
+            border-radius: 0;
+            /* Ensure proper positioning on mobile */
+            position: fixed;
+            top: auto;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-height: 60vh;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .cart-menu {
+            width: 100vw;
+            max-width: none;
+            /* Mobile cart menu inherits the fixed positioning */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .navbar {
+            height: 70px;
+        }
+
+        .nav-links {
+            top: 70px;
+            height: calc(100vh - 70px);
+        }
+
+        .nav-container {
+            padding: 0.4rem 0.8rem;
+        }
+
+        .nav-logo {
+            font-size: 1rem;
+        }
+
+        .nav-logo img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .nav-links {
+            padding: 20px 15px;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            font-size: 1rem;
+            padding: 10px 0;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+
+        .icon-btn {
+            font-size: 1.1rem;
+            padding: 5px;
+        }
+
+        .login-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .user-btn img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .menu-toggle {
+            font-size: 1.2rem;
+            padding: 4px;
+        }
+
+        .badge {
+            font-size: 9px;
+            padding: 1px 4px;
+            min-width: 14px;
+            height: 14px;
+            top: -5px;
+            right: -6px;
         }
     }
 
@@ -586,27 +779,309 @@
 
     // Notification
     const notifBtn = document.querySelector('.notification-dropdown .dropbtn');
-    notifBtn.addEventListener('click', e => {
-        e.preventDefault();
-        notifBtn.parentElement.classList.toggle('open');
-    });
+    if (notifBtn) {
+        notifBtn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Close other dropdowns first
+            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                if (!dropdown.contains(notifBtn)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+            notifBtn.parentElement.classList.toggle('open');
+        });
+    }
+
+    // Cart dropdown
+    const cartBtn = document.querySelector('.cart-dropdown .dropbtn');
+    if (cartBtn) {
+        cartBtn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Close other dropdowns first
+            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                if (!dropdown.contains(cartBtn)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+            cartBtn.parentElement.classList.toggle('open');
+
+            // Load cart items when opening dropdown
+            if (cartBtn.parentElement.classList.contains('open')) {
+                loadCartItems();
+            }
+        });
+    }
+
+    // User dropdown
+    const userBtn = document.querySelector('.user-dropdown .dropbtn');
+    if (userBtn) {
+        userBtn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Close other dropdowns first
+            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                if (!dropdown.contains(userBtn)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+            userBtn.parentElement.classList.toggle('open');
+        });
+    }
+
+    // Close dropdowns when clicking outside
     document.addEventListener('click', e => {
-        if (!notifBtn.parentElement.contains(e.target)) {
+        // Close notification dropdown
+        if (notifBtn && !notifBtn.parentElement.contains(e.target)) {
             notifBtn.parentElement.classList.remove('open');
         }
-    });
-
-    //CArt
-
-    const cartBtn = document.querySelector('.cart-dropdown .dropbtn');
-    cartBtn.addEventListener('click', e => {
-        e.preventDefault();
-        cartBtn.parentElement.classList.toggle('open');
-    });
-
-    document.addEventListener('click', e => {
-        if (!cartBtn.parentElement.contains(e.target)) {
+        // Close cart dropdown
+        if (cartBtn && !cartBtn.parentElement.contains(e.target)) {
             cartBtn.parentElement.classList.remove('open');
         }
+        // Close user dropdown
+        if (userBtn && !userBtn.parentElement.contains(e.target)) {
+            userBtn.parentElement.classList.remove('open');
+        }
     });
+
+    // Prevent dropdown close when clicking inside cart menu
+    const cartMenu = document.getElementById('cartMenu');
+    if (cartMenu) {
+        cartMenu.addEventListener('click', e => {
+            e.stopPropagation();
+        });
+    }
+
+    // Initialize cart on page load
+    updateCartBadge();
+
+    // Listen for cart updates
+    document.addEventListener('cartUpdated', function() {
+        updateCartBadge();
+    });
+
+    // Function to update cart badge
+    function updateCartBadge() {
+        // First try AJAX for logged-in users
+        fetch("/keranjang/get", {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                credentials: 'same-origin'
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const badge = document.getElementById("cartBadge");
+                if (badge) {
+                    const count = data.total_items || 0;
+                    badge.textContent = count;
+                    badge.setAttribute('data-count', count);
+                    if (count === 0) {
+                        badge.style.display = 'none';
+                    } else {
+                        badge.style.display = 'flex';
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error("Error updating cart badge:", error);
+                // Fallback: try to get from session storage for guest users
+                try {
+                    const sessionCart = sessionStorage.getItem("keranjang");
+                    if (sessionCart) {
+                        const cart = JSON.parse(sessionCart);
+                        const total = Object.values(cart).reduce(
+                            (sum, item) => sum + (item.jumlah || 0),
+                            0
+                        );
+                        const badge = document.getElementById("cartBadge");
+                        if (badge) {
+                            badge.textContent = total;
+                            badge.setAttribute('data-count', total);
+                            if (total === 0) {
+                                badge.style.display = 'none';
+                            } else {
+                                badge.style.display = 'flex';
+                            }
+                        }
+                    } else {
+                        // No session cart, set to 0
+                        const badge = document.getElementById("cartBadge");
+                        if (badge) {
+                            badge.textContent = "0";
+                            badge.setAttribute('data-count', '0');
+                            badge.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Fallback cart count failed:", e);
+                    // Set to 0 if all fails
+                    const badge = document.getElementById("cartBadge");
+                    if (badge) {
+                        badge.textContent = "0";
+                        badge.setAttribute('data-count', '0');
+                        badge.style.display = 'none';
+                    }
+                }
+            });
+    }
+
+    // Function to load cart items for dropdown
+    function loadCartItems() {
+        fetch("/keranjang/get", {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                credentials: 'same-origin'
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const cartMenu = document.getElementById("cartMenu");
+                if (!cartMenu) return;
+
+                // Update badge first
+                const badge = document.getElementById("cartBadge");
+                if (badge) {
+                    const count = data.total_items || 0;
+                    badge.textContent = count;
+                    badge.setAttribute('data-count', count);
+                    if (count === 0) {
+                        badge.style.display = 'none';
+                    } else {
+                        badge.style.display = 'flex';
+                    }
+                }
+
+                if (data.items && data.items.length > 0) {
+                    let html = "";
+                    data.items.forEach((item) => {
+                        html += `
+                        <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
+                            <img src="${item.gambar ? "/storage/" + item.gambar : "/images/no-image.jpg"}" alt="${item.nama}"
+                                class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
+                            <div class="cart-info flex-grow-1">
+                                <span class="cart-name fw-bold">${item.nama}</span>
+                                ${item.variasi ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>` : ''}
+                                <span class="cart-qty text-muted">x${item.jumlah}</span>
+                                <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format((item.harga || 0) * (item.jumlah || 1))}</span>
+                            </div>
+                        </li>
+                    `;
+                    });
+                    html += `
+                    <li class="cart-footer d-flex justify-content-between p-2">
+                        <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
+                        <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
+                    </li>
+                `;
+                    cartMenu.innerHTML = html;
+                } else {
+                    cartMenu.innerHTML = '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading cart items:", error);
+                // Fallback: try to get from session storage for guest users
+                try {
+                    const sessionCart = sessionStorage.getItem("keranjang");
+                    if (sessionCart) {
+                        const cart = JSON.parse(sessionCart);
+                        const cartMenu = document.getElementById("cartMenu");
+                        if (cartMenu) {
+                            // Update badge from session
+                            const total = Object.values(cart).reduce(
+                                (sum, item) => sum + (item.jumlah || 0),
+                                0
+                            );
+                            const badge = document.getElementById("cartBadge");
+                            if (badge) {
+                                badge.textContent = total;
+                                badge.setAttribute('data-count', total);
+                                if (total === 0) {
+                                    badge.style.display = 'none';
+                                } else {
+                                    badge.style.display = 'flex';
+                                }
+                            }
+
+                            if (Object.keys(cart).length > 0) {
+                                let html = "";
+                                Object.values(cart).forEach((item) => {
+                                    html += `
+                                    <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
+                                        <img src="${item.gambar ? '/storage/' + item.gambar : '/images/no-image.jpg'}" alt="${item.nama}"
+                                            class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
+                                        <div class="cart-info flex-grow-1">
+                                            <span class="cart-name fw-bold">${item.nama}</span>
+                                            ${item.variasi ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>` : ''}
+                                            <span class="cart-qty text-muted">x${item.jumlah || 1}</span>
+                                            <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format((item.harga || 0) * (item.jumlah || 1))}</span>
+                                        </div>
+                                    </li>
+                                `;
+                                });
+                                html += `
+                                <li class="cart-footer d-flex justify-content-between p-2">
+                                    <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
+                                    <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
+                                </li>
+                            `;
+                                cartMenu.innerHTML = html;
+                            } else {
+                                cartMenu.innerHTML =
+                                    '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                            }
+                        }
+                    } else {
+                        // No session cart
+                        const cartMenu = document.getElementById("cartMenu");
+                        if (cartMenu) {
+                            cartMenu.innerHTML =
+                                '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                        }
+                        // Set badge to 0
+                        const badge = document.getElementById("cartBadge");
+                        if (badge) {
+                            badge.textContent = "0";
+                            badge.setAttribute('data-count', '0');
+                            badge.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Fallback cart loading failed:", e);
+                    // Set empty cart if all fails
+                    const cartMenu = document.getElementById("cartMenu");
+                    if (cartMenu) {
+                        cartMenu.innerHTML = '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                    }
+                    // Set badge to 0
+                    const badge = document.getElementById("cartBadge");
+                    if (badge) {
+                        badge.textContent = "0";
+                    }
+                }
+            });
+    }
 </script>

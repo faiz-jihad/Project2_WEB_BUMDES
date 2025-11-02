@@ -17,7 +17,21 @@
     <link rel="stylesheet" href="<?php echo e(asset('css/navbar.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/input.css')); ?>">
 
+    <!-- Custom JS -->
+    <script src="<?php echo e(asset('js/navbar.js')); ?>" defer></script>
+
+    <!-- Laravel Notify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css">
+    <script src="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/js/notify.js"></script>
+
+    <!-- CSRF Token for AJAX -->
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+
     <title><?php echo $__env->yieldContent('title', config('app.name')); ?></title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?php echo e(asset('images/Bumdes.jpg')); ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('images/Bumdes.jpg')); ?>">
 
     <style>
         /* === PRELOADER STYLE === */

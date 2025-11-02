@@ -27,31 +27,37 @@ class SocialiteController extends Controller
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
             return redirect('/login')->withErrors([
-                'msg' => 'Gagal login dengan ' . ucfirst($provider)
+                'msg' => 'Gagal login dengan ' . ucfirst($provider) . '. Silakan coba lagi.'
             ]);
         }
 
-        // Ambil data user
-        $name = $socialUser->getName() ?? $socialUser->getNickname() ?? 'No Name';
-        $email = $socialUser->getEmail() ?? 'noemail_' . $socialUser->getId() . '@example.com';
-        $avatar = $socialUser->getAvatar();
+        $existingUser = User::where('email', $socialUser->getEmail())->first();
 
-        $user = User::updateOrCreate(
-            [
-                'provider' => $provider,
-                'provider_id' => $socialUser->getId(),
-            ],
-            [
-                'name' => $socialUser->getName() ?? 'No Name',
+        if ($existingUser) {
+            if ($existingUser->provider !== $provider) {
+                $existingUser->update([
+                    'provider' => $provider,
+                    'provider_id' => $socialUser->getId(),
+                    'avatar' => $socialUser->getAvatar() ?? $existingUser->avatar,
+                ]);
+            }
+            $user = $existingUser;
+        } else {
+            $user = User::create([
+                'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'No Name',
                 'email' => $socialUser->getEmail() ?? 'noemail_' . $socialUser->getId() . '@example.com',
                 'email_verified_at' => now(),
                 'password' => bcrypt(Str::random(16)),
                 'avatar' => $socialUser->getAvatar(),
-            ]
-        );
+                'provider' => $provider,
+                'provider_id' => $socialUser->getId(),
+            ]);
+        }
 
-        Auth::login($user);
+        // Login r user
+        Auth::login($user, true); // Remember the user
 
-        return redirect('/beranda');
+        // Redirect to intended page or beranda
+        return redirect()->intended('/beranda');
     }
 }

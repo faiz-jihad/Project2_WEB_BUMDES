@@ -52,9 +52,15 @@
                             target="_blank" class="btn-hubungi">
                             <i class="bi bi-whatsapp"></i> Hubungi Kami
                         </a>
-                        <button class="btn-keranjang" id="addToCartBtn" data-id="{{ $produk->id }}">
-                            Tambah ke Keranjang
-                        </button>
+                        @auth
+                            <button class="btn-keranjang" id="addToCartBtn" data-id="{{ $produk->id }}">
+                                Tambah ke Keranjang
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}" class="btn-login-detail">
+                                <i class="bi bi-person"></i> Login untuk Tambah Keranjang
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>
@@ -240,6 +246,26 @@
             transform: translateY(-2px);
         }
 
+        .btn-login-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-login-detail:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
             .produk-detail-grid {
@@ -281,11 +307,15 @@
             const produkId = this.getAttribute('data-id');
             const variasi = document.getElementById('variasi') ? document.getElementById('variasi').value : '';
 
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="bi bi-hourglass-split"></i> Menambahkan...';
+
             fetch("{{ route('keranjang.tambah') }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
                         produk_id: produkId,
@@ -294,9 +324,40 @@
                 })
                 .then(res => res.json())
                 .then(data => {
+                    // Reset button state
+                    this.disabled = false;
+                    this.innerHTML = 'Tambah ke Keranjang';
+
                     if (data.success) {
-                        alert('Produk berhasil ditambahkan ke keranjang!');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Produk berhasil ditambahkan ke keranjang!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        // Trigger cart update event for real-time navbar update
+                        document.dispatchEvent(new CustomEvent('cartUpdated'));
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.message || 'Gagal menambahkan produk ke keranjang.'
+                        });
                     }
+                })
+                .catch(error => {
+                    // Reset button state
+                    this.disabled = false;
+                    this.innerHTML = 'Tambah ke Keranjang';
+
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.'
+                    });
                 });
         });
     </script>

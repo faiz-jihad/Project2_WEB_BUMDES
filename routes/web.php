@@ -6,10 +6,9 @@ use App\Http\Controllers\{
     Auth\AuthenticatedSessionController,
     HomeController,
     ProdukController,
-    BeritaController,
+    // BeritaController,
     Auth\RegisteredUserController,
     Auth\SocialiteController,
-
 };
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
@@ -19,17 +18,21 @@ use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\IotController;
+use App\Http\Controllers\Penulis\BeritaController;
+
+// Moved to auth middleware group below
+
+Route::get('/iot', [App\Http\Controllers\iotController::class, 'index'])->name('iot.index');
+
+Route::get('/about', [BeritaController::class, 'index'])->name('about');
 
 
-Route::get('/iot', [App\Http\Controllers\iotController::class, 'index']);
-
+// Route::view('/penulis', 'pages.penulis.dashboardpenulis')->name('welcome');
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
-Route::get('/beranda', [HomeController::class, 'index']);
 
 // Static pages
-Route::view('/about', 'pages.about')->name('about');
 Route::view('/services', 'pages.services')->name('services');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/akun', 'pages.akun')->name('akun');
@@ -57,6 +60,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard choice for admin/penulis
+    Route::get('/dashboard-choice', [DashboardController::class, 'choice'])->name('dashboard.choice');
+    Route::post('/dashboard/admin', [DashboardController::class, 'goToAdmin'])->name('dashboard.admin');
+    Route::post('/dashboard/home', [DashboardController::class, 'goToHome'])->name('dashboard.home');
+
+    // Penulis routes - only for penulis role
+    Route::middleware('role:penulis')->group(function () {
+        Route::get('/penulis/dashboard', [\App\Http\Controllers\Penulis\BeritaController::class, 'index'])->name('penulis.dashboard');
+        Route::get('/penulis/berita', [\App\Http\Controllers\Penulis\BeritaController::class, 'index'])->name('penulis.berita.index');
+        Route::post('/penulis/berita', [\App\Http\Controllers\Penulis\BeritaController::class, 'store'])->name('penulis.berita.store');
+        Route::put('/penulis/berita/{id}', [\App\Http\Controllers\Penulis\BeritaController::class, 'update'])->name('penulis.berita.update');
+    });
 });
 
 // Produk routes
@@ -64,18 +80,15 @@ Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/iot', [iotController::class, 'index']);
-});
-
-
 
 // Berita
-Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
-Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
+Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
+Route::get('/berita/kategori/{slug}', [App\Http\Controllers\BeritaController::class, 'kategori'])->name('berita.kategori');
+Route::get('/berita/{slug}', [App\Http\Controllers\BeritaController::class, 'show'])->name('berita.show');
 
 // Keranjang
 Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+Route::get('/keranjang/get', [KeranjangController::class, 'get'])->name('keranjang.get');
 Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
 Route::post('/keranjang/hapus', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
 Route::post('/keranjang/update-jumlah', [KeranjangController::class, 'updateJumlah'])->name('keranjang.updateJumlah');
@@ -97,10 +110,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
-Route::post('/pump', [DashboardController::class, 'controlPump'])->name('pump.control');
-
-Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
 
 
 // Auth scaffolding routes

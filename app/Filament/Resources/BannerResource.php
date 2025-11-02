@@ -18,13 +18,15 @@ class BannerResource extends Resource
     protected static ?string $model = Banner::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
+    protected static ?string $navigationGroup = 'Berita';
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('id_berita')
-                    ->relationship('berita', 'judul')
+                    ->relationship('berita', 'Judul')
                     ->label('Berita')
                     ->required(),
             ]);
@@ -34,7 +36,7 @@ class BannerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('berita.judul')->label('Judul Berita'),
+                Tables\Columns\TextColumn::make('berita.Judul')->label('Judul Berita'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i'),

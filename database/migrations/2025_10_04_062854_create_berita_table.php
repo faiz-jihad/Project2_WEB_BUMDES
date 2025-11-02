@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('id_kategori');
             $table->string('Judul');
             $table->string('slug')->unique();
-            $table->string('Thumbnail');
+            $table->string('Thumbnail')->nullable();
             $table->longText('Isi_Berita');
             $table->timestamps();
         });

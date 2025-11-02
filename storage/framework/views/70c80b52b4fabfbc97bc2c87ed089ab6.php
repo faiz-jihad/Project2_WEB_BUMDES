@@ -70,13 +70,22 @@
                                     <h3><?php echo e($item->nama); ?></h3>
                                     <p><?php echo e(Str::limit($item->deskripsi, 90)); ?></p>
                                     <span class="harga">Rp <?php echo e(number_format($item->harga, 0, ',', '.')); ?></span>
-                                    <button class="produk-btn lihat-detail" data-bs-toggle="modal"
-                                        data-bs-target="#produkModal" data-nama="<?php echo e($item->nama); ?>"
-                                        data-deskripsi="<?php echo e($item->deskripsi); ?>"
-                                        data-harga="Rp <?php echo e(number_format($item->harga, 0, ',', '.')); ?>"
-                                        data-gambar="<?php echo e(asset('storage/' . $item->gambar)); ?>">
-                                        Lihat Detail
-                                    </button>
+                                    <div class="produk-actions">
+                                        <a href="<?php echo e(route('produk.show', $item->id)); ?>" class="produk-btn lihat-detail">
+                                            Lihat Detail
+                                        </a>
+                                        <?php if(auth()->guard()->check()): ?>
+                                            <button class="produk-btn btn-keranjang-home" data-id="<?php echo e($item->id); ?>"
+                                                data-nama="<?php echo e($item->nama); ?>" data-harga="<?php echo e($item->harga); ?>"
+                                                data-gambar="<?php echo e($item->gambar); ?>">
+                                                <i class="bi bi-cart-plus"></i> Keranjang
+                                            </button>
+                                        <?php else: ?>
+                                            <a href="<?php echo e(route('login')); ?>" class="produk-btn btn-login">
+                                                <i class="bi bi-person"></i> Login untuk Tambah Keranjang
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -127,21 +136,47 @@
                     <p class="text-muted">Kabar terbaru seputar kegiatan dan inovasi BUMDes Madusari.</p>
                 </div>
                 <div class="row g-4">
-                    <?php $__currentLoopData = [['Panen Raya Berhasil Meningkatkan Produksi Desa', 'berita1.jpg', 'Panen padi tahun ini mencapai rekor tertinggi di wilayah Bayalangu Kidul.'], ['Program UMKM Desa Resmi Diluncurkan', 'berita2.jpg', 'Program baru BUMDes yang mendukung pelaku UMKM dengan pendanaan dan pelatihan.'], ['Kerjasama Baru dengan BUMN untuk Energi Hijau', 'berita3.jpg', 'BUMDes Madusari menandatangani MoU dengan BUMN untuk proyek energi terbarukan.']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $berita): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="col-md-4" data-aos="fade-up">
-                            <div class="card border-0 shadow-lg rounded-4 overflow-hidden hover-float h-100">
-                                <img src="<?php echo e(asset('images/' . $berita[1])); ?>" loading="lazy" class="card-img-top"
-                                    alt="<?php echo e($berita[0]); ?>">
-                                <div class="card-body">
-                                    <h5 class="fw-bold"><?php echo e($berita[0]); ?></h5>
-                                    <p class="text-muted small"><?php echo e($berita[2]); ?></p>
-                                    <a href="<?php echo e(url('/berita')); ?>"
-                                        class="btn btn-outline-success rounded-pill btn-sm mt-2">Baca
-                                        Selengkapnya</a>
+                    <?php if(isset($banners) && $banners->count() > 0): ?>
+                        <?php $__currentLoopData = $banners->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $banner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="col-md-4" data-aos="fade-up">
+                                <div class="card border-0 shadow-lg rounded-4 overflow-hidden hover-float h-100">
+                                    <?php if($banner->berita && $banner->berita->Thumbnail): ?>
+                                        <img src="<?php echo e(asset('storage/' . $banner->berita->Thumbnail)); ?>" loading="lazy"
+                                            class="card-img-top" alt="<?php echo e($banner->berita->Judul); ?>">
+                                    <?php else: ?>
+                                        <img src="<?php echo e(asset('images/berita1.jpg')); ?>" loading="lazy" class="card-img-top"
+                                            alt="Berita BUMDes">
+                                    <?php endif; ?>
+                                    <div class="card-body">
+                                        <h5 class="fw-bold">
+                                            <?php echo e($banner->berita ? $banner->berita->Judul : 'Judul Berita'); ?></h5>
+                                        <p class="text-muted small">
+                                            <?php echo e($banner->berita ? Str::limit($banner->berita->Isi_Berita, 100) : 'Deskripsi berita akan muncul di sini.'); ?>
+
+                                        </p>
+                                        <a href="<?php echo e($banner->berita ? route('berita.show', $banner->berita->slug) : url('/berita')); ?>"
+                                            class="btn btn-outline-success rounded-pill btn-sm mt-2">Baca Selengkapnya</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php else: ?>
+                        <?php $__currentLoopData = [['Panen Raya Berhasil Meningkatkan Produksi Desa', 'berita1.jpg', 'Panen padi tahun ini mencapai rekor tertinggi di wilayah Bayalangu Kidul.'], ['Program UMKM Desa Resmi Diluncurkan', 'berita2.jpg', 'Program baru BUMDes yang mendukung pelaku UMKM dengan pendanaan dan pelatihan.'], ['Kerjasama Baru dengan BUMN untuk Energi Hijau', 'berita3.jpg', 'BUMDes Madusari menandatangani MoU dengan BUMN untuk proyek energi terbarukan.']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $berita): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="col-md-4" data-aos="fade-up">
+                                <div class="card border-0 shadow-lg rounded-4 overflow-hidden hover-float h-100">
+                                    <img src="<?php echo e(asset('images/' . $berita[1])); ?>" loading="lazy" class="card-img-top"
+                                        alt="<?php echo e($berita[0]); ?>">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold"><?php echo e($berita[0]); ?></h5>
+                                        <p class="text-muted small"><?php echo e($berita[2]); ?></p>
+                                        <a href="<?php echo e(url('/berita')); ?>"
+                                            class="btn btn-outline-success rounded-pill btn-sm mt-2">Baca
+                                            Selengkapnya</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
@@ -176,15 +211,25 @@
             <div class="container">
                 <h2 class="fw-bold text-success mb-4" data-aos="zoom-in">Galeri Kegiatan Terbaru</h2>
 
-                <div class="galeri-masonry">
-                    <?php $__currentLoopData = $galeriHome; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="galeri-item" data-aos="zoom-in">
-                            <a href="<?php echo e(asset('storage/' . $item->gambar)); ?>" data-lightbox="galeri">
-                                <img src="<?php echo e(asset('storage/' . $item->gambar)); ?>" loading="lazy"
-                                    class="img-fluid rounded-3 shadow-sm hover-scale" alt="<?php echo e($item->judul); ?>">
-                            </a>
-                        </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <!-- Swiper Container -->
+                <div class="swiper galeri-swiper">
+                    <div class="swiper-wrapper">
+                        <?php $__currentLoopData = $galeriHome; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="swiper-slide">
+                                <div class="galeri-item" data-aos="zoom-in">
+                                    <a href="<?php echo e(asset('storage/' . $item->gambar)); ?>" data-lightbox="galeri">
+                                        <img src="<?php echo e(asset('storage/' . $item->gambar)); ?>" loading="lazy"
+                                            class="img-fluid rounded-3 shadow-sm hover-scale" alt="<?php echo e($item->judul); ?>">
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                    <!-- Navigation arrows -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <!-- Pagination -->
+                    <div class="swiper-pagination"></div>
                 </div>
 
                 <div class="mt-4">
@@ -222,11 +267,16 @@
     
     <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     
     <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script defer>
         function showProdukModal(produk) {
@@ -300,6 +350,113 @@
             AOS.init({
                 once: true,
                 duration: 1000
+            });
+
+            // Initialize Swiper for Galeri
+            const galeriSwiper = new Swiper('.galeri-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    576: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                    992: {
+                        slidesPerView: 4,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // SweetAlert untuk success messages
+            <?php if(session('success')): ?>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '<?php echo e(session('success')); ?>',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            <?php endif; ?>
+
+            // Add to cart functionality for homepage products
+            document.querySelectorAll('.btn-keranjang-home').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const produkId = this.getAttribute('data-id');
+                    const produkNama = this.getAttribute('data-nama');
+
+                    // Show loading state
+                    this.disabled = true;
+                    this.innerHTML = '<i class="bi bi-hourglass-split"></i> Menambahkan...';
+
+                    fetch("<?php echo e(route('keranjang.tambah')); ?>", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                produk_id: produkId,
+                                variasi: null
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            // Reset button state
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-cart-plus"></i> Keranjang';
+
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: `${produkNama} berhasil ditambahkan ke keranjang!`,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+
+                                // Trigger cart update event for real-time navbar update
+                                document.dispatchEvent(new CustomEvent('cartUpdated'));
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    text: data.message ||
+                                        'Gagal menambahkan produk ke keranjang.'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            // Reset button state
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-cart-plus"></i> Keranjang';
+
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.'
+                            });
+                        });
+                });
             });
         });
     </script>
@@ -431,7 +588,13 @@
             color: var(--green-dark);
             font-weight: 700;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .produk-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .produk-btn {
@@ -443,11 +606,44 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 100px;
+            text-decoration: none;
+            text-align: center;
         }
 
         .produk-btn:hover {
             background: var(--green-dark);
             transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-keranjang-home {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-keranjang-home:hover {
+            background: #e0a800;
+            color: #333;
+        }
+
+        .btn-keranjang-home:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-login {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #5a6268;
+            color: white;
         }
 
 
@@ -492,45 +688,87 @@
             background: #146c43;
         }
 
-        .galeri-masonry {
-            column-count: 4;
-            column-gap: 1rem;
+        /* Swiper Galeri Styles */
+        .galeri-swiper {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+
+        .galeri-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .galeri-item {
-            break-inside: avoid;
-            margin-bottom: 1rem;
+            width: 100%;
+            height: 250px;
             overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .galeri-item img {
             width: 100%;
-            display: block;
-            border-radius: 0.5rem;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
 
+        .galeri-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
         .galeri-item:hover img {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
         }
 
-        @media (max-width: 1200px) {
-            .galeri-masonry {
-                column-count: 3;
+        /* Swiper Navigation Customization */
+        .galeri-swiper .swiper-button-next,
+        .galeri-swiper .swiper-button-prev {
+            color: var(--green);
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+        }
+
+        .galeri-swiper .swiper-button-next:after,
+        .galeri-swiper .swiper-button-prev:after {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .galeri-swiper .swiper-pagination {
+            bottom: -40px;
+        }
+
+        .galeri-swiper .swiper-pagination-bullet {
+            background: var(--green);
+            opacity: 0.5;
+        }
+
+        .galeri-swiper .swiper-pagination-bullet-active {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .galeri-swiper {
+                height: 250px;
             }
-        }
 
-        @media (max-width: 992px) {
-            .galeri-masonry {
-                column-count: 2;
+            .galeri-item {
+                height: 200px;
             }
-        }
 
-        @media (max-width: 576px) {
-            .galeri-masonry {
-                column-count: 1;
+            .galeri-swiper .swiper-button-next,
+            .galeri-swiper .swiper-button-prev {
+                width: 35px;
+                height: 35px;
             }
         }
     </style>

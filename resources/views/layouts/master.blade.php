@@ -17,7 +17,21 @@
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/input.css') }}">
 
+    <!-- Custom JS -->
+    <script src="{{ asset('js/navbar.js') }}" defer></script>
+
+    <!-- Laravel Notify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css">
+    <script src="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/js/notify.js"></script>
+
+    <!-- CSRF Token for AJAX -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', config('app.name'))</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/Bumdes.jpg') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Bumdes.jpg') }}">
 
     <style>
         /* === PRELOADER STYLE === */
