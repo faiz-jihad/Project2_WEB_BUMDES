@@ -13,9 +13,9 @@
             <div class="header-card">
                 <h1 class="header-title">
                     <i class="bi bi-newspaper"></i>
-                    Content Management Portal
+                    Manajemen Berita Saya
                 </h1>
-                <p class="header-subtitle">Create, manage and publish engaging content for your audience</p>
+                <p class="header-subtitle">Buat Beritamu Sekarang</p>
             </div>
 
             <!-- Info Cards Section -->

@@ -9,10 +9,10 @@
             <div class="nota-wrapper">
                 <div class="nota-header">
                     <div class="logo-section">
-                        <img src="{{ asset('images/bumn.png') }}" alt="BUMDes Madusari" class="logo">
+                        <img src="{{ asset('images/bumdes.jpg') }}" alt="BUMDes Madusari" class="logo">
                         <div>
                             <h1>BUMDes Madusari</h1>
-                            <p>Desa Madusari, Kecamatan Jatirejo, Kabupaten Mojokerto</p>
+                            <p>Desa Bayalangu Kidul, Kecamatan Gegesik, Cirebon</p>
                         </div>
                     </div>
                     <div class="nota-info">
@@ -153,16 +153,16 @@
     {{-- CSS --}}
     <style>
         .nota-section {
-            padding: 20px;
+            padding: 10px;
             background: #f8fff9;
             min-height: 100vh;
         }
 
         .nota-wrapper {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             background: #fff;
-            padding: 30px;
+            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
@@ -271,6 +271,16 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .order-table thead,
+        .order-table tbody,
+        .order-table tfoot {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
         }
 
         .order-table th,
@@ -278,6 +288,7 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #eaeaea;
+            word-wrap: break-word;
         }
 
         .order-table th {
@@ -335,6 +346,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn-print,
@@ -345,6 +357,8 @@
             font-weight: 600;
             display: inline-block;
             transition: 0.3s;
+            min-width: 120px;
+            text-align: center;
         }
 
         .btn-print {
@@ -365,6 +379,128 @@
 
         .btn-back:hover {
             background: #5a6268;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nota-section {
+                padding: 5px;
+            }
+
+            .nota-wrapper {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .nota-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .logo-section {
+                justify-content: center;
+            }
+
+            .nota-info h2 {
+                font-size: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .order-table {
+                font-size: 0.9rem;
+            }
+
+            .order-table th,
+            .order-table td {
+                padding: 8px 4px;
+            }
+
+            .product-info {
+                max-width: 150px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-print,
+            .btn-back {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nota-wrapper {
+                padding: 10px;
+            }
+
+            .nota-header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .logo-section h1 {
+                font-size: 1.3rem;
+            }
+
+            .logo-section p {
+                font-size: 0.8rem;
+            }
+
+            .nota-info h2 {
+                font-size: 1.3rem;
+            }
+
+            .nota-info p {
+                font-size: 0.9rem;
+            }
+
+            .customer-info h3,
+            .order-details h3,
+            .payment-info h3,
+            .notes h3 {
+                font-size: 1rem;
+            }
+
+            .order-table {
+                font-size: 0.8rem;
+            }
+
+            .order-table th,
+            .order-table td {
+                padding: 6px 2px;
+            }
+
+            .bank-info {
+                padding: 10px;
+            }
+
+            .nota-footer {
+                margin-top: 30px;
+                padding-top: 15px;
+            }
+
+            .thank-you p {
+                font-size: 0.9rem;
+            }
+
+            .btn-print,
+            .btn-back {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
         }
 
         @media print {

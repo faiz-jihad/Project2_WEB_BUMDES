@@ -12,7 +12,6 @@ class KeranjangController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            // Jika user login, ambil dari database
             $keranjangItems = Keranjang::where('user_id', Auth::id())
                 ->with('produk')
                 ->get();
@@ -33,7 +32,6 @@ class KeranjangController extends Controller
                 $total += $item->produk->harga * $item->jumlah;
             }
         } else {
-            // Jika tidak login, ambil dari session
             $keranjang = session()->get('keranjang', []);
             $total = 0;
             foreach ($keranjang as $item) {
@@ -54,7 +52,6 @@ class KeranjangController extends Controller
         $produk = Produk::findOrFail($request->produk_id);
 
         if (Auth::check()) {
-            // Jika user login, simpan ke database
             $existingItem = Keranjang::where('user_id', Auth::id())
                 ->where('produk_id', $produk->id)
                 ->where('variasi', $request->variasi ?? null)
@@ -104,15 +101,28 @@ class KeranjangController extends Controller
     public function hapus(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
-            'variasi' => 'nullable|string'
+            'id' => 'required|string'
         ]);
 
+        $id = $request->id;
+
         if (Auth::check()) {
-            // Jika user login, hapus dari database
+            $produkId = $id;
+            $variasi = null;
+            if (!is_numeric($id)) {
+                $keranjangItem = Keranjang::where('user_id', Auth::id())
+                    ->whereRaw("CONCAT(produk_id, COALESCE(variasi, '')) = ?", [$id])
+                    ->first();
+
+                if ($keranjangItem) {
+                    $produkId = $keranjangItem->produk_id;
+                    $variasi = $keranjangItem->variasi;
+                }
+            }
+
             $keranjangItem = Keranjang::where('user_id', Auth::id())
-                ->where('produk_id', $request->id)
-                ->where('variasi', $request->variasi ?? null)
+                ->where('produk_id', $produkId)
+                ->where('variasi', $variasi)
                 ->first();
 
             if ($keranjangItem) {
@@ -125,7 +135,6 @@ class KeranjangController extends Controller
         } else {
             // Jika tidak login, hapus dari session
             $keranjang = session()->get('keranjang', []);
-            $id = $request->id . ($request->variasi ?? '');
 
             if (isset($keranjang[$id])) {
                 unset($keranjang[$id]);
@@ -182,43 +191,51 @@ class KeranjangController extends Controller
     public function updateJumlah(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
-            'jumlah' => 'required|integer|min:1',
-            'variasi' => 'nullable|string'
+            'id' => 'required|string',
+            'jumlah' => 'required|integer|min:1'
         ]);
 
+        $id = $request->id;
+        $jumlah = $request->jumlah;
+
         if (Auth::check()) {
-            // Jika user login, update di database
+            // Parse ID untuk mendapatkan produk_id dan variasi
+            $produkId = $id;
+            $variasi = null;
+
+            // Jika ID mengandung variasi (biasanya ada karakter non-numeric di akhir)
+            if (!is_numeric($id)) {
+                // Cari produk dengan ID yang cocok
+                $keranjangItem = Keranjang::where('user_id', Auth::id())
+                    ->whereRaw("CONCAT(produk_id, COALESCE(variasi, '')) = ?", [$id])
+                    ->first();
+
+                if ($keranjangItem) {
+                    $produkId = $keranjangItem->produk_id;
+                    $variasi = $keranjangItem->variasi;
+                }
+            }
+
+            // Update di database
             $keranjangItem = Keranjang::where('user_id', Auth::id())
-                ->where('produk_id', $request->id)
-                ->where('variasi', $request->variasi ?? null)
+                ->where('produk_id', $produkId)
+                ->where('variasi', $variasi)
                 ->first();
 
             if ($keranjangItem) {
-                $keranjangItem->update(['jumlah' => $request->jumlah]);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Jumlah produk berhasil diperbarui'
-                ]);
+                $keranjangItem->update(['jumlah' => $jumlah]);
+                return response()->json(['success' => true]);
             }
         } else {
-            // Jika tidak login, update di session
+            // Update di session
             $keranjang = session()->get('keranjang', []);
-            $id = $request->id . ($request->variasi ?? '');
-
             if (isset($keranjang[$id])) {
-                $keranjang[$id]['jumlah'] = $request->jumlah;
+                $keranjang[$id]['jumlah'] = $jumlah;
                 session()->put('keranjang', $keranjang);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Jumlah produk berhasil diperbarui'
-                ]);
+                return response()->json(['success' => true]);
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Produk tidak ditemukan di keranjang'
-        ]);
+        return response()->json(['success' => false], 400);
     }
 }

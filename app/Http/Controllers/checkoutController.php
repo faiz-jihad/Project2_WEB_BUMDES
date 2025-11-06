@@ -29,7 +29,7 @@ class CheckoutController extends Controller
                     'id' => $item->produk_id,
                     'nama' => $item->produk->nama,
                     'harga' => $item->produk->harga,
-                    'gambar' => $item->produk->gambar,
+                    'gambar' => $item->produk->gambar ? asset('storage/' . $item->produk->gambar) : asset('images/no-image.jpg'),
                     'variasi' => $item->variasi,
                     'jumlah' => $item->jumlah,
                 ];
@@ -39,7 +39,8 @@ class CheckoutController extends Controller
             // Jika tidak login, ambil dari session
             $keranjang = session()->get('keranjang', []);
             $total = 0;
-            foreach ($keranjang as $item) {
+            foreach ($keranjang as $key => $item) {
+                $keranjang[$key]['gambar'] = $item['gambar'] ? asset('storage/' . $item['gambar']) : asset('images/no-image.jpg');
                 $total += $item['harga'] * $item['jumlah'];
             }
         }
@@ -74,6 +75,7 @@ class CheckoutController extends Controller
                     'produk_id' => $item->produk_id,
                     'nama' => $item->produk->nama,
                     'harga' => $item->produk->harga,
+                    'gambar' => $item->produk->gambar ? asset('storage/' . $item->produk->gambar) : asset('images/no-image.jpg'),
                     'jumlah' => $item->jumlah,
                     'variasi' => $item->variasi,
                     'subtotal' => $item->produk->harga * $item->jumlah,
@@ -116,6 +118,7 @@ class CheckoutController extends Controller
                     'produk_id' => $item['id'],
                     'nama' => $item['nama'],
                     'harga' => $item['harga'],
+                    'gambar' => asset('storage/' . $item['gambar']),
                     'jumlah' => $item['jumlah'],
                     'variasi' => $item['variasi'] ?? null,
                     'subtotal' => $item['harga'] * $item['jumlah'],

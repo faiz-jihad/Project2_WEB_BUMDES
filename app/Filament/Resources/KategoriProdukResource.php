@@ -24,6 +24,8 @@ class KategoriProdukResource extends Resource
     protected static ?string $modelLabel = 'Kategori Produk';
 
     protected static ?string $pluralModelLabel = 'Kategori Produk';
+        protected static ?string $navigationGroup = 'Produk';
+
 
     public static function form(Form $form): Form
     {

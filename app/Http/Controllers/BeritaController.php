@@ -74,6 +74,8 @@ class BeritaController extends Controller
         return view('pages.Berita', compact('berita', 'kategori', 'kategoriBerita', 'populer', 'search'));
     }
 
+
+
     public function show($slug)
     {
         $berita = Berita::with('kategoriBerita', 'penulis')

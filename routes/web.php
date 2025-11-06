@@ -21,17 +21,18 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\Penulis\BeritaController as PenulisBeritaController;
 use App\Http\Controllers\PesananController;
 
-// Moved to auth middleware group below
 
 Route::get('/iot', [App\Http\Controllers\iotController::class, 'index'])->name('iot.index');
 
 Route::get('/about', [BeritaController::class, 'index'])->name('about');
 
 
-// Route::view('/penulis', 'pages.penulis.dashboardpenulis')->name('welcome');
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
+// Atau
+Route::get('/beranda', [HomeController::class, 'index'])->name('home');
+
 
 // Static pages
 Route::view('/services', 'pages.services')->name('services');
@@ -62,12 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Dashboard choice for admin/penulis
     Route::get('/dashboard-choice', [DashboardController::class, 'choice'])->name('dashboard.choice');
     Route::post('/dashboard/admin', [DashboardController::class, 'goToAdmin'])->name('dashboard.admin');
     Route::post('/dashboard/home', [DashboardController::class, 'goToHome'])->name('dashboard.home');
 
-    // Penulis routes - only for penulis role
+    // Penulis routes
     Route::middleware('role:penulis')->group(function () {
         Route::get('/penulis/dashboard', [PenulisBeritaController::class, 'index'])->name('penulis.dashboard');
         Route::get('/penulis/berita', [PenulisBeritaController::class, 'index'])->name('penulis.berita.index');
@@ -77,9 +77,11 @@ Route::middleware('auth')->group(function () {
 
     // Pesanan routes - for authenticated users
     Route::resource('pesanan', PesananController::class)->except(['create', 'store']);
-    Route::post('/pesanan/{id}/mark-paid', [PesananController::class, 'markAsPaid'])->name('pesanan.mark-paid');
-    Route::get('/pesanan/{id}/nota', [PesananController::class, 'nota'])->name('pesanan.nota');
+    Route::post('/pesanan/{pesanan}/mark-paid', [PesananController::class, 'markAsPaid'])->name('pesanan.mark-paid');
+    Route::get('/pesanan/{pesanan}/nota', [PesananController::class, 'nota'])->name('pesanan.nota');
 });
+
+
 
 // Produk routes
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');

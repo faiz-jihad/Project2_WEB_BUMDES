@@ -70,7 +70,7 @@
                                 @foreach ($pesanan->items as $item)
                                     <div class="order-item">
                                         <div class="item-image">
-                                            <img src="{{ asset('storage/' . ($item['gambar'] ?? 'images/no-image.jpg')) }}"
+                                            <img src="{{ $item['gambar'] ?? asset('images/no-image.jpg') }}"
                                                 alt="{{ $item['nama'] }}">
                                         </div>
                                         <div class="item-details">
@@ -93,19 +93,18 @@
                                     <strong>Total: Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</strong>
                                 </div>
                                 <div class="order-actions">
-                                    <a href="{{ route('pesanan.show', $pesanan->id_pesanan) }}"
-                                        class="btn btn-outline-primary btn-sm">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#detailModal{{ $pesanan->id_pesanan }}">
                                         <i class="bi bi-eye"></i> Detail
-                                    </a>
+                                    </button>
                                     <a href="{{ route('pesanan.nota', $pesanan->id_pesanan) }}"
                                         class="btn btn-outline-success btn-sm" target="_blank">
                                         <i class="bi bi-receipt"></i> Nota
                                     </a>
                                     @if ($pesanan->status == 'pending')
-                                        <a href="{{ route('pesanan.edit', $pesanan->id_pesanan) }}"
-                                            class="btn btn-outline-warning btn-sm">
+                                        <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $pesanan->id_pesanan }}">
                                             <i class="bi bi-pencil"></i> Edit
-                                        </a>
+                                        </button>
                                         <form action="{{ route('pesanan.destroy', $pesanan->id_pesanan) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
@@ -116,16 +115,121 @@
                                             </button>
                                         </form>
                                     @endif
-                                    @if ($pesanan->status == 'pending' && $pesanan->metode_pembayaran == 'transfer')
-                                        <form action="{{ route('pesanan.mark-paid', $pesanan->id) }}" method="POST"
-                                            class="d-inline">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    {{-- Detail Modal --}}
+                    @foreach ($pesanans as $pesanan)
+                        <div class="modal fade" id="detailModal{{ $pesanan->id_pesanan }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="detailModalLabel{{ $pesanan->id_pesanan }}">Detail Pesanan #{{ $pesanan->id_pesanan }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Informasi Pesanan</h6>
+                                                <p><strong>Status:</strong>
+                                                    <span class="status-badge status-{{ $pesanan->status }}">
+                                                        @switch($pesanan->status)
+                                                            @case('pending') Menunggu Pembayaran @break
+                                                            @case('sudah_bayar') Sudah Bayar @break
+                                                            @case('diproses') Diproses @break
+                                                            @case('dikirim') Dikirim @break
+                                                            @case('selesai') Selesai @break
+                                                            @case('dibatalkan') Dibatalkan @break
+                                                        @endswitch
+                                                    </span>
+                                                </p>
+                                                <p><strong>Tanggal:</strong> {{ $pesanan->created_at->format('d/m/Y H:i') }}</p>
+                                                <p><strong>Metode Pembayaran:</strong> {{ ucfirst($pesanan->metode_pembayaran) }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Informasi Pemesan</h6>
+                                                <p><strong>Nama:</strong> {{ $pesanan->nama_pemesan }}</p>
+                                                <p><strong>Alamat:</strong> {{ $pesanan->alamat }}</p>
+                                                <p><strong>No. HP:</strong> {{ $pesanan->no_hp }}</p>
+                                                @if($pesanan->catatan)
+                                                    <p><strong>Catatan:</strong> {{ $pesanan->catatan }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <h6>Detail Produk</h6>
+                                        <div class="order-items">
+                                            @foreach ($pesanan->items as $item)
+                                                <div class="order-item">
+                                                    <div class="item-image">
+                                                        <img src="{{ $item['gambar'] ?? asset('images/no-image.jpg') }}" alt="{{ $item['nama'] }}">
+                                                    </div>
+                                                    <div class="item-details">
+                                                        <h4>{{ $item['nama'] }}</h4>
+                                                        @if (isset($item['variasi']) && $item['variasi'])
+                                                            <p class="item-variant">{{ $item['variasi'] }}</p>
+                                                        @endif
+                                                        <p class="item-price">Rp {{ number_format($item['harga'], 0, ',', '.') }} x {{ $item['jumlah'] }}</p>
+                                                    </div>
+                                                    <div class="item-total">
+                                                        <strong>Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</strong>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <hr>
+                                        <div class="text-end">
+                                            <h5>Total: Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <a href="{{ route('pesanan.nota', $pesanan->id_pesanan) }}" class="btn btn-success" target="_blank">
+                                            <i class="bi bi-receipt"></i> Lihat Nota
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    {{-- Edit Modal --}}
+                    @foreach ($pesanans as $pesanan)
+                        <div class="modal fade" id="editModal{{ $pesanan->id_pesanan }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel{{ $pesanan->id_pesanan }}">Edit Pesanan #{{ $pesanan->id_pesanan }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('pesanan.update', $pesanan->id_pesanan) }}" method="POST">
                                             @csrf
-                                            @method('POST')
-                                            <button type="submit" class="btn btn-outline-info btn-sm">
-                                                <i class="bi bi-check-circle"></i> Sudah Bayar
-                                            </button>
+                                            @method('PUT')
+                                            <div class="mb-3">
+                                                <label for="nama_pemesan{{ $pesanan->id_pesanan }}" class="form-label">Nama Pemesan</label>
+                                                <input type="text" class="form-control" id="nama_pemesan{{ $pesanan->id_pesanan }}" name="nama_pemesan" value="{{ $pesanan->nama_pemesan }}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="alamat{{ $pesanan->id_pesanan }}" class="form-label">Alamat</label>
+                                                <textarea class="form-control" id="alamat{{ $pesanan->id_pesanan }}" name="alamat" rows="3" required>{{ $pesanan->alamat }}</textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="no_hp{{ $pesanan->id_pesanan }}" class="form-label">No. HP</label>
+                                                <input type="text" class="form-control" id="no_hp{{ $pesanan->id_pesanan }}" name="no_hp" value="{{ $pesanan->no_hp }}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="catatan{{ $pesanan->id_pesanan }}" class="form-label">Catatan</label>
+                                                <textarea class="form-control" id="catatan{{ $pesanan->id_pesanan }}" name="catatan" rows="2">{{ $pesanan->catatan }}</textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
                                         </form>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +247,7 @@
                     </div>
                     <h3>Belum ada pesanan</h3>
                     <p>Anda belum memiliki pesanan. Mulai berbelanja sekarang!</p>
-                    <a href="{{ route('produk.index') }}" class="btn btn-primary">
+                    <a href="{{ route('produk.index') }}" class="btn btn-success">
                         <i class="bi bi-shop"></i> Mulai Belanja
                     </a>
                 </div>

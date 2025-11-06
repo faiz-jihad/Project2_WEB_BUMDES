@@ -17,7 +17,7 @@
                             @foreach ($keranjang as $key => $item)
                                 <li class="checkout-item">
                                     <div class="item-left">
-                                        <img src="{{ asset('storage/' . $item['gambar']) }}" alt="{{ $item['nama'] }}">
+                                        <img src="{{ $item['gambar'] }}" alt="{{ $item['nama'] }}">
                                         <div>
                                             <h4>{{ $item['nama'] }}</h4>
                                             @if ($item['variasi'])

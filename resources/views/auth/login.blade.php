@@ -209,7 +209,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Login Gagal!',
-                text: '{{ $errors->first() }}',
+                text: 'Akun Belum Terdaftar / Salah Password',
                 confirmButtonColor: '#198754'
             });
         @endif

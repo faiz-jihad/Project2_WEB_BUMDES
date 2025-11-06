@@ -610,6 +610,9 @@
         }
     </style>
 
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     {{-- JS --}}
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -712,10 +715,9 @@
                         }
                         return response.json();
                     })
-                    .then(data => {
+b                    .then(data => {
                         card.classList.remove('loading');
                         if (data.success) {
-                            // Trigger cart update event for real-time navbar update
                             document.dispatchEvent(new CustomEvent('cartUpdated'));
 
                             // Success animation
@@ -796,14 +798,12 @@
                                         card.remove();
                                         updateTotal();
 
-                                        // Check if cart is empty
                                         if (document.querySelectorAll('.keranjang-card')
                                             .length === 0) {
                                             location
-                                        .reload(); // Reload to show empty state
+                                                .reload(); // Reload to show empty state
                                         }
 
-                                        // Trigger cart update event for real-time navbar update
                                         document.dispatchEvent(new CustomEvent(
                                             'cartUpdated'));
 
@@ -920,9 +920,7 @@
             });
         }
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
-            // Ctrl+A to select all
             if (e.ctrlKey && e.key === 'a') {
                 e.preventDefault();
                 const selectAll = document.getElementById('pilih-semua');

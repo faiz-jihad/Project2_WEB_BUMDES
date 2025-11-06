@@ -38,7 +38,7 @@
                     </a>
                     <ul class="dropdown-menu notif-menu">
                         <?php $__empty_1 = true; $__currentLoopData = Auth::user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <li>
+                            <li class="notif-item unread">
                                 <a href="<?php echo e($notification->data['url'] ?? '#'); ?>">
                                     <?php echo e($notification->data['message']); ?>
 
@@ -48,7 +48,7 @@
                             <li><span class="empty">Tidak ada notifikasi</span></li>
                         <?php endif; ?>
                         <li class="text-center mt-2">
-                            <a href="<?php echo e(route('notifikasi.index')); ?>" class="text-success fw-semibold">Lihat Semua</a>
+                            <a href="<?php echo e(route('notifikasi.index')); ?>" class="view-all-btn">Lihat Semua</a>
                         </li>
                     </ul>
                 <?php else: ?>
@@ -71,27 +71,38 @@
                 </ul>
             </div>
 
-            <!-- User Login / Dropdown -->
+            <!-- User Login  -->
             <?php if(auth()->guard()->guest()): ?>
                 <a href="<?php echo e(route('login')); ?>" class="login-btn">Masuk</a>
             <?php endif; ?>
 
             <?php if(auth()->guard()->check()): ?>
                 <div class="dropdown user-dropdown">
-                    <a href="#" class="dropbtn user-btn" aria-expanded="false">
-                        <img src="<?php echo e(Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/default-avatar.png')); ?>"
+                    <a href="#" class="icon-btn dropbtn user-btn" aria-expanded="false">
+                        <img src="<?php echo e(Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/bumdes.jpg')); ?>"
                             alt="User" />
-                        <i class="bi bi-chevron-down"></i>
                     </a>
-                    <ul class="dropdown-menu user-menu">
+
+                    <ul class="dropdown-menu user-menu" id="userMenu">
+                        <li class="user-info">
+                            <div class="user-avatar">
+                                <img src="<?php echo e(Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/bumdes.jpg')); ?>"
+                                    alt="User" />
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name"><?php echo e(Auth::user()->name); ?></span>
+                                <span class="user-email"><?php echo e(Auth::user()->email); ?></span>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
                         <li><a href="/akun"><i class="bi bi-person"></i> Akun Saya</a></li>
                         <li><a href="<?php echo e(route('pesanan.index')); ?>"><i class="bi bi-receipt"></i> Pesanan Saya</a></li>
                         <?php if(auth()->guard()->check()): ?>
                             <?php if(Auth::user()->role === 'penulis'): ?>
-                                <li><a href="penulis/berita" <i class="bi bi-newspaper"></i>Dashboard</a></li>
+                                <li><a href="penulis/berita"><i class="bi bi-newspaper"></i> Dashboard</a></li>
                             <?php endif; ?>
                         <?php endif; ?>
-                        <li>
+                        <li class="user-footer">
                             <form method="POST" action="<?php echo e(route('logout')); ?>">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit"><i class="bi bi-box-arrow-right"></i> Keluar</button>
@@ -112,7 +123,7 @@
 <!-- Icon Library -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
 
-<!-- === STYLE === -->
+<!-- === STYLE CSS === -->
 <style>
     :root {
         --green: #198754;
@@ -220,6 +231,7 @@
     /* Dropdown */
     .dropdown {
         position: relative;
+        color: var(--green)
     }
 
     .dropbtn {
@@ -321,8 +333,33 @@
         }
     }
 
+    .notification-dropdown:hover .notif-menu,
     .notification-dropdown.open .notif-menu {
         display: block;
+    }
+
+    .notif-menu .notif-item {
+        border-bottom: 1px solid #e9ecef;
+        color: #333;
+    }
+
+    .notif-menu .notif-item:hover {
+        background: rgba(0, 123, 191, 0.05);
+    }
+
+    .notif-menu .notif-item.unread {
+        background: rgba(0, 123, 191, 0.1);
+        border-left: 3px solid var(--green);
+    }
+
+    .notif-menu .view-all-btn {
+        background: var(--green);
+        color: white;
+        font-weight: 600;
+    }
+
+    .notif-menu .view-all-btn:hover {
+        background: var(--dark-green);
     }
 
     .notif-menu li {
@@ -432,6 +469,114 @@
         object-fit: cover;
     }
 
+    /* User Dropdown Menu */
+    .user-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 120%;
+        width: 280px;
+        max-height: 400px;
+        overflow-y: auto;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        z-index: 1000;
+        transition: var(--transition);
+        /* Responsive adjustments */
+        max-width: 90vw;
+    }
+
+    /* Adjust user dropdown on smaller screens */
+    @media (max-width: 480px) {
+        .user-menu {
+            width: 250px;
+            right: -10px;
+        }
+    }
+
+    .user-dropdown.open .user-menu {
+        display: block;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--green), var(--dark-green));
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .user-avatar img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 3px solid white;
+        object-fit: cover;
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-name {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .user-email {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .user-menu .divider {
+        height: 1px;
+        background: #eee;
+        margin: 0;
+        border: none;
+    }
+
+    .user-menu a,
+    .user-menu button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 18px;
+        color: #333;
+        background: none;
+        border: none;
+        width: 100%;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: var(--transition);
+        text-align: left;
+    }
+
+    .user-menu a:hover,
+    .user-menu button:hover {
+        background: var(--green);
+        color: white;
+    }
+
+    .user-footer {
+        border-top: 1px solid #eee;
+        margin-top: 5px;
+        padding-top: 5px;
+    }
+
+    .user-footer button {
+        color: #dc3545;
+    }
+
+    .user-footer button:hover {
+        background: #dc3545;
+        color: white;
+    }
+
     /* Mobile */
     .menu-toggle {
         display: none;
@@ -476,6 +621,7 @@
         }
     }
 
+    .cart-dropdown:hover .cart-menu,
     .cart-dropdown.open .cart-menu {
         display: block;
     }
@@ -576,6 +722,10 @@
             z-index: 999;
         }
 
+        .user-menu .divider {
+            color: green);
+        }
+
         .nav-links.show {
             opacity: 1;
             pointer-events: auto;
@@ -604,6 +754,60 @@
 
         .dropdown.open .dropdown-menu {
             display: block;
+        }
+
+        .user-menu {
+            position: static;
+            display: none;
+            background: var(--dark-green);
+            box-shadow: none;
+            border-radius: 0;
+            margin-top: 10px;
+            width: 100%;
+            max-width: none;
+            left: 0;
+            right: 0;
+        }
+
+        .user-dropdown.open .user-menu {
+            display: block;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, var(--green), var(--dark-green));
+            border-radius: 0;
+            color: white;
+        }
+
+        .user-menu .divider {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .user-menu a,
+        .user-menu button {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .user-menu a:hover,
+        .user-menu button:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        .user-footer {
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .user-footer button {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .user-footer button:hover {
+            background: #dc3545;
+            color: white;
         }
 
         .dropdown-menu a,
@@ -645,7 +849,8 @@
         }
 
         .notif-menu,
-        .cart-menu {
+        .cart-menu,
+        .user-menu {
             width: 100vw;
             max-width: none;
             left: 0;
@@ -660,12 +865,62 @@
             width: 100%;
             max-height: 60vh;
             border-radius: var(--border-radius) var(--border-radius) 0 0;
+            /* Animation from bottom to top */
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            /* Enhanced contrast background */
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-dropdown:hover .notif-menu,
+        .notification-dropdown.open .notif-menu,
+        .cart-dropdown:hover .cart-menu,
+        .cart-dropdown.open .cart-menu,
+        .user-dropdown.open .user-menu {
+            transform: translateY(0);
+            opacity: 1;
         }
 
         .cart-menu {
             width: 100vw;
             max-width: none;
             /* Mobile cart menu inherits the fixed positioning */
+            /* Enhanced contrast and consistency */
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            color: #333;
+        }
+
+        .cart-dropdown.open .cart-menu {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .cart-menu .cart-item {
+            border-bottom: 1px solid #e9ecef;
+            color: #333;
+        }
+
+        .cart-menu .cart-item:hover {
+            background: rgba(0, 123, 191, 0.05);
+        }
+
+        .cart-menu .cart-total {
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .cart-menu .checkout-btn {
+            background: var(--green);
+            color: white;
+            font-weight: 600;
+        }
+
+        .cart-menu .checkout-btn:hover {
+            background: var(--dark-green);
         }
     }
 
@@ -795,6 +1050,18 @@
 
             notifBtn.parentElement.classList.toggle('open');
         });
+
+        // Add hover functionality for desktop
+        if (window.innerWidth > 900) {
+            notifBtn.addEventListener('mouseenter', () => {
+                // Close other dropdowns first
+                document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                    if (!dropdown.contains(notifBtn)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            });
+        }
     }
 
     // Cart dropdown
@@ -818,6 +1085,21 @@
                 loadCartItems();
             }
         });
+
+        // Add hover functionality for desktop
+        if (window.innerWidth > 900) {
+            cartBtn.addEventListener('mouseenter', () => {
+                // Close other dropdowns first
+                document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                    if (!dropdown.contains(cartBtn)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+
+                // Load cart items when hovering
+                loadCartItems();
+            });
+        }
     }
 
     // User dropdown
@@ -835,6 +1117,22 @@
             });
 
             userBtn.parentElement.classList.toggle('open');
+
+            // Load user menu items when opening dropdown
+            if (userBtn.parentElement.classList.contains('open')) {
+                loadUserMenu();
+            }
+        });
+    }
+
+    // Mobile user dropdown toggle
+    const mobileUserBtn = document.querySelector('.user-dropdown .dropbtn');
+    if (mobileUserBtn) {
+        mobileUserBtn.addEventListener('click', e => {
+            if (window.innerWidth <= 900) {
+                e.preventDefault();
+                mobileUserBtn.parentElement.classList.toggle('open');
+            }
         });
     }
 
@@ -853,6 +1151,32 @@
             userBtn.parentElement.classList.remove('open');
         }
     });
+
+    // Close mobile dropdowns when clicking outside
+    document.addEventListener('click', e => {
+        if (window.innerWidth <= 900) {
+            // Close notification dropdown on mobile
+            if (notifBtn && !notifBtn.parentElement.contains(e.target)) {
+                notifBtn.parentElement.classList.remove('open');
+            }
+            // Close cart dropdown on mobile
+            if (cartBtn && !cartBtn.parentElement.contains(e.target)) {
+                cartBtn.parentElement.classList.remove('open');
+            }
+            // Close user dropdown on mobile
+            if (userBtn && !userBtn.parentElement.contains(e.target)) {
+                userBtn.parentElement.classList.remove('open');
+            }
+        }
+    });
+
+    // Prevent dropdown close when clicking inside user menu
+    const userMenu = document.getElementById('userMenu');
+    if (userMenu) {
+        userMenu.addEventListener('click', e => {
+            e.stopPropagation();
+        });
+    }
 
     // Prevent dropdown close when clicking inside cart menu
     const cartMenu = document.getElementById('cartMenu');
@@ -941,6 +1265,12 @@
                     }
                 }
             });
+    }
+
+    // Function to load user menu (placeholder for future dynamic content)
+    function loadUserMenu() {
+        // Currently static, but can be extended for dynamic content
+        console.log('User menu loaded');
     }
 
     // Function to load cart items for dropdown
@@ -1045,9 +1375,17 @@
                                 `;
                                 });
                                 html += `
-                                <li class="cart-footer d-flex justify-content-between p-2">
-                                    <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
-                                    <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
+                                <li class="cart-footer d-flex justify-content-between p-2 cart-total">
+                                    <a href="/keranjang"
+                                       class="btn btn-sm"
+                                       style="background:#ffffff;color:#146c43;border:2px solid #146c43;font-weight:700;padding:8px 12px;border-radius:8px;">
+                                        Lihat Keranjang
+                                    </a>
+                                    <a href="/checkout"
+                                       class="btn btn-sm"
+                                       style="background:#146c43;color:#ffffff;border:2px solid #146c43;font-weight:700;padding:8px 12px;border-radius:8px;">
+                                        Checkout
+                                    </a>
                                 </li>
                             `;
                                 cartMenu.innerHTML = html;
@@ -1073,7 +1411,6 @@
                     }
                 } catch (e) {
                     console.error("Fallback cart loading failed:", e);
-                    // Set empty cart if all fails
                     const cartMenu = document.getElementById("cartMenu");
                     if (cartMenu) {
                         cartMenu.innerHTML = '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';

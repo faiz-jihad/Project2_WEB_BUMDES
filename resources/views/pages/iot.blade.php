@@ -79,11 +79,11 @@
 
         <!-- Grafik -->
         <div class="card p-6 bg-white">
-    <h2 class="font-semibold mb-3">Grafik Suhu & Kelembapan</h2>
-    <div class="relative w-full" style="height: 350px;"> <!-- box chart tetap -->
-        <canvas id="chartTempHum"></canvas>
-    </div>
-</div>
+            <h2 class="font-semibold mb-3">Grafik Suhu & Kelembapan</h2>
+            <div class="relative w-full" style="height: 350px;"> <!-- box chart tetap -->
+                <canvas id="chartTempHum"></canvas>
+            </div>
+        </div>
 
         <!-- Log Sensor -->
         <div class="card p-6 bg-white overflow-x-auto">
@@ -226,76 +226,96 @@
         // ==== CHART ====
         const ctx = document.getElementById('chartTempHum').getContext('2d');
 
-    // Gradient untuk tampilan lembut
-    const gradTemp = ctx.createLinearGradient(0, 0, 0, 300);
-    gradTemp.addColorStop(0, 'rgba(239,68,68,0.4)');
-    gradTemp.addColorStop(1, 'rgba(239,68,68,0.05)');
+        // Gradient untuk tampilan lembut
+        const gradTemp = ctx.createLinearGradient(0, 0, 0, 300);
+        gradTemp.addColorStop(0, 'rgba(239,68,68,0.4)');
+        gradTemp.addColorStop(1, 'rgba(239,68,68,0.05)');
 
-    const gradHum = ctx.createLinearGradient(0, 0, 0, 300);
-    gradHum.addColorStop(0, 'rgba(59,130,246,0.4)');
-    gradHum.addColorStop(1, 'rgba(59,130,246,0.05)');
+        const gradHum = ctx.createLinearGradient(0, 0, 0, 300);
+        gradHum.addColorStop(0, 'rgba(59,130,246,0.4)');
+        gradHum.addColorStop(1, 'rgba(59,130,246,0.05)');
 
-    const chartTempHum = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: 'Suhu (°C)',
-                    data: [],
-                    borderColor: '#ef4444',
-                    backgroundColor: gradTemp,
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
-                    pointBackgroundColor: '#ef4444',
-                },
-                {
-                    label: 'Kelembapan (%)',
-                    data: [],
-                    borderColor: '#3b82f6',
-                    backgroundColor: gradHum,
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
-                    pointBackgroundColor: '#3b82f6',
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false, // biar bisa diatur pakai height container
-            animation: false, // realtime cepat
-            scales: {
-                x: {
-                    title: { display: true, text: 'Waktu', color: '#555' },
-                    ticks: { color: '#333' },
-                    grid: { color: 'rgba(0,0,0,0.05)' }
-                },
-                y: {
-                    title: { display: true, text: 'Nilai Sensor', color: '#555' },
-                    beginAtZero: true,
-                    ticks: { color: '#333' },
-                    grid: { color: 'rgba(0,0,0,0.05)' }
-                }
+        const chartTempHum = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                        label: 'Suhu (°C)',
+                        data: [],
+                        borderColor: '#ef4444',
+                        backgroundColor: gradTemp,
+                        tension: 0.35,
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 2,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#ef4444',
+                    },
+                    {
+                        label: 'Kelembapan (%)',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: gradHum,
+                        tension: 0.35,
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 2,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#3b82f6',
+                    }
+                ]
             },
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#333', font: { size: 13 } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // biar bisa diatur pakai height container
+                animation: false, // realtime cepat
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Waktu',
+                            color: '#555'
+                        },
+                        ticks: {
+                            color: '#333'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nilai Sensor',
+                            color: '#555'
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#333'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
                 },
-                tooltip: {
-                    backgroundColor: '#111827',
-                    titleColor: '#fff',
-                    bodyColor: '#fff'
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#333',
+                            font: {
+                                size: 13
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#111827',
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
+                    }
                 }
             }
-        }
-    });
+        });
 
     // === FUNGSI UPDATE CHART ===
     function updateChart(obj) {
@@ -314,6 +334,26 @@
 
         chartTempHum.update('none');
     }
+
+        // === FALLBACK AJAX FETCH EVERY 5 SECONDS ===
+        function fetchLatestData() {
+            fetch('/api/sensors/latest')
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        updateCards(data);
+                        updateChart(data);
+                        updateTable(data);
+                    }
+                })
+                .catch(error => console.error('Error fetching latest data:', error));
+        }
+
+        // Fetch data every 5 seconds as fallback
+        setInterval(fetchLatestData, 5000);
+
+        // Initial fetch
+        fetchLatestData();
     </script>
 </body>
 

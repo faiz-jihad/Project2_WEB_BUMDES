@@ -240,28 +240,342 @@
         </section>
         </section>
 
-        {{-- MAP + KONTAK --}}
-        <section id="kontak" class="py-5 text-center">
-            <div class="container">
-                <h2 class="fw-bold text-success mb-3" data-aos="fade-down">Lokasi & Kontak</h2>
-                <p class="text-muted" data-aos="fade-up">Kunjungi atau hubungi kami melalui WhatsApp dan Email.
-                </p>
-                <div class="row mt-4">
-                    <div class="col-md-6" data-aos="fade-right">
-                        <iframe src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed" loading="lazy"
-                            width="100%" height="350" style="border:0;" allowfullscreen=""></iframe>
+        {{-- MAP + KONTAK (Serasi & Profesional) --}}
+        <section id="kontak" class="py-5 position-relative">
+            <div class="position-absolute w-100 h-100 top-0 start-0"
+            style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.04;"></div>
+
+            <div class="container position-relative">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-success mb-2" data-aos="fade-down">Lokasi & Kontak</h2>
+                <p class="text-muted mb-0" data-aos="fade-up">Bersinergi membangun desa yang lebih maju — hubungi kami
+                untuk kolaborasi.</p>
+            </div>
+
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6" data-aos="fade-right">
+                <div class="map-card shadow-lg rounded-4 overflow-hidden position-relative">
+                    {{-- Poster overlay to lazy-load iframe for performance + accessible --}}
+                    <button type="button" class="map-poster position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center text-white border-0"
+                    aria-label="Tampilkan peta interaktif" title="Klik untuk memuat peta interaktif">
+                    <div class="text-center px-3">
+                        <i class="bi bi-map-fill fs-1 mb-2" aria-hidden="true"></i>
+                        <h5 class="mb-1 fw-semibold">Tampilkan Peta</h5>
+                        <p class="small mb-0">Klik untuk memuat Peta </p>
                     </div>
-                    <div class="col-md-6 d-flex flex-column justify-content-center" data-aos="fade-left">
-                        <p><strong>Alamat:</strong> Bayalangu Kidul, Kabupaten Indramayu</p>
-                        <p><strong>Email:</strong> info@bumdesmadusari.id</p>
-                        <p><strong>WhatsApp:</strong> <a href="https://wa.me/6281234567890" target="_blank"
-                                class="text-success fw-bold">+62 812 3456 7890</a></p>
-                        <a href="https://wa.me/6281234567890" target="_blank"
-                            class="btn btn-success rounded-pill mt-3 px-4 py-2">Hubungi Kami</a>
+                    </button>
+
+                    {{-- Pulsing marker --}}
+                    <div class="map-pin position-absolute" aria-hidden="true">
+                    <div class="pin-outer"></div>
+                    <div class="pin-inner"></div>
+                    </div>
+
+                    {{-- Placeholder until clicked --}}
+                    <div class="map-frame w-100" style="min-height:360px; background:#f8fafb;" data-src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed">
+                    <noscript>
+                        <iframe src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed"
+                        loading="lazy" width="100%" height="360" style="border:0;" allowfullscreen></iframe>
+                    </noscript>
                     </div>
                 </div>
+                </div>
+
+                <div class="col-md-6" data-aos="fade-left">
+                <div class="contact-card bg-white p-4 rounded-4 shadow-lg position-relative overflow-hidden">
+                    <div class="d-flex align-items-start gap-3">
+                    <div class="me-2">
+                        <img src="{{ asset('images/logo.jpg') }}" alt="Logo BUMDes Madusari" class="rounded-3"
+                        style="width:84px; height:84px; object-fit:cover;">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1">BUMDes Madusari</h4>
+                        <p class="text-muted mb-2">Bayalangu Kidul, Kabupaten Indramayu</p>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-outline-success btn-sm copy-btn" data-copy="Bayalangu Kidul, Kabupaten Indramayu" aria-label="Salin alamat">
+                            <i class="bi bi-geo-alt me-1" aria-hidden="true"></i> Salin Alamat
+                        </button>
+                        <button class="btn btn-outline-success btn-sm copy-btn" data-copy="info@bumdesmadusari.id" aria-label="Salin email">
+                            <i class="bi bi-envelope me-1" aria-hidden="true"></i> Salin Email
+                        </button>
+                        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-success btn-sm"
+                            aria-label="Hubungi via WhatsApp">
+                            <i class="bi bi-whatsapp me-1" aria-hidden="true"></i> Hubungi via WA
+                        </a>
+                        </div>
+
+                        <div class="row g-2 mb-3 text-center">
+                        <div class="col-4">
+                            <h3 class="mb-0 counter-compact" data-target="120" aria-live="polite">0</h3>
+                            <small class="text-muted">Kegiatan</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0 counter-compact" data-target="75" aria-live="polite">0</h3>
+                            <small class="text-muted">Anggota</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0 counter-compact" data-target="98" aria-live="polite">0%</h3>
+                            <small class="text-muted">Kepuasan</small>
+                        </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                        <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#contactModal"
+                            aria-haspopup="dialog" aria-controls="contactModal">
+                            <i class="bi bi-chat-left-text me-1" aria-hidden="true"></i> Kirim Pesan
+                        </button>
+                        <a href="{{ route('galeri.index') }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-images me-1" aria-hidden="true"></i> Lihat Galeri
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+
+                    {{-- subtle decorative bottom wave --}}
+                    <svg class="position-absolute bottom-0 start-0 w-100" height="50" viewBox="0 0 1200 120"
+                    preserveAspectRatio="none" style="transform:translateY(50%); opacity:0.06;">
+                    <path d="M0,0 C150,100 350,0 600,0 C850,0 1050,100 1200,0 L1200,120 L0,120 Z" fill="#198754"></path>
+                    </svg>
+                </div>
+                </div>
+            </div>
             </div>
         </section>
+
+        {{-- Modal Kirim Pesan --}}
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true" aria-labelledby="contactModalTitle">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header">
+                <h5 class="modal-title" id="contactModalTitle">Kirim Pesan ke BUMDes Madusari</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <form id="contactForm" action="{{ url('/kontak/kirim') }}" method="POST" class="needs-validation" novalidate>
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-2">
+                    <label for="contactNama" class="form-label small">Nama</label>
+                    <input id="contactNama" type="text" name="nama" class="form-control" required>
+                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                    </div>
+                    <div class="mb-2">
+                    <label for="contactEmail" class="form-label small">Email</label>
+                    <input id="contactEmail" type="email" name="email" class="form-control" required>
+                    <div class="invalid-feedback">Email valid diperlukan.</div>
+                    </div>
+                    <div class="mb-2">
+                    <label for="contactPesan" class="form-label small">Pesan</label>
+                    <textarea id="contactPesan" name="pesan" rows="4" class="form-control" required></textarea>
+                    <div class="invalid-feedback">Tolong isi pesan Anda.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kirim</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+
+        <style>
+            :root {
+            --accent: #198754;
+            --accent-strong: #146c43;
+            --muted-bg: #f8fafb;
+            }
+
+            /* Map + Pin */
+            .map-card { border-radius: 14px; overflow: hidden; background: var(--muted-bg); }
+            .map-poster {
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 5;
+            background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.42));
+            color: #fff;
+            }
+            .map-poster:hover { transform: scale(1.02); }
+            .map-poster:focus { outline: none; box-shadow: 0 0 0 4px rgba(25,135,84,0.12); }
+
+            .map-pin {
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            z-index: 6;
+            pointer-events: none;
+            }
+            .pin-outer {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(25,135,84,0.18);
+            animation: pulse 2s infinite;
+            left: 0; top: 0;
+            }
+            .pin-inner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            left: 8px; top: 8px;
+            box-shadow: 0 4px 12px rgba(25,135,84,0.35);
+            transform-origin: center;
+            }
+            @keyframes pulse {
+            0% { transform: scale(.85); opacity: .9; }
+            70% { transform: scale(2.2); opacity: 0; }
+            100% { transform: scale(2.2); opacity: 0; }
+            }
+
+            .contact-card { transition: transform .25s ease, box-shadow .25s ease; }
+            .contact-card:hover { transform: translateY(-6px); }
+
+            .counter-compact { font-size:1.25rem; color: var(--accent); font-weight:700; }
+            .copy-btn { min-width:160px; }
+
+            /* Accessibility: focus on interactive small buttons */
+            .copy-btn:focus { box-shadow: 0 0 0 4px rgba(25,135,84,0.08); outline: none; }
+
+            /* Responsive */
+            @media (max-width: 767px) {
+            .map-pin { top: 40%; }
+            .copy-btn { min-width:120px; }
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+            // Lazy load map iframe on poster click / keyboard activation
+            document.querySelectorAll('.map-card').forEach(card => {
+                const poster = card.querySelector('.map-poster');
+                const frameContainer = card.querySelector('.map-frame');
+                if (!poster || !frameContainer) return;
+
+                const loadMap = function () {
+                if (frameContainer.dataset.loaded) {
+                    poster.style.opacity = 0;
+                    poster.style.pointerEvents = 'none';
+                    return;
+                }
+                const src = frameContainer.getAttribute('data-src') || frameContainer.dataset.src;
+                if (!src) return;
+                const iframe = document.createElement('iframe');
+                iframe.width = '100%';
+                iframe.height = '360';
+                iframe.loading = 'lazy';
+                iframe.style.border = '0';
+                iframe.allowFullscreen = true;
+                iframe.src = src;
+                frameContainer.appendChild(iframe);
+                frameContainer.dataset.loaded = '1';
+                poster.style.transition = 'opacity .4s';
+                poster.style.opacity = 0;
+                poster.style.pointerEvents = 'none';
+                };
+
+                poster.addEventListener('click', loadMap);
+                poster.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    loadMap();
+                }
+                });
+            });
+
+            // Copy to clipboard (address/email) with feedback
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                const text = this.getAttribute('data-copy') || '';
+                try {
+                    await navigator.clipboard.writeText(text);
+                    if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Berhasil disalin',
+                        text: text,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    } else {
+                    // graceful fallback
+                    const tip = document.createElement('div');
+                    tip.className = 'toast align-items-center text-bg-success border-0';
+                    tip.style.position = 'fixed';
+                    tip.style.top = '1rem';
+                    tip.style.right = '1rem';
+                    tip.style.zIndex = 9999;
+                    tip.innerHTML = '<div class="d-flex"><div class="toast-body text-white">Disalin: ' + text + '</div></div>';
+                    document.body.appendChild(tip);
+                    setTimeout(() => tip.remove(), 1800);
+                    }
+                } catch (err) {
+                    console.error('Clipboard error', err);
+                    if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat menyalin ke clipboard.' });
+                    }
+                }
+                });
+            });
+
+            // Compact counters when in view (avoid global name collision)
+            const compactCounters = document.querySelectorAll('.counter-compact');
+            const compactObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = +el.getAttribute('data-target') || 0;
+                const duration = 900;
+                const start = performance.now();
+                const init = +el.innerText.replace(/\D/g, '') || 0;
+                const animate = (now) => {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const value = Math.floor(init + (target - init) * progress);
+                    el.innerText = el.innerText.includes('%') ? (value + '%') : value;
+                    if (progress < 1) requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+                compactObserver.unobserve(el);
+                });
+            }, { threshold: 0.5 });
+            compactCounters.forEach(c => compactObserver.observe(c));
+
+            // Focus first input when contact modal shown
+            const contactModalEl = document.getElementById('contactModal');
+            if (contactModalEl) {
+                contactModalEl.addEventListener('shown.bs.modal', function () {
+                const firstInput = contactModalEl.querySelector('input, textarea, button');
+                if (firstInput) firstInput.focus();
+                });
+            }
+
+            // Client-side Bootstrap validation for contact form (keeps server fallback)
+            (function () {
+                const forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                    return;
+                    }
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Mengirim...';
+                    }
+                    // server handles actual submission
+                }, false);
+                });
+            })();
+            });
+        </script>
 
     </div>
 

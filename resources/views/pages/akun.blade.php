@@ -18,7 +18,7 @@
             <div class="akun-card shadow-lg">
                 <div class="akun-left">
                     <div class="avatar-wrapper">
-                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}"
+                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/bumdes.jpg') }}"
                             alt="Avatar">
                     </div>
                     <h3>{{ $user->name }}</h3>
@@ -255,4 +255,3 @@
         }
     </style>
 @endsection
-

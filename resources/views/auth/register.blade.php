@@ -211,7 +211,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Registrasi Gagal!',
-                text: '{{ $errors->first() }}',
+                text: 'Akun tidak dapat dibuat/terdaftar.',
                 confirmButtonColor: '#198754'
             });
         @endif
