@@ -58,6 +58,16 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar')
+                    ->label('Avatar')
+                    ->disk('public')
+                    ->height(40)
+                    ->width(40)
+                    ->circular()
+                    ->getStateUsing(function ($record) {
+                        return $record->avatar ? asset('storage/' . $record->avatar) : null;
+                    })
+                    ->defaultImageUrl('/images/no-avatar.png'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -83,8 +93,6 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('provider')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('provider_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('avatar')
                     ->searchable(),
             ])
             ->filters([

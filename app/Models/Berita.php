@@ -19,6 +19,7 @@ class Berita extends Model
         'slug',
         'Thumbnail',
         'Isi_Berita',
+        'status',
     ];
 
     /*

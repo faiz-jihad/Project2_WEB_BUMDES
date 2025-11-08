@@ -73,6 +73,7 @@ class BeritaController extends Controller
                 'slug' => $request->slug ?: Str::slug($request->judul),
                 'Isi_Berita' => $request->isi_berita,
                 'Thumbnail' => $thumbnailPath,
+                'status' => 'pending', // Default status for new berita
             ]);
 
             \Log::info('Berita created successfully:', $berita->toArray());
@@ -81,6 +82,7 @@ class BeritaController extends Controller
             $adminUsers = \App\Models\User::where('role', 'admin')->get();
             foreach ($adminUsers as $admin) {
                 $admin->notify(new \App\Notifications\BeritaCreated($berita, $penulis));
+                $admin->notify(new \App\Notifications\BeritaCreatedFilament($berita, $penulis));
             }
 
             notify()->success('Berita berhasil ditambahkan!', 'Berhasil');
@@ -127,6 +129,42 @@ class BeritaController extends Controller
 
         notify()->success('Berita berhasil diperbarui!', 'Berhasil');
         return redirect()->back();
+    }
+
+    public function show($id)
+    {
+        // Check if user has role 'penulis'
+        if (!auth()->check() || auth()->user()->role !== 'penulis') {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        try {
+            $berita = Berita::with('kategoriBerita', 'penulis')->findOrFail($id);
+
+            // Check if the berita belongs to the authenticated penulis
+            $penulis = \App\Models\Penulis::where('nama_penulis', auth()->user()->name)->first();
+            if (!$penulis || $berita->id_penulis !== $penulis->id_penulis) {
+                return response()->json(['success' => false, 'message' => 'Berita tidak ditemukan.'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'berita' => [
+                    'id' => $berita->id_berita,
+                    'judul' => $berita->Judul,
+                    'slug' => $berita->slug,
+                    'isi_berita' => $berita->Isi_Berita,
+                    'thumbnail' => $berita->Thumbnail,
+                    'kategori_berita' => $berita->kategoriBerita,
+                    'penulis' => $berita->penulis,
+                    'created_at' => $berita->created_at,
+                    'updated_at' => $berita->updated_at,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching berita:', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Berita tidak ditemukan.'], 404);
+        }
     }
 
     public function destroy($id)

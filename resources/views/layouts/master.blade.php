@@ -10,15 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="{{ asset('css/output.css') }}">
-
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('css/input.css') }}">
 
     <!-- Custom JS -->
-    <script src="{{ asset('js/navbar.js') }}" defer></script>
 
     <!-- Laravel Notify -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css">
@@ -51,268 +47,110 @@
             visibility: hidden;
         }
 
-        .loader-wrapper {
+        /* From Uiverse.io by Chriskoziol */
+        .spinnerContainer {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: white;
         }
 
-        /* From Uiverse.io by uxRakhal */
-        .typewriter {
-            --blue: #5cbbff;
-            --blue-dark: #162d72;
-            --key: #fff;
-            --paper: #eef0fd;
-            --text: #00000049;
-            --tool: #ffbb00;
-            --duration: 3s;
-            position: relative;
-            -webkit-animation: bounce05 var(--duration) linear infinite;
-            animation: bounce05 var(--duration) linear infinite;
-        }
-
-        .typewriter .slide {
-            width: 92px;
-            height: 20px;
-            border-radius: 3px;
-            margin-left: 14px;
-            transform: translateX(14px);
-            background: linear-gradient(var(--blue), var(--blue-dark));
-            -webkit-animation: slide05 var(--duration) ease infinite;
-            animation: slide05 var(--duration) ease infinite;
-        }
-
-        .typewriter .slide:before,
-        .typewriter .slide:after,
-        .typewriter .slide i:before {
-            content: "";
-            position: absolute;
-            background: var(--tool);
-        }
-
-        .typewriter .slide:before {
-            width: 2px;
-            height: 8px;
-            top: 6px;
-            left: 100%;
-        }
-
-        .typewriter .slide:after {
-            left: 94px;
-            top: 3px;
-            height: 14px;
-            width: 6px;
-            border-radius: 3px;
-        }
-
-        .typewriter .slide i {
-            display: block;
-            position: absolute;
-            right: 100%;
-            width: 6px;
-            height: 4px;
-            top: 4px;
-            background: var(--tool);
-        }
-
-        .typewriter .slide i:before {
-            right: 100%;
-            top: -2px;
-            width: 4px;
-            border-radius: 2px;
-            height: 14px;
-        }
-
-        .typewriter .paper {
-            position: absolute;
-            left: 24px;
-            top: -26px;
-            width: 40px;
-            height: 46px;
-            border-radius: 5px;
-            background: var(--paper);
-            transform: translateY(46px);
-            -webkit-animation: paper05 var(--duration) linear infinite;
-            animation: paper05 var(--duration) linear infinite;
-        }
-
-        .typewriter .paper:before {
-            content: "";
-            position: absolute;
-            left: 6px;
-            right: 6px;
-            top: 7px;
-            border-radius: 2px;
-            height: 4px;
-            transform: scaleY(0.8);
-            background: var(--text);
-            box-shadow: 0 12px 0 var(--text), 0 24px 0 var(--text), 0 36px 0 var(--text);
-        }
-
-        .typewriter .keyboard {
-            width: 120px;
+        .spinner {
+            width: 56px;
             height: 56px;
-            margin-top: -10px;
-            z-index: 1;
-            position: relative;
+            display: grid;
+            border: 4px solid #0000;
+            border-radius: 50%;
+            border-right-color: #ffffff;
+            animation: tri-spinner 1s infinite linear;
         }
 
-        .typewriter .keyboard:before,
-        .typewriter .keyboard:after {
+        .spinner::before,
+        .spinner::after {
             content: "";
-            position: absolute;
+            grid-area: 1/1;
+            margin: 2px;
+            border: inherit;
+            border-radius: 50%;
+            animation: tri-spinner 2s infinite;
         }
 
-        .typewriter .keyboard:before {
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 7px;
-            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-            transform: perspective(10px) rotateX(2deg);
-            transform-origin: 50% 100%;
+        .spinner::after {
+            margin: 8px;
+            animation-duration: 3s;
         }
 
-        .typewriter .keyboard:after {
-            left: 2px;
-            top: 25px;
-            width: 11px;
-            height: 4px;
-            border-radius: 2px;
-            box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            -webkit-animation: keyboard05 var(--duration) linear infinite;
-            animation: keyboard05 var(--duration) linear infinite;
-        }
-
-        @keyframes bounce05 {
-
-            85%,
-            92%,
+        @keyframes tri-spinner {
             100% {
-                transform: translateY(0);
-            }
-
-            89% {
-                transform: translateY(-4px);
-            }
-
-            95% {
-                transform: translateY(2px);
+                transform: rotate(1turn);
             }
         }
 
-        @keyframes slide05 {
-            5% {
-                transform: translateX(14px);
-            }
-
-            15%,
-            30% {
-                transform: translateX(6px);
-            }
-
-            40%,
-            55% {
-                transform: translateX(0);
-            }
-
-            65%,
-            70% {
-                transform: translateX(-4px);
-            }
-
-            80%,
-            89% {
-                transform: translateX(-12px);
-            }
-
-            100% {
-                transform: translateX(14px);
-            }
+        .loader {
+            color: #ffffff;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 25px;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box;
+            height: 40px;
+            padding: 10px 10px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            border-radius: 8px;
         }
 
-        @keyframes paper05 {
-            5% {
-                transform: translateY(46px);
+        .words {
+            overflow: hidden;
+        }
+
+        .word {
+            display: block;
+            height: 100%;
+            padding-left: 6px;
+            color: #eadb12;
+            animation: cycle-words 5s infinite;
+        }
+
+        @keyframes cycle-words {
+            10% {
+                -webkit-transform: translateY(-105%);
+                transform: translateY(-105%);
             }
 
-            20%,
-            30% {
-                transform: translateY(34px);
+            25% {
+                -webkit-transform: translateY(-100%);
+                transform: translateY(-100%);
             }
 
-            40%,
-            55% {
-                transform: translateY(22px);
+            35% {
+                -webkit-transform: translateY(-205%);
+                transform: translateY(-205%);
             }
 
-            65%,
-            70% {
-                transform: translateY(10px);
+            50% {
+                -webkit-transform: translateY(-200%);
+                transform: translateY(-200%);
             }
 
-            80%,
+            60% {
+                -webkit-transform: translateY(-305%);
+                transform: translateY(-305%);
+            }
+
+            75% {
+                -webkit-transform: translateY(-300%);
+                transform: translateY(-300%);
+            }
+
             85% {
-                transform: translateY(0);
+                -webkit-transform: translateY(-405%);
+                transform: translateY(-405%);
             }
 
-            92%,
             100% {
-                transform: translateY(46px);
-            }
-        }
-
-        @keyframes keyboard05 {
-
-            5%,
-            12%,
-            21%,
-            30%,
-            39%,
-            48%,
-            57%,
-            66%,
-            75%,
-            84% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            9% {
-                box-shadow: 15px 2px 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            18% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 2px 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            27% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 12px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            36% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 12px 0 var(--key), 60px 12px 0 var(--key), 68px 12px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            45% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 2px 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            54% {
-                box-shadow: 15px 0 0 var(--key), 30px 2px 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            63% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 12px 0 var(--key);
-            }
-
-            72% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 2px 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 10px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
-            }
-
-            81% {
-                box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 12px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
+                -webkit-transform: translateY(-400%);
+                transform: translateY(-400%);
             }
         }
     </style>
@@ -321,29 +159,18 @@
 <body>
     <!-- === PRELOADER === -->
     <div id="preloader">
-        <div class="loader-wrapper">
-            <div class="typewriter">
-                <div class="slide"><i></i></div>
-                <div class="paper"></div>
-                <div class="keyboard"></div>
-            </div><br>
-            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
-            <p class="loading-text" id="loadingText" style="font-size: 20px; text-decoration: none; color: #fff; font-family: 'Poppins', sans-serif;"></p>
-
-            <script>
-                const text = "Sebentar Yaa...";
-                const loadingText = document.getElementById('loadingText');
-                let index = 0;
-
-                function typeText() {
-                    if (index < text.length) {
-                        loadingText.textContent += text.charAt(index);
-                        index++;
-                        setTimeout(typeText, 100);
-                    }
-                }
-                typeText();
-            </script>
+        <div class="spinnerContainer">
+            <div class="spinner"></div>
+            <div class="loader">
+                <p>loading</p>
+                <div class="words">
+                    <span class="word">Pertanian</span>
+                    <span class="word">Perikanan</span>
+                    <span class="word">Pekembangan</span>
+                    <span class="word">Entertaint</span>
+                    <span class="word">Edukation</span>
+                </div>
+            </div>
         </div>
     </div>
 

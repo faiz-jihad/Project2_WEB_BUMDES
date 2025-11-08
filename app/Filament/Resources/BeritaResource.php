@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Support\Enums\FontWeight;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaResource extends Resource
 {
@@ -35,7 +36,7 @@ class BeritaResource extends Resource
 
             // ====== Kategori ======
             Forms\Components\Select::make('id_kategori')
-                ->relationship('kategori', 'judul')
+                ->relationship('kategoriBerita', 'judul')
                 ->label('Kategori')
                 ->searchable()
                 ->preload()
@@ -56,31 +57,38 @@ class BeritaResource extends Resource
                 ->required(),
 
             // ====== Thumbnail Upload ======
-            Forms\Components\FileUpload::make('thumbnail')
+            Forms\Components\FileUpload::make('Thumbnail')
                 ->label('Thumbnail')
                 ->image()
                 ->disk('public')
                 ->directory('thumbnails')
                 ->preserveFilenames()
-                ->maxSize(2048)
-                ->imageResizeMode('contain')
-                ->imageCropAspectRatio(null)
-                ->imageResizeTargetWidth(null)
-                ->imageResizeTargetHeight(null)
+                ->maxSize(5120)
                 ->deletable(true)
                 ->downloadable(true)
                 ->openable(true)
-                ->imageEditor()
                 ->columnSpanFull()
-                ->helperText('Ukuran maksimal: 2MB. Format: JPG, PNG, WEBP')
+                ->helperText('Ukuran maksimal: 5MB. Format: JPG, PNG, WEBP')
                 ->required(),
 
             // ====== Konten ======
-            Forms\Components\RichEditor::make('isi_berita')
+            Forms\Components\RichEditor::make('Isi_Berita')
                 ->label('Konten Berita')
                 ->columnSpanFull()
                 ->required()
                 ->default('Isi berita belum tersedia.'),
+
+            // ====== Status ======
+            Forms\Components\Select::make('status')
+                ->label('Status')
+                ->options([
+                    'pending' => 'Menunggu Persetujuan',
+                    'approved' => 'Disetujui',
+                    'rejected' => 'Ditolak',
+                ])
+                ->default('pending')
+                ->required()
+                ->visible(fn($context) => $context === 'edit'), // Only show in edit mode
         ]);
     }
 
@@ -100,7 +108,10 @@ class BeritaResource extends Resource
                     ->height(60)
                     ->width(80)
                     ->square()
-                    ->visibility('public'),
+                    ->getStateUsing(function ($record) {
+                        return $record->Thumbnail ? asset('storage/' . $record->Thumbnail) : null;
+                    })
+                    ->defaultImageUrl('/images/placeholder.jpg'),
 
                 // ====== Judul ======
                 Tables\Columns\TextColumn::make('Judul')
@@ -118,7 +129,7 @@ class BeritaResource extends Resource
                     ->limit(50),
 
                 // ====== Kategori ======
-                Tables\Columns\TextColumn::make('kategori.Judul')
+                Tables\Columns\TextColumn::make('kategoriBerita.Judul')
                     ->label('Kategori')
                     ->searchable()
                     ->sortable()
@@ -134,6 +145,21 @@ class BeritaResource extends Resource
                     ->icon('heroicon-m-user')
                     ->iconColor('primary')
                     ->default('-'),
+
+                // ====== Status ======
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => 'Menunggu Persetujuan',
+                        'approved' => 'Disetujui',
+                        'rejected' => 'Ditolak',
+                    }),
 
                 // ====== Created At ======
                 Tables\Columns\TextColumn::make('created_at')
@@ -152,7 +178,7 @@ class BeritaResource extends Resource
                     ->multiple(),
 
                 Tables\Filters\SelectFilter::make('id_kategori')
-                    ->relationship('kategori', 'judul')
+                    ->relationship('kategoriBerita', 'judul')
                     ->label('Kategori')
                     ->searchable()
                     ->preload()
@@ -167,8 +193,8 @@ class BeritaResource extends Resource
                     ])
                     ->query(function ($query, array $data) {
                         return $query
-                            ->when($data['created_from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
-                            ->when($data['created_until'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date));
+                            ->when($data['created_from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
@@ -186,6 +212,34 @@ class BeritaResource extends Resource
                     ->label('Lihat'),
                 Tables\Actions\EditAction::make()
                     ->label('Edit'),
+                Tables\Actions\Action::make('approve')
+                    ->label('Setujui')
+                    ->icon('heroicon-m-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Setujui Berita')
+                    ->modalDescription('Apakah Anda yakin ingin menyetujui berita ini?')
+                    ->modalSubmitActionLabel('Ya, Setujui')
+                    ->action(function (Berita $record) {
+                        $record->update(['status' => 'approved']);
+                        // Send notification to penulis
+                        $record->penulis->notify(new \App\Notifications\BeritaStatusUpdated($record, 'approved'));
+                    })
+                    ->visible(fn(Berita $record): bool => $record->status === 'pending'),
+                Tables\Actions\Action::make('reject')
+                    ->label('Tolak')
+                    ->icon('heroicon-m-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Tolak Berita')
+                    ->modalDescription('Apakah Anda yakin ingin menolak berita ini?')
+                    ->modalSubmitActionLabel('Ya, Tolak')
+                    ->action(function (Berita $record) {
+                        $record->update(['status' => 'rejected']);
+                        // Send notification to penulis
+                        $record->penulis->notify(new \App\Notifications\BeritaStatusUpdated($record, 'rejected'));
+                    })
+                    ->visible(fn(Berita $record): bool => $record->status === 'pending'),
                 Tables\Actions\DeleteAction::make()
                     ->label('Hapus')
                     ->requiresConfirmation(),

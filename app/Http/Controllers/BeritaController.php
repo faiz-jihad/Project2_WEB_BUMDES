@@ -14,8 +14,9 @@ class BeritaController extends Controller
         // Ambil query pencarian
         $search = $request->get('search');
 
-        // Query berita dengan filter pencarian
-        $beritaQuery = Berita::with('kategoriBerita', 'penulis');
+        // Query berita dengan filter pencarian - hanya yang approved
+        $beritaQuery = Berita::with('kategoriBerita', 'penulis')
+            ->where('status', 'approved');
 
         if ($search) {
             $beritaQuery->where(function ($query) use ($search) {
@@ -29,8 +30,9 @@ class BeritaController extends Controller
         // Ambil kategori berita untuk navigasi
         $kategori = KategoriBerita::all();
 
-        // Ambil berita populer (berdasarkan jumlah views atau created_at terbaru)
+        // Ambil berita populer (berdasarkan jumlah views atau created_at terbaru) - hanya yang approved
         $populer = Berita::with('kategoriBerita', 'penulis')
+            ->where('status', 'approved')
             ->latest()
             ->take(5)
             ->get();
@@ -49,9 +51,10 @@ class BeritaController extends Controller
         // Ambil query pencarian
         $search = $request->get('search');
 
-        // Query berita berdasarkan kategori dengan filter pencarian
+        // Query berita berdasarkan kategori dengan filter pencarian - hanya yang approved
         $beritaQuery = Berita::with('kategoriBerita', 'penulis')
-            ->where('id_kategori', $kategori->id_kategori);
+            ->where('id_kategori', $kategori->id_kategori)
+            ->where('status', 'approved');
 
         if ($search) {
             $beritaQuery->where(function ($query) use ($search) {
@@ -65,8 +68,9 @@ class BeritaController extends Controller
         // Ambil semua kategori untuk navigasi
         $kategoriBerita = KategoriBerita::all();
 
-        // Ambil berita populer
+        // Ambil berita populer - hanya yang approved
         $populer = Berita::with('kategoriBerita', 'penulis')
+            ->where('status', 'approved')
             ->latest()
             ->take(5)
             ->get();

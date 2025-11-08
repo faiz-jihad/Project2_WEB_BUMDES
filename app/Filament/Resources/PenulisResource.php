@@ -18,7 +18,7 @@ class PenulisResource extends Resource
     protected static ?string $model = Penulis::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationGroup = 'Berita';
-
+    protected static ?string $navigationLabel = 'Penulis';
     protected static ?string $pluralModelLabel = 'Edit Penulis';
 
     public static function form(Form $form): Form
@@ -65,6 +65,16 @@ class PenulisResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('Avatar')
+                    ->label('Avatar')
+                    ->disk('public')
+                    ->height(40)
+                    ->width(40)
+                    ->circular()
+                    ->getStateUsing(function ($record) {
+                        return $record->Avatar ? asset('storage/' . $record->Avatar) : null;
+                    })
+                    ->defaultImageUrl('/images/no-avatar.png'),
                 Tables\Columns\TextColumn::make('id_penulis')->label('No')->sortable(),
                 Tables\Columns\TextColumn::make('nama_penulis')->label('Nama Penulis')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('Username')->searchable()->sortable(),

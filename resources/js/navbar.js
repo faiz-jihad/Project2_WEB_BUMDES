@@ -6,10 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Scroll effect
     window.addEventListener("scroll", () => {
-        navbar.classList.toggle("scrolled", window.scrollY > 10);
+        if (navbar) {
+            navbar.classList.toggle("scrolled", window.scrollY > 10);
+        }
     });
 
-    // Mobile toggle
+    // Mobile menu toggle
     if (menuToggle && navLinks) {
         menuToggle.addEventListener("click", () => {
             navLinks.classList.toggle("show");
@@ -19,12 +21,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Dropdown mobile
+    // Dropdown mobile interactions
     document.querySelectorAll(".dropdown > .dropbtn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
             if (window.innerWidth <= 900) {
                 e.preventDefault();
-                btn.parentElement.classList.toggle("open");
+                const dropdown = btn.parentElement;
+                const isOpen = dropdown.classList.contains("open");
+
+                // Close all dropdowns first
+                document.querySelectorAll(".dropdown.open").forEach((d) => {
+                    if (d !== dropdown) d.classList.remove("open");
+                });
+
+                // Toggle current dropdown
+                dropdown.classList.toggle("open");
+
+                // Show/hide overlay
+                const overlay = document.querySelector(".dropdown-overlay");
+                if (overlay) {
+                    overlay.classList.toggle("show", !isOpen);
+                }
             }
         });
     });
@@ -35,8 +52,38 @@ document.addEventListener("DOMContentLoaded", function () {
         notifBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            notifBtn.parentElement.classList.toggle("open");
+            const dropdown = notifBtn.parentElement;
+            const isOpen = dropdown.classList.contains("open");
+
+            // Close other dropdowns
+            document.querySelectorAll(".dropdown.open").forEach((d) => {
+                if (d !== dropdown) d.classList.remove("open");
+            });
+
+            dropdown.classList.toggle("open");
+
+            // Load notifications when opening
+            if (!isOpen) {
+                loadNotifications();
+            }
+
+            // Show/hide overlay on mobile
+            if (window.innerWidth <= 900) {
+                const overlay = document.querySelector(".dropdown-overlay");
+                if (overlay) {
+                    overlay.classList.toggle("show", !isOpen);
+                }
+            }
         });
+    }
+
+    // Add notification badge element if it doesn't exist
+    const notifBadge = document.createElement("span");
+    notifBadge.id = "notifBadge";
+    notifBadge.className = "badge";
+    notifBadge.style.display = "none";
+    if (notifBtn && !document.getElementById("notifBadge")) {
+        notifBtn.appendChild(notifBadge);
     }
 
     // Cart dropdown
@@ -45,10 +92,27 @@ document.addEventListener("DOMContentLoaded", function () {
         cartBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            cartBtn.parentElement.classList.toggle("open");
+            const dropdown = cartBtn.parentElement;
+            const isOpen = dropdown.classList.contains("open");
+
+            // Close other dropdowns
+            document.querySelectorAll(".dropdown.open").forEach((d) => {
+                if (d !== dropdown) d.classList.remove("open");
+            });
+
+            dropdown.classList.toggle("open");
+
             // Load cart items when opening dropdown
-            if (cartBtn.parentElement.classList.contains("open")) {
+            if (!isOpen) {
                 loadCartItems();
+            }
+
+            // Show/hide overlay on mobile
+            if (window.innerWidth <= 900) {
+                const overlay = document.querySelector(".dropdown-overlay");
+                if (overlay) {
+                    overlay.classList.toggle("show", !isOpen);
+                }
             }
         });
     }
@@ -59,33 +123,69 @@ document.addEventListener("DOMContentLoaded", function () {
         userBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            userBtn.parentElement.classList.toggle("open");
+            const dropdown = userBtn.parentElement;
+            const isOpen = dropdown.classList.contains("open");
+
+            // Close other dropdowns
+            document.querySelectorAll(".dropdown.open").forEach((d) => {
+                if (d !== dropdown) d.classList.remove("open");
+            });
+
+            dropdown.classList.toggle("open");
+
+            // Show/hide overlay on mobile
+            if (window.innerWidth <= 900) {
+                const overlay = document.querySelector(".dropdown-overlay");
+                if (overlay) {
+                    overlay.classList.toggle("show", !isOpen);
+                }
+            }
         });
     }
 
-    // Close dropdowns when clicking outside
+    // Close dropdowns when clicking outside or on overlay
     document.addEventListener("click", (e) => {
-        if (!e.target.closest(".dropdown")) {
+        if (
+            !e.target.closest(".dropdown") ||
+            e.target.classList.contains("dropdown-overlay")
+        ) {
             document.querySelectorAll(".dropdown.open").forEach((dropdown) => {
                 dropdown.classList.remove("open");
             });
+            const overlay = document.querySelector(".dropdown-overlay");
+            if (overlay) {
+                overlay.classList.remove("show");
+            }
         }
     });
 
     // Prevent dropdown menu clicks from closing
-    document.querySelectorAll(".dropdown-menu").forEach((menu) => {
-        menu.addEventListener("click", (e) => {
-            e.stopPropagation();
+    document
+        .querySelectorAll(".dropdown-menu, .notif-menu, .cart-menu, .user-menu")
+        .forEach((menu) => {
+            menu.addEventListener("click", (e) => {
+                e.stopPropagation();
+            });
         });
-    });
 
-    // Initialize cart on page load
+    // Initialize on page load
     updateCartBadge();
+    updateNotificationBadge();
 
     // Listen for cart updates
     document.addEventListener("cartUpdated", function () {
         updateCartBadge();
     });
+
+    // Listen for notification updates
+    document.addEventListener("notificationUpdated", function () {
+        updateNotificationBadge();
+    });
+
+    // Auto-refresh notifications every 30 seconds
+    setInterval(() => {
+        updateNotificationBadge();
+    }, 30000);
 });
 
 // Function to update cart badge
@@ -95,14 +195,16 @@ function updateCartBadge() {
         headers: {
             "X-Requested-With": "XMLHttpRequest",
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                .content,
+                ?.content,
         },
     })
         .then((response) => response.json())
         .then((data) => {
             const badge = document.getElementById("cartBadge");
             if (badge) {
-                badge.textContent = data.total_items || 0;
+                const count = data.total_items || 0;
+                badge.textContent = count;
+                badge.style.display = count > 0 ? "flex" : "none";
             }
         })
         .catch((error) => {
@@ -119,21 +221,136 @@ function updateCartBadge() {
                     const badge = document.getElementById("cartBadge");
                     if (badge) {
                         badge.textContent = total;
+                        badge.style.display = total > 0 ? "flex" : "none";
                     }
                 } else {
-                    // No session cart, set to 0
                     const badge = document.getElementById("cartBadge");
                     if (badge) {
                         badge.textContent = "0";
+                        badge.style.display = "none";
                     }
                 }
             } catch (e) {
                 console.error("Fallback cart count failed:", e);
-                // Set to 0 if all fails
                 const badge = document.getElementById("cartBadge");
                 if (badge) {
                     badge.textContent = "0";
+                    badge.style.display = "none";
                 }
+            }
+        });
+}
+
+// Function to update notification badge
+function updateNotificationBadge() {
+    fetch("/notifikasi/count", {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                ?.content,
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            const badge = document.getElementById("notifBadge");
+            if (badge) {
+                const count = data.unread_count || 0;
+                badge.textContent = count;
+                badge.style.display = count > 0 ? "flex" : "none";
+            }
+        })
+        .catch((error) => {
+            console.error("Error updating notification badge:", error);
+            const badge = document.getElementById("notifBadge");
+            if (badge) {
+                badge.textContent = "0";
+                badge.style.display = "none";
+            }
+        });
+}
+
+// Function to load notifications
+function loadNotifications() {
+    fetch("/notifikasi/get", {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                ?.content,
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            const notifMenu = document.getElementById("notifMenu");
+            if (!notifMenu) return;
+
+            if (data.notifications && data.notifications.length > 0) {
+                let html = "";
+                data.notifications.slice(0, 5).forEach((notif) => {
+                    const isUnread = !notif.read_at;
+                    html += `
+                        <li class="notif-item ${
+                            isUnread ? "unread" : ""
+                        }" data-id="${notif.id}">
+                            <a href="${
+                                notif.data?.url || "#"
+                            }" class="d-block p-3" onclick="markAsRead(${
+                        notif.id
+                    })">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold mb-1">${
+                                            notif.data?.title || "Notifikasi"
+                                        }</div>
+                                        <div class="text-muted small">${
+                                            notif.data?.message ||
+                                            notif.data?.body ||
+                                            ""
+                                        }</div>
+                                        <div class="text-muted small mt-1">${formatTimeAgo(
+                                            notif.created_at
+                                        )}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    `;
+                });
+
+                if (data.notifications.length > 5) {
+                    html += `
+                        <li class="notif-item">
+                            <a href="/notifikasi" class="view-all-btn d-block text-center p-2">
+                                Lihat Semua Notifikasi
+                            </a>
+                        </li>
+                    `;
+                }
+
+                notifMenu.innerHTML = html;
+            } else {
+                notifMenu.innerHTML = `
+                    <li class="notif-item">
+                        <div class="empty text-center p-3">
+                            <i class="bi bi-bell-slash text-muted mb-2" style="font-size: 2rem;"></i>
+                            <div>Tidak ada notifikasi</div>
+                        </div>
+                    </li>
+                `;
+            }
+        })
+        .catch((error) => {
+            console.error("Error loading notifications:", error);
+            const notifMenu = document.getElementById("notifMenu");
+            if (notifMenu) {
+                notifMenu.innerHTML = `
+                    <li class="notif-item">
+                        <div class="empty text-center p-3 text-danger">
+                            Gagal memuat notifikasi
+                        </div>
+                    </li>
+                `;
             }
         });
 }
@@ -145,7 +362,7 @@ function loadCartItems() {
         headers: {
             "X-Requested-With": "XMLHttpRequest",
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                .content,
+                ?.content,
         },
     })
         .then((response) => response.json())
@@ -155,42 +372,51 @@ function loadCartItems() {
 
             if (data.items && data.items.length > 0) {
                 let html = "";
+                let total = 0;
+
                 data.items.forEach((item) => {
+                    const itemTotal = item.harga * item.jumlah;
+                    total += itemTotal;
                     html += `
-                    <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
-                        <img src="${
-                            item.gambar
-                                ? "/storage/" + item.gambar
-                                : "/images/no-image.jpg"
-                        }" alt="${item.nama}"
-                            class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
-                        <div class="cart-info flex-grow-1">
-                            <span class="cart-name fw-bold">${item.nama}</span>
-                            ${
-                                item.variasi
-                                    ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>`
-                                    : ""
-                            }
-                            <span class="cart-qty text-muted">x${
-                                item.jumlah
-                            }</span>
-                            <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat(
-                                "id-ID"
-                            ).format(item.harga * item.jumlah)}</span>
+                        <div class="cart-item">
+                            <img src="${
+                                item.gambar
+                                    ? "/storage/" + item.gambar
+                                    : "/images/no-image.jpg"
+                            }"
+                                 alt="${item.nama}" class="cart-img">
+                            <div class="cart-info">
+                                <div class="cart-name">${item.nama}</div>
+                                ${
+                                    item.variasi
+                                        ? `<div class="cart-qty">${item.variasi}</div>`
+                                        : ""
+                                }
+                                <div class="cart-qty">Qty: ${item.jumlah}</div>
+                                <div class="cart-price">Rp ${new Intl.NumberFormat(
+                                    "id-ID"
+                                ).format(itemTotal)}</div>
+                            </div>
                         </div>
-                    </li>
-                `;
+                    `;
                 });
+
                 html += `
-                <li class="cart-footer d-flex justify-content-between p-2">
-                    <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
-                    <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
-                </li>
-            `;
+                    <div class="cart-footer">
+                        <div class="cart-total fw-bold">Total: Rp ${new Intl.NumberFormat(
+                            "id-ID"
+                        ).format(total)}</div>
+                        <div class="d-flex gap-2">
+                            <a href="/keranjang" class="btn-cart">Lihat Keranjang</a>
+                            <a href="/checkout" class="btn-checkout">Checkout</a>
+                        </div>
+                    </div>
+                `;
+
                 cartMenu.innerHTML = html;
             } else {
                 cartMenu.innerHTML =
-                    '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                    '<div class="empty">Keranjang kosong</div>';
             }
         })
         .catch((error) => {
@@ -204,65 +430,113 @@ function loadCartItems() {
                     if (cartMenu) {
                         if (Object.keys(cart).length > 0) {
                             let html = "";
+                            let total = 0;
+
                             Object.values(cart).forEach((item) => {
+                                const itemTotal =
+                                    (item.harga || 0) * (item.jumlah || 1);
+                                total += itemTotal;
                                 html += `
-                                <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
-                                    <img src="${
-                                        item.gambar
-                                            ? "/storage/" + item.gambar
-                                            : "/images/no-image.jpg"
-                                    }" alt="${item.nama}"
-                                        class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
-                                    <div class="cart-info flex-grow-1">
-                                        <span class="cart-name fw-bold">${
-                                            item.nama
-                                        }</span>
-                                        ${
-                                            item.variasi
-                                                ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>`
-                                                : ""
-                                        }
-                                        <span class="cart-qty text-muted">x${
-                                            item.jumlah || 1
-                                        }</span>
-                                        <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat(
-                                            "id-ID"
-                                        ).format(
-                                            (item.harga || 0) *
-                                                (item.jumlah || 1)
-                                        )}</span>
+                                    <div class="cart-item">
+                                        <img src="${
+                                            item.gambar
+                                                ? "/storage/" + item.gambar
+                                                : "/images/no-image.jpg"
+                                        }"
+                                             alt="${
+                                                 item.nama
+                                             }" class="cart-img">
+                                        <div class="cart-info">
+                                            <div class="cart-name">${
+                                                item.nama
+                                            }</div>
+                                            ${
+                                                item.variasi
+                                                    ? `<div class="cart-qty">${item.variasi}</div>`
+                                                    : ""
+                                            }
+                                            <div class="cart-qty">Qty: ${
+                                                item.jumlah || 1
+                                            }</div>
+                                            <div class="cart-price">Rp ${new Intl.NumberFormat(
+                                                "id-ID"
+                                            ).format(itemTotal)}</div>
+                                        </div>
                                     </div>
-                                </li>
-                            `;
+                                `;
                             });
+
                             html += `
-                            <li class="cart-footer d-flex justify-content-between p-2">
-                                <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
-                                <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
-                            </li>
-                        `;
+                                <div class="cart-footer">
+                                    <div class="cart-total fw-bold">Total: Rp ${new Intl.NumberFormat(
+                                        "id-ID"
+                                    ).format(total)}</div>
+                                    <div class="d-flex gap-2">
+                                        <a href="/keranjang" class="btn-cart">Lihat Keranjang</a>
+                                        <a href="/checkout" class="btn-checkout">Checkout</a>
+                                    </div>
+                                </div>
+                            `;
+
                             cartMenu.innerHTML = html;
                         } else {
                             cartMenu.innerHTML =
-                                '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                                '<div class="empty">Keranjang kosong</div>';
                         }
                     }
                 } else {
-                    // No session cart
                     const cartMenu = document.getElementById("cartMenu");
                     if (cartMenu) {
                         cartMenu.innerHTML =
-                            '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                            '<div class="empty">Keranjang kosong</div>';
                     }
                 }
             } catch (e) {
                 console.error("Fallback cart loading failed:", e);
-                // Set empty cart if all fails
                 const cartMenu = document.getElementById("cartMenu");
                 if (cartMenu) {
                     cartMenu.innerHTML =
-                        '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                        '<div class="empty">Keranjang kosong</div>';
                 }
             }
         });
+}
+
+// Function to mark notification as read
+function markAsRead(notificationId) {
+    fetch(`/notifikasi/${notificationId}/read`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                ?.content,
+        },
+    })
+        .then(() => {
+            updateNotificationBadge();
+        })
+        .catch((error) => {
+            console.error("Error marking notification as read:", error);
+        });
+}
+
+// Function to format time ago
+function formatTimeAgo(dateString) {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    if (diffInSeconds < 60) return "Baru saja";
+    if (diffInSeconds < 3600)
+        return `${Math.floor(diffInSeconds / 60)} menit yang lalu`;
+    if (diffInSeconds < 86400)
+        return `${Math.floor(diffInSeconds / 3600)} jam yang lalu`;
+    if (diffInSeconds < 604800)
+        return `${Math.floor(diffInSeconds / 86400)} hari yang lalu`;
+
+    return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+    });
 }

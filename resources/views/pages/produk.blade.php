@@ -7,10 +7,16 @@
         <div class="produk-container" data-aos="fade-up">
             <h1 class="produk-title">Produk Unggulan BUMDes Madusari</h1>
             <p class="produk-subtitle">Temukan berbagai produk berkualitas hasil karya masyarakat desa kami.</p>
-
             <!-- Search -->
+            @if (request('search'))
+                <div class="search-results mb-4">
+                    <p>Menampilkan hasil pencarian untuk: "<strong>{{ request('search') }}</strong>"
+                        <a href="{{ route('produk.index') }}" class="btn-clear-search">Tampilkan Semua</a>
+                    </p>
+                </div>
+            @endif
             <div class="search-box mb-4">
-                <input type="text" id="produkSearch" placeholder="Cari produk..." />
+                <input type="text" id="produkSearch" placeholder="Cari produk..." value="{{ request('search') }}" />
             </div>
 
             <!-- Filter Kategori -->
@@ -119,6 +125,39 @@
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 1rem;
+        }
+
+        .search-results {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--green);
+        }
+
+        .search-results p {
+            margin: 0;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .btn-clear-search {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .btn-clear-search:hover {
+            text-decoration: underline;
+        }
+
+        .produk-container img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 30px;
+
         }
 
         /* Filter */

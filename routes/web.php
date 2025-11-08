@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:penulis')->group(function () {
         Route::get('/penulis/dashboard', [PenulisBeritaController::class, 'index'])->name('penulis.dashboard');
         Route::get('/penulis/berita', [PenulisBeritaController::class, 'index'])->name('penulis.berita.index');
+        Route::get('/penulis/berita/{id}', [PenulisBeritaController::class, 'show'])->name('penulis.berita.show');
         Route::post('/penulis/berita', [PenulisBeritaController::class, 'store'])->name('penulis.berita.store');
         Route::put('/penulis/berita/{id}', [PenulisBeritaController::class, 'update'])->name('penulis.berita.update');
     });

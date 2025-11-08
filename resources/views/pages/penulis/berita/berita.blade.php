@@ -43,23 +43,23 @@
                         <div class="stats-item">
                             <div class="stats-label">
                                 <i class="bi bi-check-circle-fill text-success"></i>
-                                Published
+                                Disetujui
                             </div>
-                            <div class="stats-value">{{ $berita->where('status', 'published')->count() }}</div>
-                        </div>
-                        <div class="stats-item">
-                            <div class="stats-label">
-                                <i class="bi bi-file-earmark-text text-primary"></i>
-                                Drafts
-                            </div>
-                            <div class="stats-value">{{ $berita->where('status', 'draft')->count() }}</div>
+                            <div class="stats-value">{{ $berita->where('status', 'approved')->count() }}</div>
                         </div>
                         <div class="stats-item">
                             <div class="stats-label">
                                 <i class="bi bi-clock-fill text-warning"></i>
-                                Pending
+                                Menunggu
                             </div>
                             <div class="stats-value">{{ $berita->where('status', 'pending')->count() }}</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-label">
+                                <i class="bi bi-x-circle-fill text-danger"></i>
+                                Ditolak
+                            </div>
+                            <div class="stats-value">{{ $berita->where('status', 'rejected')->count() }}</div>
                         </div>
                     </div>
                 </div>
@@ -79,9 +79,9 @@
                     <p class="mb-0">Total Berita</p>
                 </div>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #2563eb, #2563ebaa);">
+            <div class="stat-card" style="background: linear-gradient(135deg, #075c0e, #105f22aa);">
                 <div class="card stats-card shadow-sm border-0 rounded-4 text-center p-4 bg-gradient"
-                    style="background:linear-gradient(135deg,#2563eb,#2563ebaa);color:white;">
+                    style="background:linear-gradient(135deg,#07701e,#0a7915aa);color:white;">
                     <i class="bi bi-tags fs-2 mb-2"></i>
                     <h3 class="fw-bold mb-0">{{ $kategori->count() }}</h3>
                     <p class="mb-0">Kategori</p>
@@ -297,14 +297,14 @@
 
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-eye"></i>
-                                    Status Publikasi
+                                    <i class="bi bi-info-circle"></i>
+                                    Catatan
                                 </label>
-                                <select name="status" id="status" class="form-select">
-                                    <option value="published">Publikasikan Sekarang</option>
-                                    <option value="draft">Simpan sebagai Draft</option>
-                                    <option value="scheduled">Jadwalkan Publikasi</option>
-                                </select>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                    <strong>Informasi:</strong> Berita yang Anda buat akan otomatis dalam status "Menunggu
+                                    Persetujuan" dan akan ditinjau oleh admin sebelum dipublikasikan.
+                                </div>
                             </div>
 
                             <div class="form-group" style="grid-column: 1 / -1;">
@@ -382,7 +382,13 @@
                                     <img src="{{ $b->Thumbnail ? asset('storage/' . $b->Thumbnail) : asset('images/no-image.webp') }}"
                                         alt="Thumbnail">
                                     <div class="status-badge">
-                                        <span>✅</span> Published
+                                        @if ($b->status === 'approved')
+                                            <span style="color: #198754;">✅</span> Disetujui
+                                        @elseif($b->status === 'pending')
+                                            <span style="color: #ffc107;">⏳</span> Menunggu
+                                        @elseif($b->status === 'rejected')
+                                            <span style="color: #dc3545;">❌</span> Ditolak
+                                        @endif
                                     </div>
                                     <div class="category-badge">
                                         {{ $b->kategoriBerita->Judul ?? '-' }}
@@ -402,9 +408,9 @@
                                         </div>
                                     </div>
                                     <div class="news-actions">
-                                        <button class="btn btn-sm btn-outline-primary"
-                                            onclick="viewBerita({{ $b->id }})">
-                                            <span></span> Lihat
+                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#previewModal" onclick="viewBerita({{ $b->id }})">
+                                            <i class="bi bi-eye"></i> Lihat
                                         </button>
                                         <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
                                             data-bs-target="#editModal{{ $b->id }}">
@@ -436,18 +442,38 @@
     </main>
 
     <!-- Modal Preview -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <span>👁️</span> Preview Berita
-                </h5>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <img id="previewImage" src="" class="modal-image" alt="Preview">
-                <h4 id="previewTitle"></h4>
-                <div id="previewContent" class="modal-content-text"></div>
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">
+                        <i class="bi bi-eye"></i> Detail Berita
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="berita-detail">
+                        <div class="berita-image-container mb-4">
+                            <img id="previewImage" src="" class="img-fluid rounded" alt="Berita Image">
+                        </div>
+                        <div class="berita-info mb-3">
+                            <h4 id="previewTitle" class="berita-title"></h4>
+                            <div class="berita-meta">
+                                <span class="badge bg-primary me-2" id="previewCategory"></span>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span id="previewDate"></span>
+                                </small>
+                            </div>
+                        </div>
+                        <div id="previewContent" class="berita-content"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Tutup
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -738,13 +764,35 @@
 
         // Modal
         function viewBerita(id) {
-            console.log('View berita:', id);
-        }
+            // Fetch berita data via AJAX
+            fetch(`/penulis/berita/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const berita = data.berita;
 
-        function closeModal() {
-            document.getElementById('previewModal').classList.remove('show');
+                        // Populate modal with berita data
+                        document.getElementById('previewImage').src = berita.thumbnail ?
+                            `/storage/${berita.thumbnail}` :
+                            '{{ asset('images/no-image.webp') }}';
+                        document.getElementById('previewTitle').textContent = berita.judul;
+                        document.getElementById('previewCategory').textContent = berita.kategori_berita?.judul ||
+                            'Tidak ada kategori';
+                        document.getElementById('previewDate').textContent = new Date(berita.created_at)
+                            .toLocaleDateString('id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                        document.getElementById('previewContent').innerHTML = berita.isi_berita;
+                    } else {
+                        showNotification('Gagal memuat detail berita', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Terjadi kesalahan saat memuat berita', 'error');
+                });
         }
     </script>
 @endsection
-
-

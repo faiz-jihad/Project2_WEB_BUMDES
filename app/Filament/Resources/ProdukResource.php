@@ -64,6 +64,15 @@ class ProdukResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('gambar')
+                    ->label('Gambar')
+                    ->disk('public')
+                    ->height(60)
+                    ->width(80)
+                    ->square()
+                    ->getStateUsing(function ($record) {
+                        return $record->gambar ? asset('storage/' . $record->gambar) : null;
+                    }),
                 TextColumn::make('nama')->sortable()->searchable(),
                 TextColumn::make('kategoriProduk.nama_kategori')
                     ->label('Kategori')

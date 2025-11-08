@@ -39,7 +39,11 @@ class GaleriResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('gambar')->label('Foto'),
+                Tables\Columns\ImageColumn::make('gambar')
+                    ->label('Foto')
+                    ->getStateUsing(function ($record) {
+                        return $record->gambar ? asset('storage/' . $record->gambar) : null;
+                    }),
                 Tables\Columns\TextColumn::make('judul')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('kategori')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

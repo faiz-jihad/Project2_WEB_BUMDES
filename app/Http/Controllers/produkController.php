@@ -10,9 +10,18 @@ class ProdukController extends Controller
     /**
      * Tampilkan semua produk di halaman utama produk.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::latest()->get();
+        $query = Produk::query();
+
+        // Handle search
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('nama', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi', 'like', '%' . $search . '%');
+        }
+
+        $produk = $query->latest()->get();
 
         return view('pages.produk', compact('produk'));
     }

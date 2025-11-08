@@ -180,7 +180,7 @@
             }
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .galeri-grid {
                 column-count: 2;
             }

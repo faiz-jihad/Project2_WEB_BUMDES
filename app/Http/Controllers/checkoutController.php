@@ -8,14 +8,14 @@ use App\Models\Pesanan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\PesananBaru;
+use App\Notifications\PesananCreated;
+use App\Models\User;
 
 class CheckoutController extends Controller
 {
-    // Menampilkan halaman checkout
     public function index()
     {
         if (Auth::check()) {
-            // Jika user login, ambil dari database
             $keranjangItems = Keranjang::where('user_id', Auth::id())
                 ->with('produk')
                 ->get();
@@ -100,8 +100,10 @@ class CheckoutController extends Controller
             Keranjang::where('user_id', Auth::id())->delete();
 
             // Kirim notifikasi ke admin
-            // Notification::route('mail', config('app.admin_email'))->notify(new PesananBaru($pesanan));
+            Notification::route('mail', config('app.admin_email'))->notify(new PesananBaru($pesanan));
 
+            // Kirim notifikasi ke user
+            Auth::user()->notify(new PesananCreated($pesanan));
         } else {
             // Jika tidak login, cek keranjang dari session
             $keranjang = session()->get('keranjang', []);
@@ -143,6 +145,6 @@ class CheckoutController extends Controller
             session()->forget('keranjang');
         }
 
-        return redirect()->route('pesanan.show', $pesanan->id_pesanan)->with('success', 'Pesanan berhasil dibuat!');
+        return redirect()->route('pesanan.index')->with('success', 'Pesanan berhasil dibuat! Silakan lihat detail pesanan di halaman pesanan Anda.');
     }
 }

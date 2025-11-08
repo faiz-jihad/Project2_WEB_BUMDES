@@ -36,7 +36,29 @@ class BannerResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('berita.Thumbnail')
+                    ->label('Thumbnail')
+                    ->disk('public')
+                    ->height(60)
+                    ->width(80)
+                    ->square()
+                    ->getStateUsing(function ($record) {
+                        return $record->berita && $record->berita->Thumbnail ? asset('storage/' . $record->berita->Thumbnail) : null;
+                    }),
                 Tables\Columns\TextColumn::make('berita.Judul')->label('Judul Berita'),
+                Tables\Columns\TextColumn::make('berita.status')
+                    ->label('Status Berita')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => 'Menunggu Persetujuan',
+                        'approved' => 'Disetujui',
+                        'rejected' => 'Ditolak',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i'),

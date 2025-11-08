@@ -45,7 +45,7 @@
                         @if (isset($berita) && $berita)
                             @forelse($berita as $b)
                                 @if (is_object($b))
-                                    <div class="col-md-6 col-lg-4 berita-item" data-aos="fade-up"
+                                    <div class="col-md-6 col-lg-4 berita-item" style="color:#fff" data-aos="fade-up"
                                         data-aos-delay="{{ $loop->index * 100 }}" data-judul="{{ strtolower($b->Judul ?? '') }}"
                                         data-kategori="{{ strtolower($b->kategoriBerita?->Judul ?? 'umum') }}">
                                         <div class="card border-0 shadow-sm h-100 berita-card overflow-hidden">

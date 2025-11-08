@@ -17,6 +17,8 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
+use App\Notifications\PesananStatusUpdated;
+use App\Models\User;
 
 class PesananResource extends Resource
 {
@@ -201,6 +203,11 @@ class PesananResource extends Resource
                             ->title('Status pesanan berhasil diperbarui')
                             ->success()
                             ->send();
+
+                        // Kirim notifikasi ke user
+                        if ($record->user) {
+                            $record->user->notify(new PesananStatusUpdated($record));
+                        }
                     }),
             ])
             ->bulkActions([

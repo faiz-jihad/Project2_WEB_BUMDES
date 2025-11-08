@@ -4,25 +4,19 @@
         <!-- Logo -->
         <a href="/" class="nav-logo">
             <img src="{{ asset('images/Bumdes.jpg') }}" alt="Logo" />
-            <span><strong>BUMDes Madusari</strong></span>
+            {{-- <span><strong>BUMDes Madusari</strong></span> --}}
         </a>
-
         <!-- Menu Links -->
         <ul class="nav-links" id="navLinks">
-            <li><a href="/" class="active">Beranda</a></li>
-
-            <li><a href="/berita">Berita</a></li>
-
-            <li><a href="/produk">Produk</a></li>
-
-
+            <li><a href="/" data-route="/">Beranda</a></li>
+            <li><a href="/berita" data-route="/berita">Berita</a></li>
+            <li><a href="/produk" data-route="/produk">Produk</a></li>
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <li><a href="/iot">IOT</a></li>
+                    <li><a href="/iot" data-route="/iot">IOT</a></li>
                 @endif
             @endauth
-
-            <li><a href="/galeri">Galeri</a></li>
+            <li><a href="/galeri" data-route="/galeri">Galeri</a></li>
         </ul>
 
         <!-- Right Icons -->
@@ -33,10 +27,12 @@
                     <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
                         <i class="bi bi-bell"></i>
                         @if (Auth::user()->unreadNotifications->count() > 0)
-                            <span class="badge">{{ Auth::user()->unreadNotifications->count() }}</span>
+                            <span class="badge"
+                                onclick="window.location.href='{{ route('notifikasi.index') }}'">{{ Auth::user()->unreadNotifications->count() }}</span>
                         @endif
                     </a>
                     <ul class="dropdown-menu notif-menu">
+                        <button class="mobile-close-btn" aria-label="Tutup">X</button>
                         @forelse(Auth::user()->unreadNotifications as $notification)
                             <li class="notif-item unread">
                                 <a href="{{ $notification->data['url'] ?? '#' }}">
@@ -62,10 +58,11 @@
             <div class="dropdown cart-dropdown">
                 <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
                     <i class="bi bi-cart"></i>
-                    <span class="badge" id="cartBadge">0</span>
+                    <span class="badge" id="cartBadge" onclick="window.location.href='/keranjang'">0</span>
                 </a>
 
                 <ul class="dropdown-menu cart-menu" id="cartMenu">
+                    <button class="mobile-close-btn" aria-label="Tutup">X</button>
                     <li class="empty text-center p-2"><span>Keranjang kosong</span></li>
                 </ul>
             </div>
@@ -83,6 +80,7 @@
                     </a>
 
                     <ul class="dropdown-menu user-menu" id="userMenu">
+                        <button class="mobile-close-btn" aria-label="Tutup">X</button>
                         <li class="user-info">
                             <div class="user-avatar">
                                 <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/bumdes.jpg') }}"
@@ -121,1305 +119,782 @@
 
 <!-- Icon Library -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+<!-- Navbar Script -->
 
-<!-- === STYLE CSS === -->
 <style>
-    :root {
-        --green: #198754;
-        --dark-green: #146c43;
-        --yellow: #ffc107;
-        --light: #f8fff9;
-        --shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        --border-radius: 10px;
-        --transition: all 0.3s ease;
+    /* === RESET & BASE === */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", "Poppins", sans-serif;
     }
 
-    /* Navbar */
+    body {
+        background: #f8f9fb;
+        overflow-x: hidden;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    /* === NAVBAR === */
     .navbar {
-        position: fixed;
-        top: 0;
         width: 100%;
-        height: 90px;
-        background: linear-gradient(180deg, var(--green), var(--dark-green));
-        box-shadow: var(--shadow);
-        color: white;
+        background: #fff;
+        border-bottom: 1px solid #e5e5e5;
+        position: sticky;
+        top: 0;
         z-index: 1000;
-        transition: var(--transition);
+        transition: all 0.3s ease;
     }
 
-    .navbar.scrolled {
-        background: var(--dark-green);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    #navbar.scrolled {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
     .nav-container {
-        max-width: 1200px;
+        width: 100%;
+        max-width: 1440px;
         margin: 0 auto;
-        padding: 0.9rem 2rem;
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        /* kiri - tengah - kanan */
         align-items: center;
         justify-content: space-between;
-        gap: 2rem;
-        flex-wrap: wrap;
+        padding: 15px 60px;
     }
 
-    /* Logo */
     .nav-logo {
         display: flex;
         align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        color: white;
-        font-weight: 600;
-        font-size: 1.3rem;
+        gap: 12px;
         flex-shrink: 0;
     }
 
     .nav-logo img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        border: 2px solid white;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
         object-fit: cover;
     }
 
-    /* Menu Links */
+    /* === MENU === */
     .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 1.8rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
         flex: 1;
+        display: flex;
         justify-content: center;
+        align-items: center;
+        gap: 36px;
+        transition: all 0.3s ease;
     }
 
-    .nav-links a {
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        padding: 6px 0;
+    .nav-links li a {
+        color: #333;
+        font-weight: 600;
+        font-size: 1.05rem;
         position: relative;
-        transition: var(--transition);
-        white-space: nowrap;
+        padding: 6px 0;
+        transition: color 0.25s ease;
     }
 
-    .nav-links a::after {
+    .nav-links li a:hover,
+    .nav-links li a.active {
+        color: #1b7f5b;
+    }
+
+    .nav-links li a::after {
         content: "";
         position: absolute;
-        bottom: -3px;
         left: 0;
+        bottom: -5px;
         width: 0%;
         height: 2px;
-        background: var(--yellow);
+        background: #1b7f5b;
+        border-radius: 2px;
         transition: width 0.3s ease;
-        border-radius: 1px;
     }
 
-    .nav-links a:hover,
-    .nav-links a.active {
-        color: var(--yellow);
-    }
-
-    .nav-links a:hover::after,
-    .nav-links a.active::after {
+    .nav-links li a:hover::after,
+    .nav-links li a.active::after {
         width: 100%;
     }
 
-    /* Dropdown */
-    .dropdown {
-        position: relative;
-        color: var(--green)
+    /* === RIGHT ICONS === */
+    .nav-left {
+        justify-content: flex-start;
     }
 
-    .dropbtn {
+    .nav-centre {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-right {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 20px;
+        position: relative;
+        justify-content: flex-end;
+    }
+
+    /* icon umum */
+    .nav-right .icon-btn {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-right i {
+        font-size: 1.45rem;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .nav-right i:hover {
+        color: #1b7f5b;
+    }
+
+    /* === BADGE === */
+    .badge {
+        position: absolute;
+        top: -4px;
+        right: -8px;
+        background: #e63946;
+        color: #fff;
+        font-size: 0.7rem;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
         cursor: pointer;
-        transition: var(--transition);
+        transition: all 0.2s ease;
+    }
+
+    .badge:hover {
+        background: #d32f3f;
+        transform: scale(1.1);
+    }
+
+    /* === DROPDOWN === */
+    .dropdown {
+        position: relative;
     }
 
     .dropdown-menu {
         display: none;
         position: absolute;
-        top: 120%;
-        left: 0;
-        background: white;
-        color: var(--green);
-        border-radius: var(--border-radius);
-        min-width: 180px;
-        max-width: 280px;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        overflow: hidden;
-        transition: var(--transition);
-        z-index: 1000;
-        /* Responsive positioning */
-        right: auto;
-        transform: none;
-    }
-
-    /* Adjust dropdown position on smaller screens */
-    @media (max-width: 1200px) {
-        .dropdown-menu {
-            min-width: 160px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .dropdown-menu {
-            min-width: 140px;
-            max-width: 200px;
-        }
-    }
-
-    .dropdown:hover .dropdown-menu {
-        display: block;
-    }
-
-    .dropdown-menu a,
-    .dropdown-menu button {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 18px;
-        color: var(--green);
-        background: none;
-        border: none;
-        width: 100%;
-        font-size: 14px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: var(--transition);
-        text-align: left;
-    }
-
-    .dropdown-menu a:hover,
-    .dropdown-menu button:hover {
-        background: var(--green);
-        color: white;
-    }
-
-    /* Notification Dropdown */
-    .notification-dropdown {
-        position: relative;
-    }
-
-    .notif-menu {
-        display: none;
-        position: absolute;
-        top: 120%;
+        top: 110%;
         right: 0;
-        width: 280px;
-        max-height: 350px;
-        overflow-y: auto;
-        background: white;
-        color: var(--green);
-        border-radius: var(--border-radius);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        z-index: 1000;
-        transition: var(--transition);
-        /* Responsive adjustments */
-        max-width: 90vw;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        min-width: 260px;
+        overflow: hidden;
+        animation: fadeIn 0.25s ease;
+        z-index: 999;
     }
 
-    /* Adjust notification dropdown on smaller screens */
-    @media (max-width: 480px) {
-        .notif-menu {
-            width: 250px;
-            right: -10px;
-        }
-    }
-
-    .notification-dropdown:hover .notif-menu,
-    .notification-dropdown.open .notif-menu {
+    .dropdown.open .dropdown-menu {
         display: block;
     }
 
-    .notif-menu .notif-item {
-        border-bottom: 1px solid #e9ecef;
-        color: #333;
+    /* Tombol Close — Desktop */
+    @media (min-width: 993px) {
+        .dropdown-menu .mobile-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: rgba(240, 240, 240, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: #555;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 10;
+        }
+
+        .dropdown-menu .mobile-close-btn:hover {
+            background: #e6f2ee;
+            color: #1b7f5b;
+            transform: scale(1.1);
+        }
     }
 
-    .notif-menu .notif-item:hover {
-        background: rgba(0, 123, 191, 0.05);
+    .dropdown-menu li {
+        border-bottom: 1px solid #f1f1f1;
     }
 
-    .notif-menu .notif-item.unread {
-        background: rgba(0, 123, 191, 0.1);
-        border-left: 3px solid var(--green);
-    }
-
-    .notif-menu .view-all-btn {
-        background: var(--green);
-        color: white;
-        font-weight: 600;
-    }
-
-    .notif-menu .view-all-btn:hover {
-        background: var(--dark-green);
-    }
-
-    .notif-menu li {
-        border-bottom: 1px solid #eee;
-    }
-
-    .notif-menu li:last-child {
+    .dropdown-menu li:last-child {
         border-bottom: none;
     }
 
-    .notif-menu a {
+    .dropdown-menu a,
+    .dropdown-menu span {
         display: block;
-        padding: 10px 15px;
-        color: var(--green);
-        font-size: 14px;
-        text-decoration: none;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        color: #333;
+        transition: background 0.2s ease;
     }
 
-    .notif-menu a:hover {
-        background: var(--green);
-        color: white;
+    .dropdown-menu a:hover {
+        background: #f5f7fb;
+        color: #1b7f5b;
     }
 
-    .notif-menu .empty {
-        display: block;
-        padding: 12px 15px;
-        color: #888;
-        font-style: italic;
-        text-align: center;
-    }
-
-    /* Right Icons */
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex-shrink: 0;
-    }
-
-    .icon-btn {
-        position: relative;
-        color: white;
-        font-size: 1.3rem;
-        transition: var(--transition);
-        padding: 8px;
+    /* === USER DROPDOWN === */
+    .user-dropdown img {
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
-    }
-
-    .icon-btn:hover {
-        color: var(--yellow);
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .badge {
-        position: absolute;
-        top: -6px;
-        right: -8px;
-        background: var(--yellow);
-        color: var(--green);
-        font-size: 10px;
-        font-weight: bold;
-        border-radius: 50%;
-        padding: 2px 5px;
-        min-width: 16px;
-        height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-    }
-
-    .badge:empty,
-    .badge[data-count="0"] {
-        display: none;
-    }
-
-    /* Login Button */
-    .login-btn {
-        background: var(--yellow);
-        color: var(--green);
-        padding: 8px 18px;
-        border-radius: 12px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: var(--transition);
-        white-space: nowrap;
-    }
-
-    .login-btn:hover {
-        background: #e6b800;
-        color: white;
-        transform: translateY(-1px);
-    }
-
-    /* User Dropdown */
-    .user-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .user-btn img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid white;
         object-fit: cover;
     }
 
-    /* User Dropdown Menu */
     .user-menu {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 120%;
-        width: 280px;
-        max-height: 400px;
-        overflow-y: auto;
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        z-index: 1000;
-        transition: var(--transition);
-        /* Responsive adjustments */
-        max-width: 90vw;
-    }
-
-    /* Adjust user dropdown on smaller screens */
-    @media (max-width: 480px) {
-        .user-menu {
-            width: 250px;
-            right: -10px;
-        }
-    }
-
-    .user-dropdown.open .user-menu {
-        display: block;
+        min-width: 220px;
     }
 
     .user-info {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 15px;
-        background: linear-gradient(135deg, var(--green), var(--dark-green));
-        color: white;
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        gap: 10px;
+        padding: 12px 16px;
     }
 
     .user-avatar img {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        border: 3px solid white;
         object-fit: cover;
     }
 
-    .user-details {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .user-name {
+    .user-details .user-name {
         font-weight: 600;
-        font-size: 16px;
     }
 
-    .user-email {
-        font-size: 12px;
-        opacity: 0.8;
-    }
-
-    .user-menu .divider {
-        height: 1px;
-        background: #eee;
-        margin: 0;
-        border: none;
-    }
-
-    .user-menu a,
-    .user-menu button {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 18px;
-        color: #333;
-        background: none;
-        border: none;
-        width: 100%;
-        font-size: 14px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: var(--transition);
-        text-align: left;
-    }
-
-    .user-menu a:hover,
-    .user-menu button:hover {
-        background: var(--green);
-        color: white;
-    }
-
-    .user-footer {
-        border-top: 1px solid #eee;
-        margin-top: 5px;
-        padding-top: 5px;
+    .user-details .user-email {
+        font-size: 0.8rem;
+        color: #666;
     }
 
     .user-footer button {
-        color: #dc3545;
+        width: 100%;
+        padding: 10px;
+        background: #f8f9fb;
+        border: none;
+        font-weight: 600;
+        color: #333;
+        transition: background 0.25s;
     }
 
     .user-footer button:hover {
-        background: #dc3545;
-        color: white;
+        background: #e9ecef;
+        color: #1b7f5b;
     }
 
-    /* Mobile */
-    .menu-toggle {
-        display: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: white;
-        padding: 6px;
-        border-radius: 4px;
-        transition: var(--transition);
-    }
-
-    .menu-toggle:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .cart-dropdown {
-        position: relative;
-    }
-
-    .cart-menu {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 120%;
-        width: 320px;
-        max-height: 400px;
-        overflow-y: auto;
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-        z-index: 1000;
-        transition: var(--transition);
-        /* Responsive adjustments */
-        max-width: 90vw;
-    }
-
-    /* Adjust cart dropdown on smaller screens */
-    @media (max-width: 480px) {
-        .cart-menu {
-            width: 280px;
-            right: -10px;
-        }
-    }
-
-    .cart-dropdown:hover .cart-menu,
-    .cart-dropdown.open .cart-menu {
-        display: block;
+    /* === CART DROPDOWN === */
+    .cart-dropdown .dropdown-menu {
+        min-width: 300px;
+        padding-bottom: 6px;
     }
 
     .cart-item {
         display: flex;
-        gap: 10px;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
     }
 
-    .cart-item:last-child {
-        border-bottom: none;
-    }
-
-    .cart-img {
-        width: 50px;
-        height: 50px;
+    .cart-item img {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
         object-fit: cover;
-        border-radius: 5px;
     }
 
-    .cart-info {
-        display: flex;
-        flex-direction: column;
-        font-size: 14px;
+    .cart-item strong {
+        font-size: 0.9rem;
     }
 
-    .cart-name {
-        font-weight: 600;
-    }
-
-    .cart-qty,
-    .cart-price {
-        color: #555;
+    .cart-item span {
+        font-size: 0.85rem;
+        color: #777;
     }
 
     .cart-footer {
-        display: flex;
-        justify-content: space-between;
         padding: 10px;
+        display: flex;
+        gap: 10px;
     }
 
-    .cart-footer .btn {
-        padding: 6px 12px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .btn-cart {
-        background: #f1f1f1;
-        color: #333;
-    }
-
-    .btn-checkout {
-        background: #198754;
-        color: white;
-    }
-
-    .empty {
+    .cart-footer a {
+        flex: 1;
         text-align: center;
-        padding: 15px;
-        font-style: italic;
-        color: #888;
+        padding: 8px 0;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
 
+    .cart-footer .btn-view {
+        background: #e9efff;
+        color: #1b7f5b;
+    }
 
-    @media (max-width: 900px) {
+    .cart-footer .btn-view:hover {
+        background: #d7e3ff;
+    }
+
+    .cart-footer .btn-checkout {
+        background: #1b7f5b;
+        color: #fff;
+    }
+
+    .cart-footer .btn-checkout:hover {
+        background: #166749;
+    }
+
+    /* === MOBILE TOGGLE === */
+    #menuToggle {
+        display: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+    }
+
+    /* === OVERLAY === */
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 900;
+        transition: opacity 0.25s ease, visibility 0.25s;
+    }
+
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 992px) {
         .nav-container {
-            padding: 0.5rem 1rem;
+            padding: 12px 20px;
         }
 
-        .nav-logo {
-            font-size: 1.1rem;
-        }
-
-        .nav-logo img {
-            width: 40px;
-            height: 40px;
+        #menuToggle {
+            display: block;
         }
 
         .nav-links {
             position: fixed;
-            top: 90px;
-            left: 0;
-            width: 100%;
-            height: calc(100vh - 90px);
+            top: 0;
+            right: -100%;
+            width: 270px;
+            height: 100vh;
             flex-direction: column;
-            background: var(--green);
-            padding: 30px 20px;
-            gap: 2rem;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-20px);
-            transition: var(--transition);
-            overflow-y: auto;
-            z-index: 999;
-        }
-
-        .user-menu .divider {
-            color: green);
+            background: #fff;
+            padding: 90px 25px;
+            gap: 25px;
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08);
+            transition: right 0.3s ease;
         }
 
         .nav-links.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
-        .nav-links li {
-            width: 100%;
-            text-align: center;
-        }
-
-        .nav-links a {
-            font-size: 1.1rem;
-            padding: 12px 0;
-            display: block;
-        }
-
-        .dropdown-menu {
-            position: static;
-            display: none;
-            background: var(--dark-green);
-            box-shadow: none;
-            border-radius: 0;
-            margin-top: 10px;
-        }
-
-        .dropdown.open .dropdown-menu {
-            display: block;
-        }
-
-        .user-menu {
-            position: static;
-            display: none;
-            background: var(--dark-green);
-            box-shadow: none;
-            border-radius: 0;
-            margin-top: 10px;
-            width: 100%;
-            max-width: none;
-            left: 0;
             right: 0;
         }
 
-        .user-dropdown.open .user-menu {
-            display: block;
+        .nav-links li a {
+            font-size: 1.1rem;
+        }
+
+        /* === SIDEBAR / DROPDOWN UMUM === */
+        .dropdown-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: #ffffff;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(27, 127, 91, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 80% 90%, rgba(27, 127, 91, 0.08) 0%, transparent 30%);
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.08);
+            border-radius: 0;
+            border: none;
+            transition: right 0.35s ease, opacity 0.35s ease;
+            opacity: 0;
+            z-index: 1001;
+            padding: 80px 20px 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+        }
+
+        /* Saat terbuka */
+        .dropdown.open .dropdown-menu {
+            right: 0;
+            opacity: 1;
+            animation: fadeSlideIn 0.4s ease forwards;
+        }
+
+        /* Animasi buka */
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Tombol Close — Umum (Desktop & Mobile) */
+        .dropdown-menu .mobile-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: rgba(240, 240, 240, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: #555;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 10;
+        }
+
+        .dropdown-menu .mobile-close-btn:hover {
+            background: #e6f2ee;
+            color: #1b7f5b;
+            transform: scale(1.1);
+        }
+
+        /* === SPESIFIKASI SIDEBAR === */
+        .notification-dropdown .dropdown-menu {
+            width: 320px;
+        }
+
+        .cart-dropdown .dropdown-menu {
+            width: 320px;
+        }
+
+        .user-dropdown .dropdown-menu {
+            width: 280px;
+        }
+
+        /* === ITEM STYLING === */
+        .notif-item,
+        .cart-item,
+        .user-menu li {
+            border-bottom: 1px solid #f1f1f1;
+            padding: 15px 0;
+        }
+
+        .notif-item:last-child,
+        .cart-item:last-child,
+        .user-menu li:last-child {
+            border-bottom: none;
         }
 
         .user-info {
-            background: linear-gradient(135deg, var(--green), var(--dark-green));
-            border-radius: 0;
-            color: white;
+            margin-bottom: 20px;
         }
 
-        .user-menu .divider {
-            background: rgba(0, 0, 0, 0.1);
+        .user-menu a {
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
         }
 
-        .user-menu a,
-        .user-menu button {
-            color: #333;
-            font-weight: 500;
-        }
-
-        .user-menu a:hover,
-        .user-menu button:hover {
-            background: var(--green);
-            color: white;
+        .user-menu a:hover {
+            color: #1b7f5b;
+            transform: translateX(3px);
         }
 
         .user-footer {
-            border-top: 1px solid #e9ecef;
-            background: #f8f9fa;
+            margin-top: 20px;
         }
 
-        .user-footer button {
-            color: #dc3545;
-            font-weight: 600;
+        /* === RESPONSIVE === */
+        @media (max-width: 992px) {
+            .dropdown-menu {
+                width: 300px;
+            }
+
+            .dropdown-menu .mobile-close-btn {
+                top: 20px;
+                right: 20px;
+                width: 36px;
+                height: 36px;
+                font-size: 22px;
+            }
         }
 
-        .user-footer button:hover {
-            background: #dc3545;
-            color: white;
+        @media (max-width: 576px) {
+            .nav-container {
+                padding: 10px 15px;
+            }
+
+            .cart-dropdown .dropdown-menu {
+                min-width: 260px;
+            }
         }
 
-        .dropdown-menu a,
-        .dropdown-menu button {
-            color: white;
-            justify-content: center;
-            padding: 15px 20px;
+        /* === ANIMASI TAMBAHAN === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .dropdown-menu a:hover,
-        .dropdown-menu button:hover {
-            background: var(--yellow);
-            color: var(--green);
-        }
-
-        .nav-right {
-            gap: 0.125rem;
-        }
-
-        .icon-btn {
-            font-size: 1.2rem;
-            padding: 6px;
-        }
-
-        .login-btn {
-            padding: 6px 12px;
-            font-size: 0.9rem;
-        }
-
-        .user-btn img {
-            width: 35px;
-            height: 35px;
-        }
-
-        .menu-toggle {
-            display: block;
-            font-size: 1.5rem;
-            padding: 8px;
-        }
-
-        .notif-menu,
-        .cart-menu,
-        .user-menu {
-            width: 100vw;
-            max-width: none;
-            left: 0;
-            right: 0;
-            border-radius: 0;
-            /* Ensure proper positioning on mobile */
+        .lightbox-modal {
             position: fixed;
-            top: auto;
-            bottom: 0;
+            display: none;
+            z-index: 1500;
             left: 0;
-            right: 0;
+            top: 0;
             width: 100%;
-            max-height: 60vh;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            /* Animation from bottom to top */
-            transform: translateY(100%);
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            /* Enhanced contrast background */
-            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
         }
-
-        .notification-dropdown:hover .notif-menu,
-        .notification-dropdown.open .notif-menu,
-        .cart-dropdown:hover .cart-menu,
-        .cart-dropdown.open .cart-menu,
-        .user-dropdown.open .user-menu {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .cart-menu {
-            width: 100vw;
-            max-width: none;
-            /* Mobile cart menu inherits the fixed positioning */
-            /* Enhanced contrast and consistency */
-            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-            color: #333;
-        }
-
-        .cart-dropdown.open .cart-menu {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .cart-menu .cart-item {
-            border-bottom: 1px solid #e9ecef;
-            color: #333;
-        }
-
-        .cart-menu .cart-item:hover {
-            background: rgba(0, 123, 191, 0.05);
-        }
-
-        .cart-menu .cart-total {
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .cart-menu .checkout-btn {
-            background: var(--green);
-            color: white;
-            font-weight: 600;
-        }
-
-        .cart-menu .checkout-btn:hover {
-            background: var(--dark-green);
-        }
-    }
-
-    @media (max-width: 576px) {
-        .navbar {
-            height: 70px;
-        }
-
-        .nav-links {
-            top: 70px;
-            height: calc(100vh - 70px);
-        }
-
-        .nav-container {
-            padding: 0.4rem 0.8rem;
-        }
-
-        .nav-logo {
-            font-size: 1rem;
-        }
-
-        .nav-logo img {
-            width: 35px;
-            height: 35px;
-        }
-
-        .nav-links {
-            padding: 20px 15px;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            font-size: 1rem;
-            padding: 10px 0;
-        }
-
-        .dropdown-menu a,
-        .dropdown-menu button {
-            padding: 12px 15px;
-            font-size: 0.9rem;
-        }
-
-        .icon-btn {
-            font-size: 1.1rem;
-            padding: 5px;
-        }
-
-        .login-btn {
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-
-        .user-btn img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .menu-toggle {
-            font-size: 1.2rem;
-            padding: 4px;
-        }
-
-        .badge {
-            font-size: 9px;
-            padding: 1px 4px;
-            min-width: 14px;
-            height: 14px;
-            top: -5px;
-            right: -6px;
-        }
-    }
-
-    @keyframes fadeDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
 </style>
-
-<!-- === SCRIPT === -->
 <script>
-    const navbar = document.getElementById("navbar");
-    const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
+    document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.getElementById("navbar");
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+        const overlay = document.createElement("div");
+        overlay.className = "overlay";
+        document.body.appendChild(overlay);
 
-    // Scroll effect
-    window.addEventListener("scroll", () => {
-        navbar.classList.toggle("scrolled", window.scrollY > 10);
-    });
+        window.addEventListener("scroll", () => {
+            navbar.classList.toggle("scrolled", window.scrollY > 20);
+        });
 
-    // Mobile toggle
-    menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("show");
-        menuToggle.innerHTML = navLinks.classList.contains("show") ?
-            '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
-    });
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("show");
+            menuToggle.innerHTML = navLinks.classList.contains("show") ?
+                '<i class="bi bi-x-lg"></i>' :
+                '<i class="bi bi-list"></i>';
+        });
 
-    // Dropdown mobile
-    document.querySelectorAll(".dropdown > .dropbtn").forEach(btn => {
-        btn.addEventListener("click", e => {
-            if (window.innerWidth <= 900) {
+        const dropdowns = document.querySelectorAll(".dropdown");
+
+        dropdowns.forEach(drop => {
+            const btn = drop.querySelector(".dropbtn");
+
+            btn.addEventListener("click", e => {
                 e.preventDefault();
-                btn.parentElement.classList.toggle("open");
-            }
-        });
-    });
+                e.stopPropagation();
 
-    // Notification
-    const notifBtn = document.querySelector('.notification-dropdown .dropbtn');
-    if (notifBtn) {
-        notifBtn.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Close other dropdowns first
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                if (!dropdown.contains(notifBtn)) {
-                    dropdown.classList.remove('open');
-                }
-            });
-
-            notifBtn.parentElement.classList.toggle('open');
-        });
-
-        // Add hover functionality for desktop
-        if (window.innerWidth > 900) {
-            notifBtn.addEventListener('mouseenter', () => {
-                // Close other dropdowns first
-                document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                    if (!dropdown.contains(notifBtn)) {
-                        dropdown.classList.remove('open');
-                    }
-                });
-            });
-        }
-    }
-
-    // Cart dropdown
-    const cartBtn = document.querySelector('.cart-dropdown .dropbtn');
-    if (cartBtn) {
-        cartBtn.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Close other dropdowns first
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                if (!dropdown.contains(cartBtn)) {
-                    dropdown.classList.remove('open');
-                }
-            });
-
-            cartBtn.parentElement.classList.toggle('open');
-
-            // Load cart items when opening dropdown
-            if (cartBtn.parentElement.classList.contains('open')) {
-                loadCartItems();
-            }
-        });
-
-        // Add hover functionality for desktop
-        if (window.innerWidth > 900) {
-            cartBtn.addEventListener('mouseenter', () => {
-                // Close other dropdowns first
-                document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                    if (!dropdown.contains(cartBtn)) {
-                        dropdown.classList.remove('open');
-                    }
+                dropdowns.forEach(d => {
+                    if (d !== drop) d.classList.remove("open");
                 });
 
-                // Load cart items when hovering
-                loadCartItems();
-            });
-        }
-    }
+                const wasOpen = drop.classList.contains("open");
+                drop.classList.toggle("open");
+                const isNowOpen = drop.classList.contains("open");
+                overlay.classList.toggle("active", isNowOpen);
 
-    // User dropdown
-    const userBtn = document.querySelector('.user-dropdown .dropbtn');
-    if (userBtn) {
-        userBtn.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Close other dropdowns first
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                if (!dropdown.contains(userBtn)) {
-                    dropdown.classList.remove('open');
+                // Load cart items when cart dropdown is opened
+                if (!wasOpen && isNowOpen && drop.classList.contains("cart-dropdown")) {
+                    loadCartItems();
                 }
             });
 
-            userBtn.parentElement.classList.toggle('open');
-
-            // Load user menu items when opening dropdown
-            if (userBtn.parentElement.classList.contains('open')) {
-                loadUserMenu();
+            if (window.innerWidth > 900) {
+                drop.addEventListener("mouseenter", () => {
+                    dropdowns.forEach(d => d.classList.remove("open"));
+                    drop.classList.add("open");
+                });
+                drop.addEventListener("mouseleave", () => {
+                    drop.classList.remove("open");
+                });
             }
         });
-    }
 
-    // Mobile user dropdown toggle
-    const mobileUserBtn = document.querySelector('.user-dropdown .dropbtn');
-    if (mobileUserBtn) {
-        mobileUserBtn.addEventListener('click', e => {
-            if (window.innerWidth <= 900) {
-                e.preventDefault();
-                mobileUserBtn.parentElement.classList.toggle('open');
+        overlay.addEventListener("click", () => {
+            dropdowns.forEach(d => d.classList.remove("open"));
+            overlay.classList.remove("active");
+        });
+
+        // Close mobile sidebars when clicking the close button
+        document.addEventListener("click", (e) => {
+            if (e.target.classList.contains("mobile-close-btn")) {
+                const dropdown = e.target.closest(".dropdown");
+                if (dropdown) {
+                    dropdown.classList.remove("open");
+                    overlay.classList.remove("active");
+                }
             }
         });
-    }
 
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', e => {
-        // Close notification dropdown
-        if (notifBtn && !notifBtn.parentElement.contains(e.target)) {
-            notifBtn.parentElement.classList.remove('open');
-        }
-        // Close cart dropdown
-        if (cartBtn && !cartBtn.parentElement.contains(e.target)) {
-            cartBtn.parentElement.classList.remove('open');
-        }
-        // Close user dropdown
-        if (userBtn && !userBtn.parentElement.contains(e.target)) {
-            userBtn.parentElement.classList.remove('open');
-        }
-    });
+        // Add swipe gesture support for mobile sidebars
+        let startX = 0;
+        let startY = 0;
+        let isSwiping = false;
 
-    // Close mobile dropdowns when clicking outside
-    document.addEventListener('click', e => {
-        if (window.innerWidth <= 900) {
-            // Close notification dropdown on mobile
-            if (notifBtn && !notifBtn.parentElement.contains(e.target)) {
-                notifBtn.parentElement.classList.remove('open');
+        document.addEventListener("touchstart", (e) => {
+            if (e.target.closest(".dropdown-menu")) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isSwiping = true;
             }
-            // Close cart dropdown on mobile
-            if (cartBtn && !cartBtn.parentElement.contains(e.target)) {
-                cartBtn.parentElement.classList.remove('open');
-            }
-            // Close user dropdown on mobile
-            if (userBtn && !userBtn.parentElement.contains(e.target)) {
-                userBtn.parentElement.classList.remove('open');
-            }
-        }
-    });
-
-    // Prevent dropdown close when clicking inside user menu
-    const userMenu = document.getElementById('userMenu');
-    if (userMenu) {
-        userMenu.addEventListener('click', e => {
-            e.stopPropagation();
         });
-    }
 
-    // Prevent dropdown close when clicking inside cart menu
-    const cartMenu = document.getElementById('cartMenu');
-    if (cartMenu) {
-        cartMenu.addEventListener('click', e => {
-            e.stopPropagation();
+        document.addEventListener("touchmove", (e) => {
+            if (!isSwiping) return;
+
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const diffX = startX - currentX;
+            const diffY = startY - currentY;
+
+            // Only handle horizontal swipes (left to right)
+            if (Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
+                const dropdown = e.target.closest(".dropdown");
+                if (dropdown && dropdown.classList.contains("open")) {
+                    dropdown.classList.remove("open");
+                    overlay.classList.remove("active");
+                    isSwiping = false;
+                }
+            }
         });
-    }
 
-    // Initialize cart on page load
-    updateCartBadge();
+        document.addEventListener("touchend", () => {
+            isSwiping = false;
+        });
 
-    // Listen for cart updates
-    document.addEventListener('cartUpdated', function() {
+        const cartBadge = document.getElementById("cartBadge");
+        const cartMenu = document.getElementById("cartMenu");
         updateCartBadge();
-    });
 
-    // Function to update cart badge
-    function updateCartBadge() {
-        // First try AJAX for logged-in users
-        fetch("/keranjang/get", {
-                method: "GET",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || '',
-                },
-                credentials: 'same-origin'
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const badge = document.getElementById("cartBadge");
-                if (badge) {
+        function updateCartBadge() {
+            fetchCart()
+                .then(data => {
                     const count = data.total_items || 0;
-                    badge.textContent = count;
-                    badge.setAttribute('data-count', count);
-                    if (count === 0) {
-                        badge.style.display = 'none';
-                    } else {
-                        badge.style.display = 'flex';
-                    }
-                }
-            })
-            .catch((error) => {
-                console.error("Error updating cart badge:", error);
-                // Fallback: try to get from session storage for guest users
-                try {
+                    setBadgeCount(cartBadge, count);
+                })
+                .catch(() => {
                     const sessionCart = sessionStorage.getItem("keranjang");
                     if (sessionCart) {
                         const cart = JSON.parse(sessionCart);
-                        const total = Object.values(cart).reduce(
-                            (sum, item) => sum + (item.jumlah || 0),
-                            0
-                        );
-                        const badge = document.getElementById("cartBadge");
-                        if (badge) {
-                            badge.textContent = total;
-                            badge.setAttribute('data-count', total);
-                            if (total === 0) {
-                                badge.style.display = 'none';
-                            } else {
-                                badge.style.display = 'flex';
-                            }
-                        }
+                        const total = Object.values(cart).reduce((a, b) => a + (b.jumlah || 0), 0);
+                        setBadgeCount(cartBadge, total);
                     } else {
-                        // No session cart, set to 0
-                        const badge = document.getElementById("cartBadge");
-                        if (badge) {
-                            badge.textContent = "0";
-                            badge.setAttribute('data-count', '0');
-                            badge.style.display = 'none';
-                        }
+                        setBadgeCount(cartBadge, 0);
                     }
-                } catch (e) {
-                    console.error("Fallback cart count failed:", e);
-                    // Set to 0 if all fails
-                    const badge = document.getElementById("cartBadge");
-                    if (badge) {
-                        badge.textContent = "0";
-                        badge.setAttribute('data-count', '0');
-                        badge.style.display = 'none';
-                    }
-                }
-            });
-    }
+                });
+        }
 
-    // Function to load user menu (placeholder for future dynamic content)
-    function loadUserMenu() {
-        // Currently static, but can be extended for dynamic content
-        console.log('User menu loaded');
-    }
+        function setBadgeCount(badge, count) {
+            if (!badge) return;
+            badge.textContent = count;
+            badge.style.display = count > 0 ? "flex" : "none";
+        }
 
-    // Function to load cart items for dropdown
-    function loadCartItems() {
-        fetch("/keranjang/get", {
-                method: "GET",
+        async function fetchCart() {
+            const response = await fetch("/keranjang/get", {
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || ""
                 },
-                credentials: 'same-origin'
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const cartMenu = document.getElementById("cartMenu");
+                credentials: "same-origin"
+            });
+            if (!response.ok) throw new Error("Failed");
+            return response.json();
+        }
+
+        async function loadCartItems() {
+            try {
+                const data = await fetchCart();
                 if (!cartMenu) return;
 
-                // Update badge first
-                const badge = document.getElementById("cartBadge");
-                if (badge) {
-                    const count = data.total_items || 0;
-                    badge.textContent = count;
-                    badge.setAttribute('data-count', count);
-                    if (count === 0) {
-                        badge.style.display = 'none';
-                    } else {
-                        badge.style.display = 'flex';
-                    }
-                }
+                // Always include close button for mobile
+                const closeBtnHtml = '<button class="mobile-close-btn" aria-label="Tutup">×</button>';
 
                 if (data.items && data.items.length > 0) {
-                    let html = "";
-                    data.items.forEach((item) => {
-                        html += `
-                        <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
-                            <img src="${item.gambar ? "/storage/" + item.gambar : "/images/no-image.jpg"}" alt="${item.nama}"
-                                class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
-                            <div class="cart-info flex-grow-1">
-                                <span class="cart-name fw-bold">${item.nama}</span>
-                                ${item.variasi ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>` : ''}
-                                <span class="cart-qty text-muted">x${item.jumlah}</span>
-                                <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format((item.harga || 0) * (item.jumlah || 1))}</span>
-                            </div>
-                        </li>
-                    `;
-                    });
-                    html += `
-                    <li class="cart-footer d-flex justify-content-between p-2">
-                        <a href="/keranjang" class="btn btn-outline-success btn-sm">Lihat Keranjang</a>
-                        <a href="/checkout" class="btn btn-success btn-sm">Checkout</a>
-                    </li>
-                `;
-                    cartMenu.innerHTML = html;
+                    cartMenu.innerHTML = closeBtnHtml + data.items.map(item => `
+          <li class="cart-item">
+            <img src="${item.gambar ? "/storage/" + item.gambar : "/images/no-image.jpg"}" alt="${item.nama}">
+            <div class="cart-info">
+              <strong>${item.nama}</strong>
+              ${item.variasi ? `<small>${item.variasi}</small>` : ""}
+              <div>x${item.jumlah} &middot;
+                <span class="text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format(item.harga * item.jumlah)}</span>
+              </div>
+            </div>
+          </li>
+        `).join('') + `
+          <li class="cart-footer">
+            <a href="/keranjang" class="btn-view">Lihat Keranjang</a>
+            <a href="/checkout" class="btn-checkout">Checkout</a>
+          </li>
+        `;
                 } else {
-                    cartMenu.innerHTML = '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
+                    cartMenu.innerHTML = closeBtnHtml +
+                        `<li class="empty text-center p-2"><span>Keranjang kosong</span></li>`;
                 }
-            })
-            .catch((error) => {
-                console.error("Error loading cart items:", error);
-                // Fallback: try to get from session storage for guest users
-                try {
-                    const sessionCart = sessionStorage.getItem("keranjang");
-                    if (sessionCart) {
-                        const cart = JSON.parse(sessionCart);
-                        const cartMenu = document.getElementById("cartMenu");
-                        if (cartMenu) {
-                            // Update badge from session
-                            const total = Object.values(cart).reduce(
-                                (sum, item) => sum + (item.jumlah || 0),
-                                0
-                            );
-                            const badge = document.getElementById("cartBadge");
-                            if (badge) {
-                                badge.textContent = total;
-                                badge.setAttribute('data-count', total);
-                                if (total === 0) {
-                                    badge.style.display = 'none';
-                                } else {
-                                    badge.style.display = 'flex';
-                                }
-                            }
+            } catch (e) {
+                console.error(e);
+                cartMenu.innerHTML = '<button class="mobile-close-btn" aria-label="Tutup">×</button>' +
+                    `<li class="empty text-center p-2"><span>Keranjang kosong</span></li>`;
+            }
+        }
 
-                            if (Object.keys(cart).length > 0) {
-                                let html = "";
-                                Object.values(cart).forEach((item) => {
-                                    html += `
-                                    <li class="cart-item d-flex align-items-center gap-2 p-2 border-bottom">
-                                        <img src="${item.gambar ? '/storage/' + item.gambar : '/images/no-image.jpg'}" alt="${item.nama}"
-                                            class="cart-img rounded" style="width:50px; height:50px; object-fit:cover;">
-                                        <div class="cart-info flex-grow-1">
-                                            <span class="cart-name fw-bold">${item.nama}</span>
-                                            ${item.variasi ? `<span class="cart-variant d-block text-muted" style="font-size:0.8rem;">${item.variasi}</span>` : ''}
-                                            <span class="cart-qty text-muted">x${item.jumlah || 1}</span>
-                                            <span class="cart-price text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format((item.harga || 0) * (item.jumlah || 1))}</span>
-                                        </div>
-                                    </li>
-                                `;
-                                });
-                                html += `
-                                <li class="cart-footer d-flex justify-content-between p-2 cart-total">
-                                    <a href="/keranjang"
-                                       class="btn btn-sm"
-                                       style="background:#ffffff;color:#146c43;border:2px solid #146c43;font-weight:700;padding:8px 12px;border-radius:8px;">
-                                        Lihat Keranjang
-                                    </a>
-                                    <a href="/checkout"
-                                       class="btn btn-sm"
-                                       style="background:#146c43;color:#ffffff;border:2px solid #146c43;font-weight:700;padding:8px 12px;border-radius:8px;">
-                                        Checkout
-                                    </a>
-                                </li>
-                            `;
-                                cartMenu.innerHTML = html;
-                            } else {
-                                cartMenu.innerHTML =
-                                    '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
-                            }
-                        }
-                    } else {
-                        // No session cart
-                        const cartMenu = document.getElementById("cartMenu");
-                        if (cartMenu) {
-                            cartMenu.innerHTML =
-                                '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
-                        }
-                        // Set badge to 0
-                        const badge = document.getElementById("cartBadge");
-                        if (badge) {
-                            badge.textContent = "0";
-                            badge.setAttribute('data-count', '0');
-                            badge.style.display = 'none';
-                        }
-                    }
-                } catch (e) {
-                    console.error("Fallback cart loading failed:", e);
-                    const cartMenu = document.getElementById("cartMenu");
-                    if (cartMenu) {
-                        cartMenu.innerHTML = '<li class="empty text-center p-2"><span>Keranjang kosong</span></li>';
-                    }
-                    // Set badge to 0
-                    const badge = document.getElementById("cartBadge");
-                    if (badge) {
-                        badge.textContent = "0";
-                    }
-                }
-            });
-    }
+        // Remove duplicate cart button handler since it's now handled in the main dropdown loop
+
+        // Remove duplicate button handlers since they're now handled in the main dropdown loop
+
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".dropdown") && !e.target.closest("#menuToggle")) {
+                dropdowns.forEach(d => d.classList.remove("open"));
+                overlay.classList.remove("active");
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 900) {
+                navLinks.classList.remove("show");
+                menuToggle.innerHTML = '<i class="bi bi-list"></i>';
+            }
+        });
+    });
 </script>

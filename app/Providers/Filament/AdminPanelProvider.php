@@ -27,8 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->plugins([
+                \Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin::make(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -39,6 +43,12 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\BeritaNotificationWidget::class,
+                \App\Filament\Widgets\RecentOrdersWidget::class,
+                \App\Filament\Widgets\OrdersChart::class,
+                \App\Filament\Widgets\QuickActionsWidget::class,
+                \App\Filament\Resources\YResource\Widgets\SensorChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
