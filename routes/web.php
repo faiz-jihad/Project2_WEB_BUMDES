@@ -94,6 +94,7 @@ Route::get('/produk/{slug}', [ProdukController::class, 'show'])->name('produk.sh
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/kategori/{slug}', [BeritaController::class, 'kategori'])->name('berita.kategori');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
+Route::post('/berita/{slug}/like', [BeritaController::class, 'like'])->name('berita.like')->middleware('auth');
 
 // Keranjang
 Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');

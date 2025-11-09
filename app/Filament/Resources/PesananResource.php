@@ -197,6 +197,7 @@ class PesananResource extends Resource
                             ->label('Status Baru'),
                     ])
                     ->action(function (Pesanan $record, array $data): void {
+                        $oldStatus = $record->status;
                         $record->update(['status' => $data['status']]);
 
                         Notification::make()
@@ -206,7 +207,7 @@ class PesananResource extends Resource
 
                         // Kirim notifikasi ke user
                         if ($record->user) {
-                            $record->user->notify(new PesananStatusUpdated($record));
+                            $record->user->notify(new PesananStatusUpdated($record, $oldStatus, $data['status']));
                         }
                     }),
             ])

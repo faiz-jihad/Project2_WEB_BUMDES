@@ -44,7 +44,7 @@ class ProductUpdated extends Notification
         return (new MailMessage)
             ->subject('Produk Telah ' . ucfirst($actionText))
             ->greeting('Halo ' . $notifiable->name . '!')
-            ->line('Produk "' . $this->produk->nama_produk . '" telah ' . $actionText . ' oleh ' . $this->user->name)
+            ->line('Produk "' . $this->produk->nama . '" telah ' . $actionText . ' oleh ' . $this->user->name)
             ->line('Kategori: ' . ($this->produk->kategoriProduk->nama_kategori ?? 'Tidak ada kategori'))
             ->line('Harga: Rp ' . number_format($this->produk->harga, 0, ',', '.'))
             ->action('Lihat Produk', route('produk.show', $this->produk->slug))
@@ -63,13 +63,13 @@ class ProductUpdated extends Notification
 
         return [
             'produk_id' => $this->produk->id_produk,
-            'nama_produk' => $this->produk->nama_produk,
+            'nama_produk' => $this->produk->nama,
             'slug' => $this->produk->slug,
             'user' => $this->user->name,
             'kategori' => $this->produk->kategoriProduk->nama_kategori ?? 'Tidak ada kategori',
             'harga' => $this->produk->harga,
             'action' => $this->action,
-            'message' => 'Produk "' . $this->produk->nama_produk . '" telah ' . $actionText,
+            'message' => 'Produk "' . $this->produk->nama . '" telah ' . $actionText,
             'url' => route('produk.show', $this->produk->slug),
         ];
     }

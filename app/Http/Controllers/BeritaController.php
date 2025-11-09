@@ -78,8 +78,6 @@ class BeritaController extends Controller
         return view('pages.Berita', compact('berita', 'kategori', 'kategoriBerita', 'populer', 'search'));
     }
 
-
-
     public function show($slug)
     {
         $berita = Berita::with('kategoriBerita', 'penulis')
@@ -87,5 +85,35 @@ class BeritaController extends Controller
             ->firstOrFail();
 
         return view('pages.detail', compact('berita'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | LIKE METHODS
+    |--------------------------------------------------------------------------
+    */
+    public function like($slug)
+    {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $berita = Berita::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+
+        if ($berita->isLikedBy($user)) {
+            // Unlike
+            $berita->likedByUsers()->detach($user->id);
+            $liked = false;
+        } else {
+            // Like
+            $berita->likedByUsers()->attach($user->id);
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $berita->likesCount()
+        ]);
     }
 }

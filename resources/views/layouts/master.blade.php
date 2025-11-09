@@ -13,12 +13,16 @@
     <!-- Custom CSS -->
     {{-- <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('css/input.css') }}">
+    @stack('styles')
 
     <!-- Custom JS -->
 
     <!-- Laravel Notify -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css">
     <script src="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/js/notify.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- CSRF Token for AJAX -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -241,6 +245,8 @@
             }, 500);
         });
     </script>
+
+    @stack('scripts')
 </body>
 
 </html>

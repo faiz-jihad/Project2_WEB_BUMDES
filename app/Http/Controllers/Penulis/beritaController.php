@@ -78,11 +78,10 @@ class BeritaController extends Controller
 
             \Log::info('Berita created successfully:', $berita->toArray());
 
-            // Send notification to admin users
-            $adminUsers = \App\Models\User::where('role', 'admin')->get();
-            foreach ($adminUsers as $admin) {
-                $admin->notify(new \App\Notifications\BeritaCreated($berita, $penulis));
-                $admin->notify(new \App\Notifications\BeritaCreatedFilament($berita, $penulis));
+            // Send notification to all users
+            $allUsers = \App\Models\User::all();
+            foreach ($allUsers as $user) {
+                $user->notify(new \App\Notifications\BeritaCreated($berita, $penulis));
             }
 
             notify()->success('Berita berhasil ditambahkan!', 'Berhasil');

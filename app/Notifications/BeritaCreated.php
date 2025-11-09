@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use App\Models\Berita;
 use App\Models\Penulis;
 
@@ -29,7 +30,7 @@ class BeritaCreated extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', 'broadcast'];
     }
 
     /**
@@ -46,6 +47,22 @@ class BeritaCreated extends Notification
             ->action('Lihat Berita', route('berita.show', $this->berita->slug))
             ->line('Silakan tinjau berita ini di panel admin.')
             ->salutation('Salam, Sistem Berita');
+    }
+
+    /**
+     * Get the broadcast representation of the notification.
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'berita_id' => $this->berita->id_berita,
+            'judul' => $this->berita->Judul,
+            'slug' => $this->berita->slug,
+            'penulis' => $this->penulis->nama_penulis,
+            'kategori' => $this->berita->kategoriBerita->Judul ?? 'Tidak ada kategori',
+            'message' => 'Berita baru "' . $this->berita->Judul . '" telah dibuat oleh ' . $this->penulis->nama_penulis,
+            'url' => route('berita.show', $this->berita->slug),
+        ]);
     }
 
     /**

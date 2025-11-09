@@ -102,7 +102,7 @@ class CheckoutController extends Controller
             // Kirim notifikasi ke admin
             Notification::route('mail', config('app.admin_email'))->notify(new PesananBaru($pesanan));
 
-            // Kirim notifikasi ke user
+            // Kirim notifikasi ke user yang membuat pesanan
             Auth::user()->notify(new PesananCreated($pesanan));
         } else {
             // Jika tidak login, cek keranjang dari session

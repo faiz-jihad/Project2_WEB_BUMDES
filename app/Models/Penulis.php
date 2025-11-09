@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Penulis extends Model
 {
-    protected $table = 'penulis'; 
+    use Notifiable;
+
+    protected $table = 'penulis';
     protected $primaryKey = 'id_penulis'; // ini penting!
 
     public $incrementing = true;  // true kalau kolom id_penulis auto increment

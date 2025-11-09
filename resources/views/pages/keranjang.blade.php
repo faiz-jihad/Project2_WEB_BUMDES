@@ -496,116 +496,419 @@
             }
         }
 
-        /* Responsive Design */
+        /* Enhanced Mobile Design with Animations */
         @media(max-width: 768px) {
             .keranjang-section {
                 padding: 100px 15px 140px;
+                background: linear-gradient(135deg, var(--gray-bg) 0%, #ffffff 100%);
+                animation: fadeInUp 0.6s ease-out;
             }
 
             .keranjang-title {
                 font-size: 2rem;
                 margin-bottom: 30px;
+                animation: slideInDown 0.5s ease-out;
+            }
+
+            .keranjang-wrapper {
+                gap: 16px;
             }
 
             .keranjang-card {
                 padding: 20px;
                 flex-direction: column;
                 gap: 16px;
+                border-radius: 20px;
+                background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                border: 1px solid rgba(25, 135, 84, 0.1);
+                position: relative;
+                overflow: hidden;
+                animation: slideInUp 0.4s ease-out;
+                animation-fill-mode: both;
+            }
+
+            .keranjang-card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .keranjang-card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .keranjang-card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            .keranjang-card:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+
+            .keranjang-card:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+
+            .keranjang-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, var(--green), var(--green-dark));
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.3s ease;
+            }
+
+            .keranjang-card:hover::before {
+                transform: scaleX(1);
+            }
+
+            .checkbox-area {
+                position: absolute;
+                top: 16px;
+                left: 16px;
+                margin-right: 0;
+                z-index: 2;
+            }
+
+            .checkbox-area input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                accent-color: var(--green);
+                cursor: pointer;
+                border-radius: 6px;
+                transition: transform 0.2s ease;
+            }
+
+            .checkbox-area input[type="checkbox"]:checked {
+                transform: scale(1.1);
             }
 
             .produk-area {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                text-align: left;
                 gap: 16px;
-            }
-
-            .produk-img {
-                width: 100px;
-                height: 100px;
-                align-self: center;
-            }
-
-            .produk-info {
-                text-align: center;
-                align-items: center;
-            }
-
-            .nama-produk {
-                font-size: 1.1rem;
-            }
-
-            .jumlah-box {
-                justify-content: center;
-            }
-
-            .btn-hapus {
-                top: 12px;
-                right: 12px;
-                width: 32px;
-                height: 32px;
-                font-size: 1.3rem;
-            }
-
-            .sticky-footer {
-                padding: 16px 20px;
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .footer-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .total-text {
-                font-size: 1.1rem;
-            }
-
-            .btn-checkout {
-                padding: 12px 24px;
-                font-size: 1rem;
-            }
-        }
-
-        @media(max-width: 480px) {
-            .keranjang-title {
-                font-size: 1.8rem;
-            }
-
-            .keranjang-card {
-                padding: 16px;
+                align-items: flex-start;
+                margin-top: 8px;
             }
 
             .produk-img {
                 width: 80px;
                 height: 80px;
+                border-radius: 12px;
+                flex-shrink: 0;
+                transition: transform 0.3s ease;
+            }
+
+            .produk-img:hover {
+                transform: scale(1.05) rotate(2deg);
+            }
+
+            .produk-info {
+                flex: 1;
+                text-align: left;
+                align-items: flex-start;
+                gap: 6px;
             }
 
             .nama-produk {
-                font-size: 1rem;
+                font-size: 1.1rem;
+                line-height: 1.3;
+                margin-bottom: 4px;
+            }
+
+            .variasi {
+                font-size: 0.85rem;
+                padding: 3px 6px;
+                margin-bottom: 6px;
             }
 
             .harga {
                 font-size: 1rem;
+                margin: 6px 0;
             }
 
-            .jumlah-input {
-                width: 40px;
+            .jumlah-box {
+                justify-content: flex-start;
+                margin: 10px 0;
+                padding: 6px 10px;
+                border-radius: 20px;
             }
 
             .btn-jumlah {
                 width: 28px;
                 height: 28px;
                 font-size: 1rem;
+                transition: all 0.2s ease;
+            }
+
+            .btn-jumlah:active {
+                transform: scale(0.9);
+            }
+
+            .jumlah-input {
+                width: 45px;
+                padding: 4px 6px;
+                font-size: 0.9rem;
+            }
+
+            .subtotal {
+                font-size: 1rem;
+                margin: 6px 0 0 0;
+            }
+
+            .btn-hapus {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+                background: rgba(220, 53, 69, 0.1);
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                z-index: 2;
+            }
+
+            .btn-hapus:hover {
+                background: #dc3545;
+                color: #fff;
+                transform: scale(1.1) rotate(90deg);
+            }
+
+            .sticky-footer {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 16px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+                backdrop-filter: blur(20px);
+                border-top: 2px solid var(--green-light);
+                animation: slideInUp 0.5s ease-out;
+            }
+
+            .footer-left {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-right {
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .total-text {
+                font-size: 1.1rem;
+                order: 1;
+            }
+
+            .btn-checkout {
+                padding: 12px 24px;
+                font-size: 1rem;
+                order: 2;
+                min-width: 140px;
+                text-align: center;
+            }
+        }
+
+        @media(max-width: 480px) {
+            .keranjang-section {
+                padding: 90px 12px 130px;
+            }
+
+            .keranjang-title {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+
+            .keranjang-card {
+                padding: 16px;
+                gap: 14px;
+                border-radius: 16px;
+            }
+
+            .produk-area {
+                gap: 12px;
+            }
+
+            .produk-img {
+                width: 70px;
+                height: 70px;
+                border-radius: 10px;
+            }
+
+            .produk-info {
+                gap: 4px;
+            }
+
+            .nama-produk {
+                font-size: 1rem;
+                line-height: 1.2;
+            }
+
+            .variasi {
+                font-size: 0.8rem;
+                padding: 2px 5px;
+            }
+
+            .harga {
+                font-size: 0.95rem;
+            }
+
+            .jumlah-box {
+                padding: 5px 8px;
+                margin: 8px 0;
+            }
+
+            .btn-jumlah {
+                width: 26px;
+                height: 26px;
+                font-size: 0.9rem;
+            }
+
+            .jumlah-input {
+                width: 40px;
+                padding: 3px 5px;
+                font-size: 0.85rem;
+            }
+
+            .subtotal {
+                font-size: 0.95rem;
+            }
+
+            .btn-hapus {
+                width: 28px;
+                height: 28px;
+                font-size: 1.1rem;
+                top: 10px;
+                right: 10px;
             }
 
             .sticky-footer {
                 padding: 14px 16px;
+                gap: 14px;
             }
 
             .btn-checkout {
                 padding: 10px 20px;
                 font-size: 0.95rem;
+                min-width: 120px;
+            }
+
+            .total-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Enhanced Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Touch-friendly interactions for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .keranjang-card {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .keranjang-card:active {
+                transform: scale(0.98);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-jumlah:active {
+                transform: scale(0.9);
+                transition: transform 0.1s ease;
+            }
+
+            .btn-hapus:active {
+                transform: scale(0.9);
+                transition: transform 0.1s ease;
+            }
+
+            .checkbox-area input[type="checkbox"]:active {
+                transform: scale(0.9);
+            }
+        }
+
+        /* Loading state improvements */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.1), transparent);
+            animation: shimmer 1.5s infinite;
+            z-index: 1;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Quantity change animation */
+        .quantity-change {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
             }
         }
     </style>
@@ -676,6 +979,82 @@
                     jumlah++;
                 } else if (this.classList.contains('minus') && jumlah > 1) {
                     jumlah--;
+                } else if (this.classList.contains('minus') && jumlah <= 1) {
+                    // Jika jumlah sudah 1 dan user klik minus, tampilkan konfirmasi hapus
+                    Swal.fire({
+                        title: 'Hapus Produk?',
+                        html: `Apakah kamu yakin ingin menghapus <strong>${card.querySelector('.nama-produk').innerText}</strong> dari keranjang?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: '<i class="fas fa-trash"></i> Ya, Hapus',
+                        cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                        customClass: {
+                            popup: 'animated fadeInDown',
+                            confirmButton: 'btn btn-success mx-2',
+                            cancelButton: 'btn btn-secondary mx-2'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Hapus produk
+                            fetch('{{ route('keranjang.hapus') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        id: card.dataset.id
+                                    })
+                                })
+                                .then(res => {
+                                    if (!res.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return res.json();
+                                })
+                                .then(data => {
+                                    card.classList.remove('loading');
+                                    if (data.success) {
+                                        // Smooth removal animation
+                                        card.style.transform = 'translateX(-100%)';
+                                        card.style.opacity = '0';
+
+                                        setTimeout(() => {
+                                            card.remove();
+                                            updateTotal();
+
+                                            if (document.querySelectorAll(
+                                                    '.keranjang-card').length === 0) {
+                                                location
+                                                    .reload(); // Reload to show empty state
+                                            }
+
+                                            document.dispatchEvent(new CustomEvent(
+                                                'cartUpdated'));
+
+                                            showNotification(
+                                                'Produk berhasil dihapus dari keranjang!',
+                                                'success');
+                                        }, 300);
+                                    } else {
+                                        showNotification(data.message ||
+                                            'Gagal menghapus produk.', 'error');
+                                    }
+                                })
+                                .catch(error => {
+                                    card.classList.remove('loading');
+                                    console.error('Error:', error);
+                                    showNotification('Terjadi kesalahan saat menghapus produk.',
+                                        'error');
+                                });
+                        } else {
+                            card.classList.remove('loading');
+                        }
+                    });
+                    return; // Exit the function early
                 }
 
                 input.value = jumlah;
@@ -690,9 +1069,13 @@
                 subtotalSpan.style.color = 'var(--green)';
                 subtotalSpan.innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
 
+                // Add quantity change animation class
+                card.classList.add('quantity-change');
+
                 setTimeout(() => {
                     subtotalSpan.style.transform = '';
                     subtotalSpan.style.color = '';
+                    card.classList.remove('quantity-change');
                 }, 300);
 
                 updateTotal();
@@ -715,7 +1098,7 @@
                         }
                         return response.json();
                     })
-b                    .then(data => {
+                    .then(data => {
                         card.classList.remove('loading');
                         if (data.success) {
                             document.dispatchEvent(new CustomEvent('cartUpdated'));

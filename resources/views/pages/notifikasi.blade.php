@@ -3,6 +3,7 @@
 @section('title', 'Notifikasi')
 
 @section('content')
+<br><br><br>
     <div class="container mx-auto px-4 py-10" x-data="{ notificationsOpen: true }" x-cloak>
         <div class="max-w-4xl mx-auto space-y-6">
             <div class="flex justify-between items-center">
@@ -11,19 +12,33 @@
                     Notifikasi
                 </h1>
 
-                @if (Auth::check() && Auth::user()->notifications->count() > 0)
-                    <button @click="notificationsOpen = !notificationsOpen"
-                        class="flex items-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-200 font-semibold transition duration-200">
-                        <i class="bi" :class="notificationsOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                        <span class="ml-2">Tampilkan</span>
-                    </button>
+                @if (Auth::check())
+                    @php
+                        $user = Auth::user();
+                        $penulis = \App\Models\Penulis::where('Username', $user->email)->first();
+                        $notificationCount = $penulis
+                            ? $penulis->notifications->count()
+                            : $user->notifications->count();
+                    @endphp
+                    @if ($notificationCount > 0)
+                        <button @click="notificationsOpen = !notificationsOpen"
+                            class="flex items-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-200 font-semibold transition duration-200">
+                            <i class="bi" :class="notificationsOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                            <span class="ml-2">Tampilkan</span>
+                        </button>
+                    @endif
                 @endif
             </div>
 
             @if (Auth::check())
-                @if (Auth::user()->notifications->count() > 0)
+                @php
+                    $user = Auth::user();
+                    $penulis = \App\Models\Penulis::where('Username', $user->email)->first();
+                    $notifications = $penulis ? $penulis->notifications : $user->notifications;
+                @endphp
+                @if ($notifications->count() > 0)
                     <div x-show="notificationsOpen" x-transition.duration.500ms class="space-y-4">
-                        @foreach (Auth::user()->notifications as $notification)
+                        @foreach ($notifications as $notification)
                             <div x-data="{ read: {{ $notification->read_at ? 'true' : 'false' }} }"
                                 class="relative overflow-hidden rounded-2xl border-l-4 transition transform hover:-translate-y-1 duration-300 shadow-md hover:shadow-lg
                                     bg-white dark:bg-gray-800"
@@ -31,7 +46,8 @@
 
                                 <!-- highlight animation -->
                                 <div x-show="!read"
-                                    class="absolute inset-0 bg-green-50 dark:bg-green-900/30 animate-pulse opacity-40"></div>
+                                    class="absolute inset-0 bg-green-50 dark:bg-green-900/30 animate-pulse opacity-40">
+                                </div>
 
                                 <div class="relative p-6 flex justify-between items-start">
                                     <div class="flex-1">
@@ -46,7 +62,8 @@
 
                                     <div class="flex space-x-2">
                                         @if (!$notification->read_at)
-                                            <button @click="
+                                            <button
+                                                @click="
                                                 read = true;
                                                 fetch('{{ route('notifikasi.read', $notification->id) }}')
                                             "

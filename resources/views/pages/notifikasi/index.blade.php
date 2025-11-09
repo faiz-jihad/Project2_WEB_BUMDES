@@ -74,3 +74,17 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.Echo !== 'undefined') {
+                window.Echo.private('notifications.{{ Auth::id() }}')
+                    .listen('.notification.sent', (e) => {
+                        // Reload the page to show new notification
+                        location.reload();
+                    });
+            }
+        });
+    </script>
+@endsection

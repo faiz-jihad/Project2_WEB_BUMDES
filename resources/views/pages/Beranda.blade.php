@@ -8,15 +8,10 @@
         {{-- HERO --}}
         <section
             class="hero position-relative text-white text-center d-flex align-items-center justify-content-center overflow-hidden"
-            style="height:100vh;">
-            <div class="hero-slideshow position-absolute w-100 h-100">
-                <div class="slide active" style="background-image: url('{{ asset('images/bgutama.jpg') }}');"></div>
-                <div class="slide" style="background-image: url('{{ asset('images/bg.jpg') }}');"></div>
-                <div class="slide" style="background-image: url('{{ asset('images/bg3.jpg') }}');"></div>
-            </div>
-            <div class="position-absolute top-0 start-0 w-100 h-100"
-                style="background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85));"></div>
-            <div class="text-center px-3 hero-content" data-aos="fade-up" data-aos-duration="1200">
+            style="height:100vh; background-image: url('{{ asset('images/bgutama.jpg') }}'); background-size: cover; background-position: center;">
+            <div class="position-absolute top-0 start-0 w-100 h-100 hero-overlay"
+                style="background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85)); z-index: 2;"></div>
+            <div class="text-center px-3 hero-content" data-aos="fade-up" data-aos-duration="1200" style="z-index: 3;">
                 <h1 class="fw-bold display-4 mb-2 text-uppercase" style="letter-spacing:1px;">
                     BUMDes <span class="text-success">Madusari</span>
                 </h1>
@@ -60,41 +55,52 @@
                     <h2 class="fw-bold text-success mb-3">Produk Unggulan Kami</h2>
                     <p class="text-muted">Dikelola oleh masyarakat, untuk masyarakat.</p>
                 </div>
-                <div class="produk-carousel mt-4">
-                    @if (isset($produk) && $produk->count() > 0)
-                        @foreach ($produk as $item)
-                            <div class="produk-card" data-aos="fade-up">
-                                <div class="produk-img">
-                                    <img src="{{ asset('storage/' . $item->gambar) }}" loading="lazy"
-                                        alt="{{ $item->nama }}">
-                                </div>
-                                <div class="produk-info">
-                                    <h3>{{ $item->nama }}</h3>
-                                    <p>{{ Str::limit($item->deskripsi, 90) }}</p>
-                                    <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
-                                    <div class="produk-actions">
-                                        <a href="{{ route('produk.show', $item->id) }}" class="produk-btn lihat-detail">
-                                            Lihat Detail
-                                        </a>
-                                        @auth
-                                            <button class="produk-btn btn-keranjang-home" data-id="{{ $item->id }}"
-                                                data-nama="{{ $item->nama }}" data-harga="{{ $item->harga }}"
-                                                data-gambar="{{ $item->gambar }}">
-                                                <i class="bi bi-cart-plus"></i> Keranjang
-                                            </button>
-                                        @else
-                                            <a href="{{ route('login') }}" class="produk-btn btn-login">
-                                                <i class="bi bi-person"></i> Login untuk Tambah Keranjang
-                                            </a>
-                                        @endauth
+                @if (isset($produk) && $produk->count() > 0)
+                    <!-- Swiper Container -->
+                    <div class="swiper produk-swiper mt-4">
+                        <div class="swiper-wrapper">
+                            @foreach ($produk as $item)
+                                <div class="swiper-slide">
+                                    <div class="produk-card" data-aos="fade-up">
+                                        <div class="produk-img">
+                                            <img src="{{ asset('storage/' . $item->gambar) }}" loading="lazy"
+                                                alt="{{ $item->nama }}">
+                                        </div>
+                                        <div class="produk-info">
+                                            <h3>{{ $item->nama }}</h3>
+                                            <p>{{ Str::limit($item->deskripsi, 90) }}</p>
+                                            <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                            <div class="produk-actions">
+                                                <a href="{{ route('produk.show', $item->id) }}"
+                                                    class="produk-btn lihat-detail">
+                                                    Lihat Detail
+                                                </a>
+                                                @auth
+                                                    <button class="produk-btn btn-keranjang-home" data-id="{{ $item->id }}"
+                                                        data-nama="{{ $item->nama }}" data-harga="{{ $item->harga }}"
+                                                        data-gambar="{{ $item->gambar }}">
+                                                        <i class="bi bi-cart-plus"></i> Keranjang
+                                                    </button>
+                                                @else
+                                                    <a href="{{ route('login') }}" class="produk-btn btn-login">
+                                                        <i class="bi bi-person"></i> Login untuk Tambah Keranjang
+                                                    </a>
+                                                @endauth
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="no-produk">Belum ada produk yang tersedia saat ini.</p>
-                    @endif
-                </div>
+                            @endforeach
+                        </div>
+                        <!-- Navigation arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <!-- Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
+                @else
+                    <p class="no-produk mt-4">Belum ada produk yang tersedia saat ini.</p>
+                @endif
             </div>
         </section>
 
@@ -243,337 +249,404 @@
         {{-- MAP + KONTAK (Serasi & Profesional) --}}
         <section id="kontak" class="py-5 position-relative">
             <div class="position-absolute w-100 h-100 top-0 start-0"
-            style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.04;"></div>
+                style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.04;"></div>
 
             <div class="container position-relative">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold text-success mb-2" data-aos="fade-down">Lokasi & Kontak</h2>
-                <p class="text-muted mb-0" data-aos="fade-up">Bersinergi membangun desa yang lebih maju — hubungi kami
-                untuk kolaborasi.</p>
-            </div>
-
-            <div class="row g-4 align-items-center">
-                <div class="col-md-6" data-aos="fade-right">
-                <div class="map-card shadow-lg rounded-4 overflow-hidden position-relative">
-                    {{-- Poster overlay to lazy-load iframe for performance + accessible --}}
-                    <button type="button" class="map-poster position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center text-white border-0"
-                    aria-label="Tampilkan peta interaktif" title="Klik untuk memuat peta interaktif">
-                    <div class="text-center px-3">
-                        <i class="bi bi-map-fill fs-1 mb-2" aria-hidden="true"></i>
-                        <h5 class="mb-1 fw-semibold">Tampilkan Peta</h5>
-                        <p class="small mb-0">Klik untuk memuat Peta </p>
-                    </div>
-                    </button>
-
-                    {{-- Pulsing marker --}}
-                    <div class="map-pin position-absolute" aria-hidden="true">
-                    <div class="pin-outer"></div>
-                    <div class="pin-inner"></div>
-                    </div>
-
-                    {{-- Placeholder until clicked --}}
-                    <div class="map-frame w-100" style="min-height:360px; background:#f8fafb;" data-src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed">
-                    <noscript>
-                        <iframe src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed"
-                        loading="lazy" width="100%" height="360" style="border:0;" allowfullscreen></iframe>
-                    </noscript>
-                    </div>
-                </div>
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold text-success mb-2" data-aos="fade-down">Lokasi & Kontak</h2>
+                    <p class="text-muted mb-0" data-aos="fade-up">Bersinergi membangun desa yang lebih maju — hubungi kami
+                        untuk kolaborasi.</p>
                 </div>
 
-                <div class="col-md-6" data-aos="fade-left">
-                <div class="contact-card bg-white p-4 rounded-4 shadow-lg position-relative overflow-hidden">
-                    <div class="d-flex align-items-start gap-3">
-                    <div class="me-2">
-                        <img src="{{ asset('images/logo.jpg') }}" alt="Logo BUMDes Madusari" class="rounded-3"
-                        style="width:84px; height:84px; object-fit:cover;">
-                    </div>
-                    <div class="flex-grow-1">
-                        <h4 class="fw-bold mb-1">BUMDes Madusari</h4>
-                        <p class="text-muted mb-2">Bayalangu Kidul, Kabupaten Indramayu</p>
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="map-card shadow-lg rounded-4 overflow-hidden position-relative">
+                            {{-- Poster overlay to lazy-load iframe for performance + accessible --}}
+                            <button type="button"
+                                class="map-poster position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center text-white border-0"
+                                aria-label="Tampilkan peta interaktif" title="Klik untuk memuat peta interaktif">
+                                <div class="text-center px-3">
+                                    <i class="bi bi-map-fill fs-1 mb-2" aria-hidden="true"></i>
+                                    <h5 class="mb-1 fw-semibold">Tampilkan Peta</h5>
+                                    <p class="small mb-0">Klik untuk memuat Peta </p>
+                                </div>
+                            </button>
 
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                        <button class="btn btn-outline-success btn-sm copy-btn" data-copy="Bayalangu Kidul, Kabupaten Indramayu" aria-label="Salin alamat">
-                            <i class="bi bi-geo-alt me-1" aria-hidden="true"></i> Salin Alamat
-                        </button>
-                        <button class="btn btn-outline-success btn-sm copy-btn" data-copy="info@bumdesmadusari.id" aria-label="Salin email">
-                            <i class="bi bi-envelope me-1" aria-hidden="true"></i> Salin Email
-                        </button>
-                        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-success btn-sm"
-                            aria-label="Hubungi via WhatsApp">
-                            <i class="bi bi-whatsapp me-1" aria-hidden="true"></i> Hubungi via WA
-                        </a>
-                        </div>
+                            {{-- Pulsing marker --}}
+                            <div class="map-pin position-absolute" aria-hidden="true">
+                                <div class="pin-outer"></div>
+                                <div class="pin-inner"></div>
+                            </div>
 
-                        <div class="row g-2 mb-3 text-center">
-                        <div class="col-4">
-                            <h3 class="mb-0 counter-compact" data-target="120" aria-live="polite">0</h3>
-                            <small class="text-muted">Kegiatan</small>
-                        </div>
-                        <div class="col-4">
-                            <h3 class="mb-0 counter-compact" data-target="75" aria-live="polite">0</h3>
-                            <small class="text-muted">Anggota</small>
-                        </div>
-                        <div class="col-4">
-                            <h3 class="mb-0 counter-compact" data-target="98" aria-live="polite">0%</h3>
-                            <small class="text-muted">Kepuasan</small>
-                        </div>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                        <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#contactModal"
-                            aria-haspopup="dialog" aria-controls="contactModal">
-                            <i class="bi bi-chat-left-text me-1" aria-hidden="true"></i> Kirim Pesan
-                        </button>
-                        <a href="{{ route('galeri.index') }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-images me-1" aria-hidden="true"></i> Lihat Galeri
-                        </a>
+                            {{-- Placeholder until clicked --}}
+                            <div class="map-frame w-100" style="min-height:360px; background:#f8fafb;"
+                                data-src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed">
+                                <noscript>
+                                    <iframe src="https://www.google.com/maps?q=Bayalangu+Kidul,+Indramayu&output=embed"
+                                        loading="lazy" width="100%" height="360" style="border:0;"
+                                        allowfullscreen></iframe>
+                                </noscript>
+                            </div>
                         </div>
                     </div>
-                    </div>
 
-                    {{-- subtle decorative bottom wave --}}
-                    <svg class="position-absolute bottom-0 start-0 w-100" height="50" viewBox="0 0 1200 120"
-                    preserveAspectRatio="none" style="transform:translateY(50%); opacity:0.06;">
-                    <path d="M0,0 C150,100 350,0 600,0 C850,0 1050,100 1200,0 L1200,120 L0,120 Z" fill="#198754"></path>
-                    </svg>
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="contact-card bg-white p-4 rounded-4 shadow-lg position-relative overflow-hidden">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="me-2">
+                                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo BUMDes Madusari"
+                                        class="rounded-3" style="width:84px; height:84px; object-fit:cover;">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h4 class="fw-bold mb-1">BUMDes Madusari</h4>
+                                    <p class="text-muted mb-2">Bayalangu Kidul, Kabupaten Indramayu</p>
+
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <button class="btn btn-outline-success btn-sm copy-btn"
+                                            data-copy="Bayalangu Kidul, Kabupaten Indramayu" aria-label="Salin alamat">
+                                            <i class="bi bi-geo-alt me-1" aria-hidden="true"></i> Salin Alamat
+                                        </button>
+                                        <button class="btn btn-outline-success btn-sm copy-btn"
+                                            data-copy="info@bumdesmadusari.id" aria-label="Salin email">
+                                            <i class="bi bi-envelope me-1" aria-hidden="true"></i> Salin Email
+                                        </button>
+                                        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener"
+                                            class="btn btn-success btn-sm" aria-label="Hubungi via WhatsApp">
+                                            <i class="bi bi-whatsapp me-1" aria-hidden="true"></i> Hubungi via WA
+                                        </a>
+                                    </div>
+
+                                    <div class="row g-2 mb-3 text-center">
+                                        <div class="col-4">
+                                            <h3 class="mb-0 counter-compact" data-target="120" aria-live="polite">0</h3>
+                                            <small class="text-muted">Kegiatan</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h3 class="mb-0 counter-compact" data-target="75" aria-live="polite">0</h3>
+                                            <small class="text-muted">Anggota</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h3 class="mb-0 counter-compact" data-target="98" aria-live="polite">0%</h3>
+                                            <small class="text-muted">Kepuasan</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#contactModal" aria-haspopup="dialog"
+                                            aria-controls="contactModal">
+                                            <i class="bi bi-chat-left-text me-1" aria-hidden="true"></i> Kirim Pesan
+                                        </button>
+                                        <a href="{{ route('galeri.index') }}" class="btn btn-success btn-sm">
+                                            <i class="bi bi-images me-1" aria-hidden="true"></i> Lihat Galeri
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- subtle decorative bottom wave --}}
+                            <svg class="position-absolute bottom-0 start-0 w-100" height="50" viewBox="0 0 1200 120"
+                                preserveAspectRatio="none" style="transform:translateY(50%); opacity:0.06;">
+                                <path d="M0,0 C150,100 350,0 600,0 C850,0 1050,100 1200,0 L1200,120 L0,120 Z"
+                                    fill="#198754"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
         </section>
 
         {{-- Modal Kirim Pesan --}}
-        <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true" aria-labelledby="contactModalTitle">
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true"
+            aria-labelledby="contactModalTitle">
             <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4">
-                <div class="modal-header">
-                <h5 class="modal-title" id="contactModalTitle">Kirim Pesan ke BUMDes Madusari</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <form id="contactForm" action="{{ url('/kontak/kirim') }}" method="POST" class="needs-validation" novalidate>
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-2">
-                    <label for="contactNama" class="form-label small">Nama</label>
-                    <input id="contactNama" type="text" name="nama" class="form-control" required>
-                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                <div class="modal-content rounded-4">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="contactModalTitle">Kirim Pesan ke BUMDes Madusari</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
-                    <div class="mb-2">
-                    <label for="contactEmail" class="form-label small">Email</label>
-                    <input id="contactEmail" type="email" name="email" class="form-control" required>
-                    <div class="invalid-feedback">Email valid diperlukan.</div>
-                    </div>
-                    <div class="mb-2">
-                    <label for="contactPesan" class="form-label small">Pesan</label>
-                    <textarea id="contactPesan" name="pesan" rows="4" class="form-control" required></textarea>
-                    <div class="invalid-feedback">Tolong isi pesan Anda.</div>
-                    </div>
+                    <form id="contactForm" action="{{ url('/kontak/kirim') }}" method="POST" class="needs-validation"
+                        novalidate>
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <label for="contactNama" class="form-label small">Nama</label>
+                                <input id="contactNama" type="text" name="nama" class="form-control" required>
+                                <div class="invalid-feedback">Nama wajib diisi.</div>
+                            </div>
+                            <div class="mb-2">
+                                <label for="contactEmail" class="form-label small">Email</label>
+                                <input id="contactEmail" type="email" name="email" class="form-control" required>
+                                <div class="invalid-feedback">Email valid diperlukan.</div>
+                            </div>
+                            <div class="mb-2">
+                                <label for="contactPesan" class="form-label small">Pesan</label>
+                                <textarea id="contactPesan" name="pesan" rows="4" class="form-control" required></textarea>
+                                <div class="invalid-feedback">Tolong isi pesan Anda.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Kirim</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Batal</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Kirim</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                </div>
-                </form>
-            </div>
             </div>
         </div>
 
         <style>
             :root {
-            --accent: #198754;
-            --accent-strong: #146c43;
-            --muted-bg: #f8fafb;
+                --accent: #198754;
+                --accent-strong: #146c43;
+                --muted-bg: #f8fafb;
             }
 
             /* Map + Pin */
-            .map-card { border-radius: 14px; overflow: hidden; background: var(--muted-bg); }
-            .map-poster {
-            transition: opacity .25s ease, transform .25s ease;
-            z-index: 5;
-            background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.42));
-            color: #fff;
+            .map-card {
+                border-radius: 14px;
+                overflow: hidden;
+                background: var(--muted-bg);
             }
-            .map-poster:hover { transform: scale(1.02); }
-            .map-poster:focus { outline: none; box-shadow: 0 0 0 4px rgba(25,135,84,0.12); }
+
+            .map-poster {
+                transition: opacity .25s ease, transform .25s ease;
+                z-index: 5;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.42));
+                color: #fff;
+            }
+
+            .map-poster:hover {
+                transform: scale(1.02);
+            }
+
+            .map-poster:focus {
+                outline: none;
+                box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.12);
+            }
 
             .map-pin {
-            left: 50%;
-            top: 45%;
-            transform: translate(-50%, -50%);
-            width: 28px;
-            height: 28px;
-            z-index: 6;
-            pointer-events: none;
+                left: 50%;
+                top: 45%;
+                transform: translate(-50%, -50%);
+                width: 28px;
+                height: 28px;
+                z-index: 6;
+                pointer-events: none;
             }
+
             .pin-outer {
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(25,135,84,0.18);
-            animation: pulse 2s infinite;
-            left: 0; top: 0;
+                position: absolute;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: rgba(25, 135, 84, 0.18);
+                animation: pulse 2s infinite;
+                left: 0;
+                top: 0;
             }
+
             .pin-inner {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            left: 8px; top: 8px;
-            box-shadow: 0 4px 12px rgba(25,135,84,0.35);
-            transform-origin: center;
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: var(--accent);
+                left: 8px;
+                top: 8px;
+                box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+                transform-origin: center;
             }
+
             @keyframes pulse {
-            0% { transform: scale(.85); opacity: .9; }
-            70% { transform: scale(2.2); opacity: 0; }
-            100% { transform: scale(2.2); opacity: 0; }
+                0% {
+                    transform: scale(.85);
+                    opacity: .9;
+                }
+
+                70% {
+                    transform: scale(2.2);
+                    opacity: 0;
+                }
+
+                100% {
+                    transform: scale(2.2);
+                    opacity: 0;
+                }
             }
 
-            .contact-card { transition: transform .25s ease, box-shadow .25s ease; }
-            .contact-card:hover { transform: translateY(-6px); }
+            .contact-card {
+                transition: transform .25s ease, box-shadow .25s ease;
+            }
 
-            .counter-compact { font-size:1.25rem; color: var(--accent); font-weight:700; }
-            .copy-btn { min-width:160px; }
+            .contact-card:hover {
+                transform: translateY(-6px);
+            }
+
+            .counter-compact {
+                font-size: 1.25rem;
+                color: var(--accent);
+                font-weight: 700;
+            }
+
+            .copy-btn {
+                min-width: 160px;
+            }
 
             /* Accessibility: focus on interactive small buttons */
-            .copy-btn:focus { box-shadow: 0 0 0 4px rgba(25,135,84,0.08); outline: none; }
+            .copy-btn:focus {
+                box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.08);
+                outline: none;
+            }
 
             /* Responsive */
             @media (max-width: 767px) {
-            .map-pin { top: 40%; }
-            .copy-btn { min-width:120px; }
+                .map-pin {
+                    top: 40%;
+                }
+
+                .copy-btn {
+                    min-width: 120px;
+                }
             }
         </style>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-            // Lazy load map iframe on poster click / keyboard activation
-            document.querySelectorAll('.map-card').forEach(card => {
-                const poster = card.querySelector('.map-poster');
-                const frameContainer = card.querySelector('.map-frame');
-                if (!poster || !frameContainer) return;
+            document.addEventListener('DOMContentLoaded', function() {
+                // Lazy load map iframe on poster click / keyboard activation
+                document.querySelectorAll('.map-card').forEach(card => {
+                    const poster = card.querySelector('.map-poster');
+                    const frameContainer = card.querySelector('.map-frame');
+                    if (!poster || !frameContainer) return;
 
-                const loadMap = function () {
-                if (frameContainer.dataset.loaded) {
-                    poster.style.opacity = 0;
-                    poster.style.pointerEvents = 'none';
-                    return;
-                }
-                const src = frameContainer.getAttribute('data-src') || frameContainer.dataset.src;
-                if (!src) return;
-                const iframe = document.createElement('iframe');
-                iframe.width = '100%';
-                iframe.height = '360';
-                iframe.loading = 'lazy';
-                iframe.style.border = '0';
-                iframe.allowFullscreen = true;
-                iframe.src = src;
-                frameContainer.appendChild(iframe);
-                frameContainer.dataset.loaded = '1';
-                poster.style.transition = 'opacity .4s';
-                poster.style.opacity = 0;
-                poster.style.pointerEvents = 'none';
-                };
+                    const loadMap = function() {
+                        if (frameContainer.dataset.loaded) {
+                            poster.style.opacity = 0;
+                            poster.style.pointerEvents = 'none';
+                            return;
+                        }
+                        const src = frameContainer.getAttribute('data-src') || frameContainer.dataset.src;
+                        if (!src) return;
+                        const iframe = document.createElement('iframe');
+                        iframe.width = '100%';
+                        iframe.height = '360';
+                        iframe.loading = 'lazy';
+                        iframe.style.border = '0';
+                        iframe.allowFullscreen = true;
+                        iframe.src = src;
+                        frameContainer.appendChild(iframe);
+                        frameContainer.dataset.loaded = '1';
+                        poster.style.transition = 'opacity .4s';
+                        poster.style.opacity = 0;
+                        poster.style.pointerEvents = 'none';
+                    };
 
-                poster.addEventListener('click', loadMap);
-                poster.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    loadMap();
-                }
-                });
-            });
-
-            // Copy to clipboard (address/email) with feedback
-            document.querySelectorAll('.copy-btn').forEach(btn => {
-                btn.addEventListener('click', async function () {
-                const text = this.getAttribute('data-copy') || '';
-                try {
-                    await navigator.clipboard.writeText(text);
-                    if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil disalin',
-                        text: text,
-                        showConfirmButton: false,
-                        timer: 1500
+                    poster.addEventListener('click', loadMap);
+                    poster.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            loadMap();
+                        }
                     });
-                    } else {
-                    // graceful fallback
-                    const tip = document.createElement('div');
-                    tip.className = 'toast align-items-center text-bg-success border-0';
-                    tip.style.position = 'fixed';
-                    tip.style.top = '1rem';
-                    tip.style.right = '1rem';
-                    tip.style.zIndex = 9999;
-                    tip.innerHTML = '<div class="d-flex"><div class="toast-body text-white">Disalin: ' + text + '</div></div>';
-                    document.body.appendChild(tip);
-                    setTimeout(() => tip.remove(), 1800);
-                    }
-                } catch (err) {
-                    console.error('Clipboard error', err);
-                    if (typeof Swal !== 'undefined') {
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'Tidak dapat menyalin ke clipboard.' });
-                    }
+                });
+
+                // Copy to clipboard (address/email) with feedback
+                document.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const text = this.getAttribute('data-copy') || '';
+                        try {
+                            await navigator.clipboard.writeText(text);
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Berhasil disalin',
+                                    text: text,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            } else {
+                                // graceful fallback
+                                const tip = document.createElement('div');
+                                tip.className = 'toast align-items-center text-bg-success border-0';
+                                tip.style.position = 'fixed';
+                                tip.style.top = '1rem';
+                                tip.style.right = '1rem';
+                                tip.style.zIndex = 9999;
+                                tip.innerHTML =
+                                    '<div class="d-flex"><div class="toast-body text-white">Disalin: ' +
+                                    text + '</div></div>';
+                                document.body.appendChild(tip);
+                                setTimeout(() => tip.remove(), 1800);
+                            }
+                        } catch (err) {
+                            console.error('Clipboard error', err);
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Tidak dapat menyalin ke clipboard.'
+                                });
+                            }
+                        }
+                    });
+                });
+
+                // Compact counters when in view (avoid global name collision)
+                const compactCounters = document.querySelectorAll('.counter-compact');
+                const compactObserver = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        const el = entry.target;
+                        const target = +el.getAttribute('data-target') || 0;
+                        const duration = 900;
+                        const start = performance.now();
+                        const init = +el.innerText.replace(/\D/g, '') || 0;
+                        const animate = (now) => {
+                            const progress = Math.min((now - start) / duration, 1);
+                            const value = Math.floor(init + (target - init) * progress);
+                            el.innerText = el.innerText.includes('%') ? (value + '%') : value;
+                            if (progress < 1) requestAnimationFrame(animate);
+                        };
+                        requestAnimationFrame(animate);
+                        compactObserver.unobserve(el);
+                    });
+                }, {
+                    threshold: 0.5
+                });
+                compactCounters.forEach(c => compactObserver.observe(c));
+
+                // Focus first input when contact modal shown
+                const contactModalEl = document.getElementById('contactModal');
+                if (contactModalEl) {
+                    contactModalEl.addEventListener('shown.bs.modal', function() {
+                        const firstInput = contactModalEl.querySelector('input, textarea, button');
+                        if (firstInput) firstInput.focus();
+                    });
                 }
-                });
-            });
 
-            // Compact counters when in view (avoid global name collision)
-            const compactCounters = document.querySelectorAll('.counter-compact');
-            const compactObserver = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const el = entry.target;
-                const target = +el.getAttribute('data-target') || 0;
-                const duration = 900;
-                const start = performance.now();
-                const init = +el.innerText.replace(/\D/g, '') || 0;
-                const animate = (now) => {
-                    const progress = Math.min((now - start) / duration, 1);
-                    const value = Math.floor(init + (target - init) * progress);
-                    el.innerText = el.innerText.includes('%') ? (value + '%') : value;
-                    if (progress < 1) requestAnimationFrame(animate);
-                };
-                requestAnimationFrame(animate);
-                compactObserver.unobserve(el);
-                });
-            }, { threshold: 0.5 });
-            compactCounters.forEach(c => compactObserver.observe(c));
-
-            // Focus first input when contact modal shown
-            const contactModalEl = document.getElementById('contactModal');
-            if (contactModalEl) {
-                contactModalEl.addEventListener('shown.bs.modal', function () {
-                const firstInput = contactModalEl.querySelector('input, textarea, button');
-                if (firstInput) firstInput.focus();
-                });
-            }
-
-            // Client-side Bootstrap validation for contact form (keeps server fallback)
-            (function () {
-                const forms = document.querySelectorAll('.needs-validation');
-                Array.prototype.slice.call(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    form.classList.add('was-validated');
-                    return;
-                    }
-                    const submitBtn = form.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Mengirim...';
-                    }
-                    // server handles actual submission
-                }, false);
-                });
-            })();
+                // Client-side Bootstrap validation for contact form (keeps server fallback)
+                (function() {
+                    const forms = document.querySelectorAll('.needs-validation');
+                    Array.prototype.slice.call(forms).forEach(function(form) {
+                        form.addEventListener('submit', function(event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                form.classList.add('was-validated');
+                                return;
+                            }
+                            const submitBtn = form.querySelector('button[type="submit"]');
+                            if (submitBtn) {
+                                submitBtn.disabled = true;
+                                submitBtn.innerHTML =
+                                    '<i class="bi bi-hourglass-split me-1"></i> Mengirim...';
+                            }
+                            // server handles actual submission
+                        }, false);
+                    });
+                })();
             });
         </script>
 
@@ -607,14 +680,6 @@
 
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Hero Slideshow
-            const slides = document.querySelectorAll(".slide");
-            let index = 0;
-            setInterval(() => {
-                slides[index].classList.remove("active");
-                index = (index + 1) % slides.length;
-                slides[index].classList.add("active");
-            }, 5000);
 
             // Produk Modal
             const produkBtns = document.querySelectorAll('.lihat-detail');
@@ -700,6 +765,39 @@
                 },
             });
 
+            // Initialize Swiper for Produk
+            const produkSwiper = new Swiper('.produk-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    576: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    992: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
             // SweetAlert untuk success messages
             @if (session('success'))
                 Swal.fire({
@@ -777,31 +875,6 @@
     </script>
 
     <style>
-        .hero-slideshow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 2.5s ease-in-out;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
         .hero-content {
             position: relative;
             z-index: 3;
@@ -839,25 +912,55 @@
             transition: .3s ease;
         }
 
-        .produk-carousel {
+        /* Swiper Produk Styles */
+        .produk-swiper {
+            width: 100%;
+            padding-bottom: 50px;
+        }
+
+        .produk-swiper .swiper-slide {
             display: flex;
-            gap: 25px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scroll-behavior: smooth;
+            justify-content: center;
+            align-items: stretch;
         }
 
-        .produk-carousel::-webkit-scrollbar {
-            height: 8px;
+        .produk-swiper .swiper-pagination {
+            bottom: 0;
         }
 
-        .produk-carousel::-webkit-scrollbar-thumb {
+        .produk-swiper .swiper-pagination-bullet {
             background: var(--green);
-            border-radius: 4px;
+            opacity: 0.5;
         }
 
-        .produk-carousel::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
+        .produk-swiper .swiper-pagination-bullet-active {
+            opacity: 1;
+        }
+
+        /* Swiper Navigation Customization for Produk */
+        .produk-swiper .swiper-button-next,
+        .produk-swiper .swiper-button-prev {
+            color: var(--green);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            margin-top: -22px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .produk-swiper .swiper-button-next:hover,
+        .produk-swiper .swiper-button-prev:hover {
+            background: var(--green);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .produk-swiper .swiper-button-next:after,
+        .produk-swiper .swiper-button-prev:after {
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .produk-card {

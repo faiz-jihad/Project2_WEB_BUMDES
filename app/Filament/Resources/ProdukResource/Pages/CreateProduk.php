@@ -15,12 +15,12 @@ class CreateProduk extends CreateRecord
     protected function afterCreate(): void
     {
         $produk = $this->record;
-        $user = auth()->user();
+        $creator = auth()->user();
 
-        // Send notification to admin users
-        $adminUsers = User::where('role', 'admin')->get();
-        foreach ($adminUsers as $admin) {
-            $admin->notify(new ProductUpdated($produk, $user, 'created'));
+        // Send notification to all users
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            $user->notify(new ProductUpdated($produk, $creator, 'created'));
         }
     }
 }

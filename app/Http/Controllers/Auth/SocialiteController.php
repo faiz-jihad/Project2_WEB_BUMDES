@@ -54,10 +54,15 @@ class SocialiteController extends Controller
             ]);
         }
 
-        // Login r user
+        // Login the user
         Auth::login($user, true); // Remember the user
 
-        // Redirect to intended page or beranda
-        return redirect()->intended('/beranda');
+        // Redirect based on role for admin/penulis users
+        if ($user->role === 'admin' || $user->role === 'penulis') {
+            return redirect()->route('dashboard.choice');
+        }
+
+        // Redirect to intended page or beranda for regular users
+        return redirect()->intended(route('beranda'))->with('success', 'Login berhasil! Selamat datang kembali.');
     }
 }

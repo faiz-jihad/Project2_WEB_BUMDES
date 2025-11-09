@@ -49,6 +49,17 @@ class Berita extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | LIKES RELATIONSHIP
+    |--------------------------------------------------------------------------
+    */
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'berita_user', 'berita_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | ACCESSOR (opsional)
     |--------------------------------------------------------------------------
     | Supaya path relatif seperti `thumbnails/foo.jpg` otomatis
@@ -59,6 +70,21 @@ class Berita extends Model
         return $this->Thumbnail
             ? Storage::url($this->Thumbnail)
             : null;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HELPER METHODS
+    |--------------------------------------------------------------------------
+    */
+    public function isLikedBy(User $user)
+    {
+        return $this->likedByUsers()->where('user_id', $user->id)->exists();
+    }
+
+    public function likesCount()
+    {
+        return $this->likedByUsers()->count();
     }
 
     /*
