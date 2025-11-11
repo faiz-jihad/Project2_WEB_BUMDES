@@ -39,21 +39,31 @@
                         data-nama="{{ $item->nama }}" data-deskripsi="{{ $item->deskripsi }}"
                         data-harga="Rp {{ number_format($item->harga, 0, ',', '.') }}"
                         data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
-                        data-id="{{ $item->id }}" data-slug="{{ $item->slug }}">
+                        data-id="{{ $item->id }}" data-slug="{{ $item->slug }}" data-stok="{{ $item->stok }}">
                         <div class="produk-img">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
                                 alt="{{ $item->nama }}" loading="lazy">
+                            @if ($item->stok == 0)
+                                <div class="out-of-stock-badge">Habis</div>
+                            @endif
                         </div>
                         <div class="produk-info">
                             <h3>{{ $item->nama }}</h3>
                             <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                            <span class="stok-info">Stok: {{ $item->stok }}</span>
                             <p>{{ Str::limit($item->deskripsi, 100) }}</p>
                             <div class="produk-actions">
                                 @auth
-                                    <button class="btn-keranjang-icon" data-id="{{ $item->id }}"
-                                        title="Tambah ke Keranjang">
-                                        <i class="bi bi-cart-plus"></i>
-                                    </button>
+                                    @if ($item->stok > 0)
+                                        <button class="btn-keranjang-icon" data-id="{{ $item->id }}"
+                                            title="Tambah ke Keranjang">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn-keranjang-icon disabled" disabled title="Stok Habis">
+                                            <i class="bi bi-cart-x"></i>
+                                        </button>
+                                    @endif
                                 @else
                                     <a href="{{ route('login') }}" class="btn-login-icon" title="Login untuk Tambah Keranjang">
                                         <i class="bi bi-person"></i>
@@ -230,6 +240,7 @@
             border: 2px solid #f0f0f0;
             border-radius: 8px 8px 0 0;
             background: #f8f8f8;
+            position: relative;
         }
 
         .produk-img img {
@@ -258,6 +269,14 @@
             font-weight: 700;
             color: var(--green-dark);
             font-size: 1rem;
+            display: block;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+
+        .stok-info {
+            font-size: 0.85rem;
+            color: #666;
             display: block;
             margin-bottom: 8px;
             flex-shrink: 0;
@@ -400,6 +419,31 @@
 
         .close-btn:hover {
             color: var(--green-dark);
+        }
+
+        .out-of-stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .btn-keranjang-icon.disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-keranjang-icon.disabled:hover {
+            background: #6c757d;
+            transform: none;
         }
     </style>
 

@@ -5,7 +5,7 @@
 @section('content')
     <section class="keranjang-section">
         <div class="container">
-            <h1 class="keranjang-title">Keranjang Belanja</h1>
+            <h1 class="keranjang-title">Keranjang Belanja</h1><br>
 
             @if (count($keranjang) > 0)
                 <div class="keranjang-wrapper">

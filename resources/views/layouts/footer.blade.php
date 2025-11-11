@@ -1,191 +1,288 @@
-<!-- FOOTER -->
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Map -->
-        <div class="footer-map">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d94785.86416288807!2d108.27500789166334!3d-6.625543742625704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6edd8be2a2be19%3A0xa32edfcca5dff2bc!2sBayalangu%20Kidul%2C%20Kec.%20Gegesik%2C%20Kabupaten%20Cirebon%2C%20Jawa%20Barat!5e1!3m2!1sid!2sid!4v1759338364051!5m2!1sid!2sid"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
+<!DOCTYPE html>
+<html lang="id">
 
-        <!-- Links -->
-        <div class="footer-links">
-            <div class="footer-section">
-                <h3>Tentang</h3>
-                <a href="{{ route('about') }}">Tentang Kami</a>
-                <a href="{{ route('contact') }}">Kontak</a>
-                <a href="{{ route('berita.index') }}">Berita</a>
-            </div>
-            <div class="footer-section">
-                <h3>Layanan</h3>
-                <a href="{{ route('produk.index') }}">Produk</a>
-                <a href="{{ route('galeri.index') }}">Galeri</a>
-                <a href="{{ route('beranda') }}">Beranda</a>
-            </div>
-            <div class="footer-section">
-                <h3>Ikuti Kami</h3>
-                <a href="#" target="_blank"><i class="bi bi-facebook"></i> Facebook</a>
-                <a href="#" target="_blank"><i class="bi bi-twitter"></i> Twitter</a>
-                <a href="#" target="_blank"><i class="bi bi-instagram"></i> Instagram</a>
-            </div>
-        </div>
-    </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Footer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        :root {
+            --kuning: #ffc107;
+            --putih: #ffffff;
+            --hijau: #227c41;
+        }
 
-    <div class="footer-bottom">
-        <p>&copy; {{ date('Y') }} BUMDes Madusari. Semua Hak Dilindungi.</p>
-    </div>
-</footer>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
-    /* Footer Styles - Efisien dan Responsif */
-    :root {
-        --green: #0c6435;
-        --light-green: #16a34a;
-        --white: #ffffff;
-        --yellow: #ffc107;
-    }
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f8f9fa;
+        }
 
-    .footer {
-        background: var(--green);
-        color: var(--white);
-        padding: 40px 20px 20px;
-        font-family: "Poppins", sans-serif;
-    }
+        /* === FOOTER === */
+        .footer-persib {
+            background: linear-gradient(135deg, var(--hijau) 70%, #0c8216 100%);
+            color: var(--putih);
+            padding: 0 20px 40px;
+        }
 
-    .footer-container {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 40px;
-        max-width: 1200px;
-        margin: 0 auto;
-        align-items: start;
-    }
-
-    .footer-map {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease;
-    }
-
-    .footer-map:hover {
-        transform: scale(1.02);
-    }
-
-    .footer-map iframe {
-        width: 100%;
-        height: 250px;
-        border: none;
-    }
-
-    .footer-links {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 30px;
-    }
-
-    .footer-section h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: var(--white);
-        border-left: 3px solid var(--light-green);
-        padding-left: 10px;
-    }
-
-    .footer-section a {
-        display: block;
-        color: var(--white);
-        text-decoration: none;
-        font-size: 0.95rem;
-        margin-bottom: 8px;
-        transition: all 0.3s ease;
-        padding: 5px 0;
-    }
-
-    .footer-section a:hover {
-        color: var(--yellow);
-        transform: translateX(5px);
-    }
-
-    .footer-section a i {
-        margin-right: 8px;
-        transition: transform 0.3s ease;
-    }
-
-    .footer-section a:hover i {
-        transform: scale(1.1);
-    }
-
-    .footer-bottom {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        margin-top: 30px;
-        padding-top: 15px;
-        text-align: center;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    /* Tablet */
-    @media (max-width: 768px) {
         .footer-container {
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        .footer-map iframe {
-            height: 200px;
-        }
-
-        .footer-links {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-        }
-
-        .footer {
-            padding: 30px 15px 15px;
-        }
-    }
-
-    /* Mobile */
-    @media (max-width: 480px) {
-        .footer-container {
-            gap: 25px;
-        }
-
-        .footer-links {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .footer-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 0;
             text-align: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
         }
 
-        .footer-section h3 {
-            border-left: none;
-            border-bottom: 2px solid var(--light-green);
-            padding-left: 0;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+        .footer-column {
+            /* Hilangkan padding untuk menghilangkan gap */
+            padding: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
 
-        .footer-map iframe {
-            height: 180px;
+        /* Border kanan sebagai garis pembatas, lebih rapih dan tidak ada gap */
+        .footer-column:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .footer {
-            padding: 25px 10px 15px;
+        .footer-column h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin: 10px 0;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
+        .footer-column a {
+            color: var(--putih);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .footer-column a:hover {
+            color: var(--kuning);
+            transform: translateY(-2px);
+        }
+
+        .footer-logo {
+            width: 90px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            color: var(--putih);
+            font-size: 1.4rem;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--kuning);
+            transform: scale(1.1);
+        }
+
+        .app-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .app-buttons img {
+            height: 42px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .app-buttons img:hover {
+            transform: scale(1.05);
+        }
+
+        /* === Efek Ketik === */
         .footer-bottom {
-            font-size: 0.85rem;
-            margin-top: 20px;
+            text-align: center;
+            padding: 20px 20px 40px;
         }
-    }
-</style>
+
+        .footer-bottom h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--putih);
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .cursor {
+            display: inline-block;
+            color: var(--putih);
+            font-weight: 300;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* === RESPONSIF === */
+        @media (max-width: 992px) {
+            .footer-bottom h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-column:not(:last-child) {
+                border-right: none;
+            }
+
+            .footer-bottom h1 {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+
+            .social-icons a {
+                font-size: 1.2rem;
+            }
+
+            .app-buttons img {
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .footer-bottom h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- === FOOTER === -->
+    <footer class="footer-persib">
+        <div class="footer-container">
+            <!-- Logo -->
+            <div class="footer-column logo-column">
+                <img src="{{ asset('images/bumdes.jpg') }}" class="footer-logo" />
+            </div>
+
+            <!-- Email -->
+            <div class="footer-column">
+                <h4>EMAIL</h4>
+                <a href="mailto:bumdesmadusari@gmail.com">bumdesmadusari@gmail.com</a>
+            </div>
+
+            <!-- Media Sosial -->
+            <div class="footer-column">
+                <h4>MEDIA SOSIAL</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="X Twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Unduh Aplikasi -->
+            <div class="footer-column">
+                <h4>UNDUH APLIKASI</h4>
+                <div class="app-buttons">
+                    <a href="#">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                            alt="Google Play" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <h1><span id="typing-text"></span><span class="cursor">|</span></h1>
+        </div>
+    </footer>
+
+    <!-- === SCRIPT EFEK KETIK === -->
+    <script>
+        const texts = ["BERSAMA", "MEMBANGUN", "KEMAJUAN", "DAERAH"];
+        let count = 0;
+        let index = 0;
+        let currentText = "";
+        let letter = "";
+
+        function type() {
+            if (count === texts.length) count = 0;
+            currentText = texts[count];
+            letter = currentText.slice(0, ++index);
+            document.getElementById("typing-text").textContent = letter;
+
+            if (letter.length === currentText.length) {
+                setTimeout(erase, 1200);
+            } else {
+                setTimeout(type, 150);
+            }
+        }
+
+        function erase() {
+            letter = currentText.slice(0, --index);
+            document.getElementById("typing-text").textContent = letter;
+
+            if (letter.length === 0) {
+                count++;
+                index = 0;
+                setTimeout(type, 400);
+            } else {
+                setTimeout(erase, 50);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", type);
+    </script>
+</body>
+
+</html>

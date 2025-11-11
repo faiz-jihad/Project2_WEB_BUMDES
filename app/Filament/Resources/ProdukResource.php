@@ -52,9 +52,16 @@ class ProdukResource extends Resource
                     ->numeric()
                     ->minValue(0),
 
+                TextInput::make('stok')
+                    ->required()
+                    ->numeric()
+                    ->minValue(0)
+                    ->default(0),
+
                 // Upload gambar
                 \Filament\Forms\Components\FileUpload::make('gambar')
-                    ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
+                    ->maxSize(5120) // 5MB
                     ->directory('produk')
                     ->required(),
             ]);
@@ -78,6 +85,7 @@ class ProdukResource extends Resource
                     ->label('Kategori')
                     ->sortable(),
                 TextColumn::make('harga')->money('IDR', true),
+                TextColumn::make('stok'),
                 TextColumn::make('deskripsi')->limit(50),
                 TextColumn::make('created_at')->date(),
             ])

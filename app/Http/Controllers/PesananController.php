@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -133,6 +134,14 @@ class PesananController extends Controller
         // Check ownership
         if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
             abort(403);
+        }
+
+        // Restore stock for each item in the order
+        foreach ($pesanan->items as $item) {
+            $produk = Produk::find($item['produk_id']);
+            if ($produk) {
+                $produk->increment('stok', $item['jumlah']);
+            }
         }
 
         $pesanan->update(['status' => 'dibatalkan']);

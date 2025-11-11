@@ -122,7 +122,6 @@
 <!-- Navbar Script -->
 
 <style>
-    /* === RESET & BASE === */
     * {
         margin: 0;
         padding: 0;
@@ -146,39 +145,47 @@
 
     /* === NAVBAR === */
     .navbar {
-        width: 100%;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(241, 245, 249, 0.75) 100%);
-        background-image:
-            radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
-            radial-gradient(circle at 75% 75%, rgba(27, 127, 91, 0.03) 0%, transparent 30%),
-            linear-gradient(90deg, transparent 0%, rgba(27, 127, 91, 0.02) 50%, transparent 100%);
-        border-bottom: 1px solid rgba(27, 127, 91, 0.1);
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
+        width: 100%;
         z-index: 1000;
-        transition: all 0.3s ease;
-
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        height: 80px;
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        /* warna sisi kiri */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        overflow: visible;
+        /* supaya dropdown tidak terhalang */
     }
 
-    #navbar.scrolled {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(27, 127, 91, 0.05);
-        background: rgba(255, 255, 255, 0.95);
-
+    /* Bagian biru miring di kanan */
+    .navbar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30%;
+        height: 100%;
+        background-color: var(--primary-color, #1b7f5b);
+        clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+        z-index: 0;
     }
 
     .nav-container {
+        position: relative;
         width: 100%;
         max-width: 1440px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: auto 1fr auto;
-        /* kiri - tengah - kanan */
         align-items: center;
         justify-content: space-between;
-        padding: 15px 60px;
+        padding: 0 60px;
+        z-index: 2;
+        /* supaya di atas layer biru */
     }
 
     .nav-logo {
@@ -264,12 +271,12 @@
 
     .nav-right i {
         font-size: 1.45rem;
-        color: #333;
+        color: #ffffff;
         transition: color 0.3s ease;
     }
 
     .nav-right i:hover {
-        color: #1b7f5b;
+        color: #70ffcb;
     }
 
     /* === BADGE === */
@@ -356,6 +363,7 @@
             z-index: 10;
         }
 
+    
         .dropdown-menu .mobile-close-btn:hover {
             background: #e6f2ee;
             color: #1b7f5b;
@@ -1000,6 +1008,9 @@
                 padding: 10px 15px;
             }
 
+            .navbar::after {
+                width:300px ;
+            }
             .cart-dropdown .dropdown-menu {
                 min-width: 260px;
             }

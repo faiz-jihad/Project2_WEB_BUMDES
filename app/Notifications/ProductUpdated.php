@@ -31,7 +31,13 @@ class ProductUpdated extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        $channels = ['database'];
+
+        if ($notifiable->hasVerifiedEmail()) {
+            $channels[] = 'mail';
+        }
+
+        return $channels;
     }
 
     /**
@@ -62,7 +68,7 @@ class ProductUpdated extends Notification
         $actionText = $this->action === 'created' ? 'dibuat' : 'diperbarui';
 
         return [
-            'produk_id' => $this->produk->id_produk,
+            'produk_id' => $this->produk->id,
             'nama_produk' => $this->produk->nama,
             'slug' => $this->produk->slug,
             'user' => $this->user->name,

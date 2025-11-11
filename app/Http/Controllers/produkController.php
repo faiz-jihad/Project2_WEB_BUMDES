@@ -37,7 +37,25 @@ class ProdukController extends Controller
             return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan.');
         }
 
-        return view('pages.detailProduk', compact('produk'));
+        // Ambil produk lain yang berbeda dari produk saat ini
+        $produkLainnya = Produk::where('id', '!=', $produk->id)
+            ->where('kategori_id', $produk->kategori_id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        // Jika produk lain dalam kategori tidak cukup, ambil dari kategori lain
+        if ($produkLainnya->count() < 4) {
+            $produkTambahan = Produk::where('id', '!=', $produk->id)
+                ->whereNotIn('id', $produkLainnya->pluck('id'))
+                ->inRandomOrder()
+                ->limit(4 - $produkLainnya->count())
+                ->get();
+
+            $produkLainnya = $produkLainnya->merge($produkTambahan);
+        }
+
+        return view('pages.detailProduk', compact('produk', 'produkLainnya'));
     }
 
     /**

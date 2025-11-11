@@ -16,7 +16,8 @@ class Produk extends Model
         'deskripsi',
         'harga',
         'gambar',
-        'slug'
+        'slug',
+        'stok'
     ];
 
     protected static function boot()
@@ -44,5 +45,10 @@ class Produk extends Model
     public function keranjangs()
     {
         return $this->hasMany(Keranjang::class, 'produk_id');
+    }
+
+    public function getKategoriAttribute()
+    {
+        return $this->kategoriProduk->nama_kategori ?? '';
     }
 }

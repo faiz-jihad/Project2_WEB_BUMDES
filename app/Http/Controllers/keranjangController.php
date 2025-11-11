@@ -51,6 +51,14 @@ class KeranjangController extends Controller
 
         $produk = Produk::findOrFail($request->produk_id);
 
+        // Check if stock is available
+        if ($produk->stok <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stok produk habis'
+            ]);
+        }
+
         if (Auth::check()) {
             $existingItem = Keranjang::where('user_id', Auth::id())
                 ->where('produk_id', $produk->id)

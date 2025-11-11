@@ -368,4 +368,160 @@
                 });
         });
     </script>
+
+    <!-- Produk Lainnya Section -->
+    @if ($produkLainnya->count() > 0)
+        <section class="produk-lainnya-section">
+            <div class="produk-lainnya-container" data-aos="fade-up">
+                <h2 class="produk-lainnya-title">Produk Lainnya</h2>
+                <div class="produk-lainnya-grid">
+                    @foreach ($produkLainnya as $item)
+                        <article class="produk-lainnya-card" data-slug="{{ $item->slug }}">
+                            <div class="produk-lainnya-img">
+                                <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
+                                    alt="{{ $item->nama }}" loading="lazy">
+                                @if ($item->stok == 0)
+                                    <div class="out-of-stock-badge">Habis</div>
+                                @endif
+                            </div>
+                            <div class="produk-lainnya-info">
+                                <h3>{{ $item->nama }}</h3>
+                                <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                <span class="stok-info">Stok: {{ $item->stok }}</span>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <style>
+        /* Produk Lainnya Section */
+        .produk-lainnya-section {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .produk-lainnya-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .produk-lainnya-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--green-dark);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .produk-lainnya-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .produk-lainnya-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 300px;
+        }
+
+        .produk-lainnya-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .produk-lainnya-img {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .produk-lainnya-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .produk-lainnya-info {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .produk-lainnya-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .produk-lainnya-info .harga {
+            font-weight: 700;
+            color: var(--green-dark);
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .produk-lainnya-info .stok-info {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .out-of-stock-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #dc3545;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .produk-lainnya-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .produk-lainnya-card {
+                height: 280px;
+            }
+
+            .produk-lainnya-img {
+                height: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .produk-lainnya-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+    </style>
+
+    <script>
+        // Handle click on produk lainnya cards
+        document.querySelectorAll('.produk-lainnya-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const slug = this.getAttribute('data-slug');
+                window.location.href = `/produk/${slug}`;
+            });
+        });
+    </script>
 @endsection

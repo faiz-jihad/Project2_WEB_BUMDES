@@ -48,6 +48,96 @@
                 style="background: url('{{ asset('images/padi.jpg') }}') center/cover fixed; opacity:0.07;"></div>
         </section>
 
+        {{-- SEJARAH --}}
+        <section class="py-5 position-relative">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-down">
+                    <h2 class="fw-bold text-success">Sejarah BUMDes Madusari</h2>
+                    <p class="text-muted">Perjalanan panjang pembentukan dan perkembangan BUMDes Madusari dari masa ke masa.
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Timeline Item 1 -->
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
+                                2018
+                            </div>
+                            <h5 class="fw-bold text-success mb-3">Pembentukan BUMDes</h5>
+                            <p class="text-muted mb-0">BUMDes Madusari resmi didirikan berdasarkan Peraturan Desa Bayalangu
+                                Kidul Nomor 5 Tahun 2018. Awalnya berfokus pada pengelolaan potensi pertanian dan
+                                perdagangan hasil bumi.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
+                                2019
+                            </div>
+                            <h5 class="fw-bold text-success mb-3">Pengembangan UMKM</h5>
+                            <p class="text-muted mb-0">Mulai mengembangkan program pemberdayaan UMKM dengan memberikan
+                                pelatihan kewirausahaan dan akses permodalan kepada masyarakat desa.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3 -->
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
+                                2020
+                            </div>
+                            <h5 class="fw-bold text-success mb-3">Digitalisasi Layanan</h5>
+                            <p class="text-muted mb-0">Memasuki era digital dengan meluncurkan platform online untuk
+                                pemasaran produk desa dan layanan administrasi yang lebih efisien.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 4 -->
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
+                                2021-2023
+                            </div>
+                            <h5 class="fw-bold text-success mb-3">Ekspansi & Inovasi</h5>
+                            <p class="text-muted mb-0">Mengembangkan berbagai program inovasi seperti pertanian organik,
+                                kerajinan tangan, dan layanan teknologi untuk mendukung pertumbuhan ekonomi desa.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 5 -->
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
+                                2024
+                            </div>
+                            <h5 class="fw-bold text-success mb-3">Menuju Desa Mandiri</h5>
+                            <p class="text-muted mb-0">BUMDes Madusari terus berkomitmen untuk mewujudkan kemandirian
+                                ekonomi desa melalui kolaborasi dengan berbagai stakeholder dan inovasi berkelanjutan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Current Status -->
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="timeline-item bg-success text-white p-4 rounded-4 shadow-sm">
+                            <div class="timeline-year bg-white text-success rounded-pill d-inline-block px-3 py-1 mb-3">
+                                Sekarang
+                            </div>
+                            <h5 class="fw-bold mb-3">Masa Depan Cerah</h5>
+                            <p class="mb-0">Dengan semangat gotong royong dan inovasi, BUMDes Madusari siap menghadapi
+                                tantangan masa depan untuk kesejahteraan masyarakat desa.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Background Pattern -->
+            <div class="position-absolute top-0 start-0 w-100 h-100"
+                style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.03;"></div>
+        </section>
+
         {{-- PRODUK --}}
         <section class="py-5 text-center">
             <div class="container">
@@ -70,15 +160,28 @@
                                             <h3>{{ $item->nama }}</h3>
                                             <p>{{ Str::limit($item->deskripsi, 90) }}</p>
                                             <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                            <div class="stok-info mb-2">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-box-seam"></i>
+                                                    Stok: {{ $item->stok }}
+                                                    @if ($item->stok <= 0)
+                                                        <span class="badge bg-danger">Habis</span>
+                                                    @elseif($item->stok <= 5)
+                                                        <span class="badge bg-warning text-dark">Terbatas</span>
+                                                    @else
+                                                        <span class="badge bg-success">Tersedia</span>
+                                                    @endif
+                                                </small>
+                                            </div>
                                             <div class="produk-actions">
                                                 <a href="{{ route('produk.show', $item->id) }}"
                                                     class="produk-btn lihat-detail">
                                                     Lihat Detail
                                                 </a>
                                                 @auth
-                                                    <button class="produk-btn btn-keranjang-home" data-id="{{ $item->id }}"
-                                                        data-nama="{{ $item->nama }}" data-harga="{{ $item->harga }}"
-                                                        data-gambar="{{ $item->gambar }}">
+                                                    <button class="produk-btn btn-keranjang-home"
+                                                        data-id="{{ $item->id }}" data-nama="{{ $item->nama }}"
+                                                        data-harga="{{ $item->harga }}" data-gambar="{{ $item->gambar }}">
                                                         <i class="bi bi-cart-plus"></i> Keranjang
                                                     </button>
                                                 @else
@@ -135,6 +238,8 @@
                 </div>
             </div>
         </div>
+
+
 
         {{-- BERITA --}}
         <section class="py-5 bg-light">
@@ -394,6 +499,8 @@
                 </div>
             </div>
         </div>
+
+
 
         <style>
             :root {
@@ -1006,7 +1113,16 @@
             color: var(--green-dark);
             font-weight: 700;
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .stok-info {
+            font-size: 0.85rem;
+        }
+
+        .stok-info .badge {
+            font-size: 0.75rem;
+            padding: 0.25em 0.5em;
         }
 
         .produk-actions {

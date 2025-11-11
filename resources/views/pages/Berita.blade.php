@@ -40,104 +40,107 @@
                         </div>
                     </div>
 
-                    <!-- Desktop View -->
-                    <div class="row g-4 d-none d-md-flex" id="beritaDesktopGrid">
-                        @if (isset($berita) && $berita)
-                            @forelse($berita as $b)
-                                @if (is_object($b))
-                                    <div class="col-md-6 col-lg-4 berita-item" style="color:#fff" data-aos="fade-up"
-                                        data-aos-delay="{{ $loop->index * 100 }}" data-judul="{{ strtolower($b->Judul ?? '') }}"
-                                        data-kategori="{{ strtolower($b->kategoriBerita?->Judul ?? 'umum') }}">
-                                        <div class="card border-0 shadow-sm h-100 berita-card overflow-hidden">
-                                            <div class="position-relative">
-                                                <img src="{{ $b->Thumbnail ? asset('storage/' . $b->Thumbnail) : asset('images/no-image.webp') }}"
-                                                    class="card-img-top zoom-img" alt="{{ $b->Judul }}">
-                                                <span
-                                                    class="badge bg-green position-absolute top-0 start-0 m-2">{{ $b->kategoriBerita->Judul ?? 'Umum' }}</span>
-                                            </div>
-                                            <div class="card-body d-flex flex-column">
-                                                <small class="text-muted">{{ $b->created_at->format('d M Y') }}</small>
-                                                <h5 class="fw-bold mt-2 text-dark hover-text-green">
-                                                    {{ Str::limit($b->Judul, 70) }}
-                                                </h5>
-                                                <p class="text-secondary flex-grow-1">
-                                                    {{ Str::limit(strip_tags($b->Isi_Berita), 100) }}</p>
-                                                <a href="{{ route('berita.show', $b->slug) }}"
-                                                    class="btn btn-outline-green mt-auto rounded-pill">Baca Selengkapnya</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            @empty
-                                <div class="col-12 text-center py-5" data-aos="zoom-in" id="noResultsDesktop">
-                                    @if (request('search'))
-                                        <h4 class="text-muted">Tidak ada berita yang cocok dengan
-                                            "<strong>{{ request('search') }}</strong>"</h4>
-                                        <p class="text-secondary">Coba kata kunci lain atau <a
-                                                href="{{ url()->current() }}" class="text-green">hapus filter pencarian</a>
-                                        </p>
-                                    @else
-                                        <h4 class="text-muted">Belum ada berita yang tersedia.</h4>
-                                    @endif
-                                </div>
-                            @endforelse
-                        @else
-                            <div class="col-12 text-center py-5" data-aos="zoom-in" id="noResultsDesktop">
-                                <h4 class="text-muted">Belum ada berita yang tersedia.</h4>
-                            </div>
-                        @endif
-                    </div>
+                    @php
+                        $groupedBerita = collect($berita->items() ?? [])->groupBy(function ($item) {
+                            return $item->kategoriBerita->Judul ?? 'Umum';
+                        });
+                    @endphp
 
-                    <!-- Mobile View with 2-column Grid -->
-                    <div class="d-md-none" id="beritaMobileGrid">
-                        <div class="row g-3">
-                            @if (isset($berita) && $berita)
-                                @forelse($berita as $b)
-                                    @if (is_object($b))
-                                        <div class="col-6 berita-item" data-aos="fade-up"
-                                            data-aos-delay="{{ $loop->index * 50 }}"
-                                            data-judul="{{ strtolower($b->Judul) }}"
-                                            data-kategori="{{ strtolower($b->kategoriBerita->Judul ?? 'umum') }}">
+                    @if ($groupedBerita->isNotEmpty())
+                        @foreach ($groupedBerita as $kategoriJudul => $beritaKategori)
+                            <!-- Section per Kategori -->
+                            <section class="kategori-section mb-5" data-aos="fade-up">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h3 class="fw-bold text-gradient mb-0 me-3">{{ $kategoriJudul }}</h3>
+                                    <div class="flex-grow-1"
+                                        style="height: 2px; background: linear-gradient(90deg, var(--green-dark), var(--green)); opacity: 0.3;">
+                                    </div>
+                                </div>
+
+                                <!-- Desktop View -->
+                                <div class="row g-4 d-none d-md-flex kategori-grid"
+                                    id="beritaDesktopGrid-{{ Str::slug($kategoriJudul) }}">
+                                    @forelse($beritaKategori as $b)
+                                        <div class="col-md-6 col-lg-4 berita-item" style="color:#fff" data-aos="fade-up"
+                                            data-aos-delay="{{ $loop->index * 100 }}"
+                                            data-judul="{{ strtolower($b->Judul ?? '') }}"
+                                            data-kategori="{{ strtolower($kategoriJudul) }}">
                                             <div class="card border-0 shadow-sm h-100 berita-card overflow-hidden">
                                                 <div class="position-relative">
                                                     <img src="{{ $b->Thumbnail ? asset('storage/' . $b->Thumbnail) : asset('images/no-image.webp') }}"
                                                         class="card-img-top zoom-img" alt="{{ $b->Judul }}">
                                                     <span
-                                                        class="badge bg-green position-absolute top-0 start-0 m-1">{{ $b->kategoriBerita->Judul ?? 'Umum' }}</span>
+                                                        class="badge bg-green position-absolute top-0 start-0 m-2">{{ $kategoriJudul }}</span>
                                                 </div>
                                                 <div class="card-body d-flex flex-column">
                                                     <small class="text-muted">{{ $b->created_at->format('d M Y') }}</small>
-                                                    <h6 class="fw-bold mt-2 text-dark hover-text-green">
-                                                        {{ Str::limit($b->Judul, 50) }}
-                                                    </h6>
-                                                    <p class="text-secondary flex-grow-1 small">
-                                                        {{ Str::limit(strip_tags($b->Isi_Berita), 60) }}</p>
+                                                    <h5 class="fw-bold mt-2 text-dark hover-text-green">
+                                                        {{ Str::limit($b->Judul, 70) }}
+                                                    </h5>
+                                                    <p class="text-secondary flex-grow-1">
+                                                        {{ Str::limit(strip_tags($b->Isi_Berita), 100) }}</p>
                                                     <a href="{{ route('berita.show', $b->slug) }}"
-                                                        class="btn btn-outline-green mt-auto rounded-pill btn-sm">Baca</a>
+                                                        class="btn btn-outline-green mt-auto rounded-pill">Baca
+                                                        Selengkapnya</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endif
-                                @empty
-                                    <div class="col-12 text-center py-5" id="noResultsMobile">
-                                        @if (request('search'))
-                                            <h4 class="text-muted">Tidak ada berita yang cocok dengan
-                                                "<strong>{{ request('search') }}</strong>"</h4>
-                                            <p class="text-secondary">Coba kata kunci lain atau <a
-                                                    href="{{ url()->current() }}" class="text-green">hapus filter
-                                                    pencarian</a></p>
-                                        @else
-                                            <h4 class="text-muted">Belum ada berita yang tersedia.</h4>
-                                        @endif
-                                    </div>
-                                @endforelse
-                            @else
-                                <div class="col-12 text-center py-5" id="noResultsMobile">
-                                    <h4 class="text-muted">Belum ada berita yang tersedia.</h4>
+                                    @empty
+                                        <div class="col-12 text-center py-3">
+                                            <p class="text-muted">Belum ada berita dalam kategori ini.</p>
+                                        </div>
+                                    @endforelse
                                 </div>
+
+                                <!-- Mobile View with 2-column Grid -->
+                                <div class="d-md-none kategori-grid" id="beritaMobileGrid-{{ Str::slug($kategoriJudul) }}">
+                                    <div class="row g-3">
+                                        @forelse($beritaKategori as $b)
+                                            <div class="col-6 berita-item" data-aos="fade-up"
+                                                data-aos-delay="{{ $loop->index * 50 }}"
+                                                data-judul="{{ strtolower($b->Judul) }}"
+                                                data-kategori="{{ strtolower($kategoriJudul) }}">
+                                                <div class="card border-0 shadow-sm h-100 berita-card overflow-hidden">
+                                                    <div class="position-relative">
+                                                        <img src="{{ $b->Thumbnail ? asset('storage/' . $b->Thumbnail) : asset('images/no-image.webp') }}"
+                                                            class="card-img-top zoom-img" alt="{{ $b->Judul }}">
+                                                        <span
+                                                            class="badge bg-green position-absolute top-0 start-0 m-1">{{ $kategoriJudul }}</span>
+                                                    </div>
+                                                    <div class="card-body d-flex flex-column">
+                                                        <small
+                                                            class="text-muted">{{ $b->created_at->format('d M Y') }}</small>
+                                                        <h6 class="fw-bold mt-2 text-dark hover-text-green">
+                                                            {{ Str::limit($b->Judul, 50) }}
+                                                        </h6>
+                                                        <p class="text-secondary flex-grow-1 small">
+                                                            {{ Str::limit(strip_tags($b->Isi_Berita), 60) }}</p>
+                                                        <a href="{{ route('berita.show', $b->slug) }}"
+                                                            class="btn btn-outline-green mt-auto rounded-pill btn-sm">Baca</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="col-12 text-center py-3">
+                                                <p class="text-muted">Belum ada berita dalam kategori ini.</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </section>
+                        @endforeach
+                    @else
+                        <div class="text-center py-5" data-aos="zoom-in">
+                            @if (request('search'))
+                                <h4 class="text-muted">Tidak ada berita yang cocok dengan
+                                    "<strong>{{ request('search') }}</strong>"</h4>
+                                <p class="text-secondary">Coba kata kunci lain atau <a href="{{ url()->current() }}"
+                                        class="text-green">hapus filter pencarian</a></p>
+                            @else
+                                <h4 class="text-muted">Belum ada berita yang tersedia.</h4>
                             @endif
                         </div>
-                    </div>
+                    @endif
 
                     @if (isset($berita) && $berita)
                         <div class="d-flex justify-content-center mt-5" data-aos="fade-up">{{ $berita->links() }}</div>
@@ -289,7 +292,32 @@
         }
 
         .bg-green {
-            background-color: var(--green-dark) !important;
+            background: linear-gradient(135deg, var(--green-dark), var(--green)) !important;
+            color: #fff !important;
+            font-weight: 500;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 8px rgba(15, 112, 53, 0.25);
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+            display: inline-block;
+            line-height: 1.2;
+            min-width: fit-content;
+        }
+
+        .bg-green:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(15, 112, 53, 0.4);
         }
 
         /* Search */

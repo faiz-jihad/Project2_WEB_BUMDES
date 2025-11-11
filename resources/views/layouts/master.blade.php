@@ -222,7 +222,14 @@
         </script>
     </main>
 
-    <footer class="mt-5">
+    <!-- === NIKMATI IMAGE SECTION ABOVE FOOTER === -->
+    <section class="nikmati-image-section">
+        <div class="container-fluid p-0">
+            <img src="{{ asset('images/NIKMATI.png') }}" alt="NIKMATI" class="img-fluid w-100">
+        </div>
+    </section>
+
+    <footer>
         {{-- FOOTER --}}
         @include('layouts.footer')
     </footer>

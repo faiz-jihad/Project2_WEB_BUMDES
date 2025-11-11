@@ -75,7 +75,7 @@ class BeritaController extends Controller
             ->take(5)
             ->get();
 
-        return view('pages.Berita', compact('berita', 'kategori', 'kategoriBerita', 'populer', 'search'));
+        return view('pages.Berita', compact('berita', 'kategoriBerita', 'populer', 'search'));
     }
 
     public function show($slug)
