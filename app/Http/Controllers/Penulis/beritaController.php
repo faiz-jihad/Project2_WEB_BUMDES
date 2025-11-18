@@ -66,14 +66,18 @@ class BeritaController extends Controller
                 return redirect()->back();
             }
 
+            // Generate unique slug
+            $slug = $this->generateUniqueSlug($request->judul);
+
             $berita = Berita::create([
                 'id_penulis' => $penulis->id_penulis,
                 'id_kategori' => $request->kategori_id,
                 'Judul' => $request->judul,
-                'slug' => $request->slug ?: Str::slug($request->judul),
+                'slug' => $slug,
                 'Isi_Berita' => $request->isi_berita,
                 'Thumbnail' => $thumbnailPath,
                 'status' => 'pending', // Default status for new berita
+                'publish_at' => $request->publish_at ? \Carbon\Carbon::parse($request->publish_at) : null,
             ]);
 
             \Log::info('Berita created successfully:', $berita->toArray());
@@ -93,7 +97,7 @@ class BeritaController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_berita)
     {
         // Check if user has role 'penulis'
         if (auth()->user()->role !== 'penulis') {
@@ -107,7 +111,7 @@ class BeritaController extends Controller
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $berita = Berita::findOrFail($id);
+        $berita = Berita::findOrFail($id_berita);
 
         $thumbnailPath = $berita->thumbnail;
         if ($request->hasFile('thumbnail')) {
@@ -118,19 +122,23 @@ class BeritaController extends Controller
             $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
         }
 
+        // Generate unique slug for update
+        $slug = $this->generateUniqueSlug($request->judul, $id_berita);
+
         $berita->update([
             'Judul' => $request->judul,
-            'slug' => $request->slug ?: Str::slug($request->judul),
+            'slug' => $slug,
             'id_kategori' => $request->kategori_id,
             'Isi_Berita' => $request->isi_berita,
             'Thumbnail' => $thumbnailPath,
+            'publish_at' => $this->parsePublishAt($request->publish_at),
         ]);
 
         notify()->success('Berita berhasil diperbarui!', 'Berhasil');
         return redirect()->back();
     }
 
-    public function show($id)
+    public function show($id_berita)
     {
         // Check if user has role 'penulis'
         if (!auth()->check() || auth()->user()->role !== 'penulis') {
@@ -138,7 +146,7 @@ class BeritaController extends Controller
         }
 
         try {
-            $berita = Berita::with('kategoriBerita', 'penulis')->findOrFail($id);
+            $berita = Berita::with('kategoriBerita', 'penulis')->findOrFail($id_berita);
 
             // Check if the berita belongs to the authenticated penulis
             $penulis = \App\Models\Penulis::where('nama_penulis', auth()->user()->name)->first();
@@ -166,14 +174,14 @@ class BeritaController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($id_berita)
     {
         // Check if user has role 'penulis'
         if (auth()->user()->role !== 'penulis') {
             return redirect()->back()->with('error', 'Akses ditolak. Halaman ini hanya untuk penulis.');
         }
 
-        $berita = Berita::findOrFail($id);
+        $berita = Berita::findOrFail($id_berita);
 
         // Delete thumbnail if exists
         if ($berita->thumbnail && \Storage::disk('public')->exists($berita->thumbnail)) {
@@ -183,5 +191,41 @@ class BeritaController extends Controller
         $berita->delete();
         notify()->success('Berita berhasil dihapus!', 'Berhasil');
         return redirect()->back();
+    }
+
+    /**
+     * Generate a unique slug for the berita
+     */
+    private function generateUniqueSlug($title, $id = null)
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (Berita::where('slug', $slug)->when($id, function ($query) use ($id) {
+            return $query->where('id_berita', '!=', $id);
+        })->exists()) {
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Parse publish_at field safely
+     */
+    private function parsePublishAt($publishAt)
+    {
+        if (!$publishAt || $publishAt === '-' || $publishAt === '' || trim($publishAt) === '') {
+            return null;
+        }
+
+        try {
+            return \Carbon\Carbon::parse($publishAt);
+        } catch (\Exception $e) {
+            \Log::warning('Failed to parse publish_at: ' . $publishAt . ' - ' . $e->getMessage());
+            return null;
+        }
     }
 }

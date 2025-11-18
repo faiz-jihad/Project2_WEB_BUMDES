@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password</title>
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -180,12 +182,21 @@
     <div class="blur blur1"></div>
     <div class="blur blur2"></div>
 
-    <div class="card">
+    <div class="card" data-aos="fade-up" data-aos-duration="1000">
         <h1>Lupa Password</h1>
         <p>Masukkan alamat email Anda. Kami akan mengirimkan tautan untuk mengatur ulang password Anda.</p>
 
         @if (session('status'))
             <div class="alert">{{ session('status') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert"
+                style="background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5);">
+                @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                @endforeach
+            </div>
         @endif
 
         <form method="POST" action="{{ route('password.email') }}">
@@ -197,6 +208,13 @@
 
         <a href="{{ route('login') }}">← Kembali ke Login</a>
     </div>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init();
+    </script>
 </body>
 
 </html>

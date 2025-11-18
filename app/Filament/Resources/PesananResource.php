@@ -107,7 +107,31 @@ class PesananResource extends Resource
                     ->label('ID Pesanan')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('items')
+                    ->label('Daftar Barang')
+                    ->formatStateUsing(function ($state) {
+                        if (blank($state)) {
+                            return '-';
+                        }
 
+                        // Decode sekali (karena string JSON tunggal)
+                        $item = json_decode($state, true);
+
+                        // Jika gagal decode, berhenti
+                        if (!is_array($item)) {
+                            return '-';
+                        }
+
+                        // Ambil data
+                        $nama = $item['nama'] ?? '-';
+                        $jumlah = $item['jumlah'] ?? 0;
+                        $subtotal = $item['subtotal'] ?? 0;
+
+                        // Format tampilan
+                        return "{$nama} ({$jumlah}x) - Rp" . number_format($subtotal, 0, ',', '.');
+                    })
+                    ->wrap()
+                    ->sortable(),
                 TextColumn::make('nama_pemesan')
                     ->label('Nama Pemesan')
                     ->searchable()

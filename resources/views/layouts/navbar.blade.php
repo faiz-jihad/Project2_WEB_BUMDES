@@ -21,39 +21,97 @@
 
         <!-- Right Icons -->
         <div class="nav-right">
-            <!-- Notification  -->
-            <div class="dropdown notification-dropdown">
-                @auth
-                    <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
-                        <i class="bi bi-bell"></i>
-                        @if (Auth::user()->unreadNotifications->count() > 0)
-                            <span class="badge"
-                                onclick="window.location.href='{{ route('notifikasi.index') }}'">{{ Auth::user()->unreadNotifications->count() }}</span>
-                        @endif
-                    </a>
-                    <ul class="dropdown-menu notif-menu">
-                        <button class="mobile-close-btn" aria-label="Tutup">X</button>
-                        @forelse(Auth::user()->unreadNotifications as $notification)
-                            <li class="notif-item unread">
-                                <a href="{{ $notification->data['url'] ?? '#' }}">
-                                    {{ $notification->data['message'] }}
+            <div class="header-icons d-flex align-items-center gap-3">
+
+                <!-- ICON NOTIFIKASI -->
+                <div class="dropdown notification-dropdown">
+                    @auth
+                        <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
+                            <i class="bi bi-bell"></i>
+
+                            @if (auth()->user()->unreadNotifications->count() > 0)
+                                <span class="badge">
+                                    {{ auth()->user()->unreadNotifications->count() }}
+                                </span>
+                            @endif
+                        </a>
+
+                        <ul class="dropdown-menu notif-menu">
+                            <button class="mobile-close-btn" aria-label="Tutup">×</button>
+
+                            <!-- Header Notifikasi -->
+                            <li class="notif-header">
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-bell me-2"></i>Notifikasi
+                                     @if (auth()->user()->unreadNotifications->count() > 0)
+                                    <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                @endif
+
+                                </h6>
+
+                            </li>
+
+                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
+                                <li class="notif-item unread">
+                                    <a href="{{ $notification->data['url'] ?? '#' }}" class="notif-link">
+                                        <div class="notif-icon">
+                                            @if (isset($notification->data['type']))
+                                                @if ($notification->data['type'] === 'berita')
+                                                    <i class="bi bi-newspaper text-primary"></i>
+                                                @elseif($notification->data['type'] === 'produk')
+                                                    <i class="bi bi-box-seam text-success"></i>
+                                                @elseif($notification->data['type'] === 'pesanan')
+                                                    <i class="bi bi-receipt text-warning"></i>
+                                                @else
+                                                    <i class="bi bi-bell-fill text-info"></i>
+                                                @endif
+                                            @else
+                                                <i class="bi bi-bell-fill text-info"></i>
+                                            @endif
+                                        </div>
+                                        <div class="notif-content">
+                                            <div class="notif-text">
+                                                <span
+                                                    class="notif-title">{{ Str::limit($notification->data['message'] ?? 'Notifikasi baru', 80) }}</span>
+                                                <small class="notif-time">
+                                                    <i
+                                                        class="bi bi-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
+                                                </small>
+                                            </div>
+                                            <div class="notif-indicator"></div>
+                                        </div>
+                                    </a>
+                                </li>
+                            @empty
+                                <li class="notif-empty">
+                                    <div class="empty-state">
+                                        <i class="bi bi-bell-slash empty-icon"></i>
+                                        <span class="empty-text">Tidak ada notifikasi baru</span>
+                                        <small class="empty-subtext">Semua notifikasi sudah dibaca</small>
+                                    </div>
+                                </li>
+                            @endforelse
+
+                            @if (auth()->user()->unreadNotifications->count() > 5)
+                                <li class="notif-more">
+                                    <div class="text-center py-2">
+                                        <small class="text-muted">
+                                            +{{ auth()->user()->unreadNotifications->count() - 5 }} notifikasi lainnya
+                                        </small>
+                                    </div>
+                                </li>
+                            @endif
+
+                            <!-- Footer Notifikasi -->
+                            <li class="notif-footer">
+                                <a href="{{ route('notifikasi.index') }}" class="view-all-btn">
+                                    <i class="bi bi-eye me-2"></i>Lihat Semua Notifikasi
                                 </a>
                             </li>
-                        @empty
-                            <li><span class="empty">Tidak ada notifikasi</span></li>
-                        @endforelse
-                        <li class="text-center mt-2">
-                            <a href="{{ route('notifikasi.index') }}" class="view-all-btn">Lihat Semua</a>
-                        </li>
-                    </ul>
-                @else
-                    <a href="{{ route('login') }}" class="icon-btn" aria-label="Login untuk notifikasi">
-                        <i class="bi bi-bell"></i>
-                    </a>
-                @endauth
+                        </ul>
+                    @endauth
+                </div>
             </div>
-
-
             {{-- Cart  --}}
             <div class="dropdown cart-dropdown">
                 <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
@@ -69,7 +127,7 @@
 
             <!-- User Login  -->
             @guest
-                <a href="{{ route('login') }}" class="login-btn">Masuk</a>
+                <a href="{{ route('login') }}" class="login-btn" style="color: white">Masuk</a>
             @endguest
 
             @auth
@@ -96,7 +154,9 @@
                         <li><a href="{{ route('pesanan.index') }}"><i class="bi bi-receipt"></i> Pesanan Saya</a></li>
                         @auth
                             @if (Auth::user()->role === 'penulis')
-                                <li><a href="penulis/berita"><i class="bi bi-newspaper"></i> Dashboard</a></li>
+                                <li><a href="{{ route('penulis.berita.index') }}"><i class="bi bi-newspaper"></i>
+                                        Dashboard</a>
+                                </li>
                             @endif
                         @endauth
                         <li class="user-footer">
@@ -316,12 +376,32 @@
         background: #ffffff;
         border-radius: 16px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
-        min-width: 260px;
+        min-width: 320px;
+        max-width: 90vw;
+        max-height: 80vh;
         overflow: hidden;
         animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         z-index: 999;
-
         border: 1px solid rgba(27, 127, 91, 0.06);
+    }
+
+    /* Responsive dropdown width */
+    @media (max-width: 576px) {
+        .dropdown-menu {
+            min-width: 280px;
+            max-width: 95vw;
+            right: -10px;
+            max-height: 70vh;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dropdown-menu {
+            min-width: 260px;
+            max-width: 98vw;
+            right: -5px;
+            max-height: 65vh;
+        }
     }
 
     .dropdown.open .dropdown-menu {
@@ -341,13 +421,27 @@
         }
     }
 
+    /* Positioning to prevent dropdown from going off-screen */
+    .dropdown-menu {
+        transform-origin: top right;
+    }
+
+    /* Adjust position if dropdown would go off-screen */
+    @media (max-width: 992px) {
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+            transform-origin: top right;
+        }
+    }
+
     /* Tombol Close — Desktop */
     @media (min-width: 993px) {
         .dropdown-menu .mobile-close-btn {
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 32px;
+            width: 50px;
             height: 32px;
             background: rgba(240, 240, 240, 0.9);
             border: none;
@@ -363,7 +457,7 @@
             z-index: 10;
         }
 
-    
+
         .dropdown-menu .mobile-close-btn:hover {
             background: #e6f2ee;
             color: #1b7f5b;
@@ -860,13 +954,13 @@
             transform: translateY(-50%) scale(1.2);
         }
 
-        /* === SIDEBAR / DROPDOWN UMUM === */
+        /* === DROPDOWN NORMAL DENGAN ANIMASI SIDEBAR === */
         .dropdown-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100vh;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            width: 320px;
+            max-width: 90vw;
             background: #ffffff;
             background-image:
                 radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
@@ -875,41 +969,126 @@
                 linear-gradient(45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%),
                 linear-gradient(-45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%);
             background-size: 20px 20px, 30px 30px, 40px 40px, 20px 20px, 20px 20px;
-            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
-            border-radius: 0;
-            border: none;
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(27, 127, 91, 0.06);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             opacity: 0;
+            transform: translateX(100%) scale(0.95);
+            visibility: hidden;
             z-index: 1001;
-            padding: 80px 20px 20px;
+            padding: 20px;
+            max-height: 70vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
-
         }
+
+        /* Mobile: Dropdown seperti sidebar */
+        @media (max-width: 992px) {
+            .dropdown-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 320px;
+                height: 100vh;
+                background: #ffffff;
+                background-image:
+                    radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
+                    radial-gradient(circle at 75% 75%, rgba(27, 127, 91, 0.03) 0%, transparent 30%),
+                    radial-gradient(circle at 50% 50%, rgba(27, 127, 91, 0.02) 0%, transparent 35%),
+                    linear-gradient(45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%),
+                    linear-gradient(-45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%);
+                background-size: 20px 20px, 30px 30px, 40px 40px, 20px 20px, 20px 20px;
+                box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
+                border-radius: 0;
+                border: none;
+                transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+                opacity: 0;
+                z-index: 1001;
+                padding: 80px 20px 20px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+                transform: none;
+                visibility: visible;
+            }
+        }
+
+
 
         /* Saat terbuka */
         .dropdown.open .dropdown-menu {
-            right: 0;
             opacity: 1;
-            animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transform: translateX(0) scale(1);
+            visibility: visible;
+            animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        /* Animasi buka modern */
+        /* Mobile: Saat terbuka */
+        @media (max-width: 992px) {
+            .dropdown.open .dropdown-menu {
+                right: 0;
+                opacity: 1;
+                animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+                transform: none;
+                visibility: visible;
+            }
+        }
+
+        /* Animasi buka modern untuk mobile */
         @keyframes slideInRight {
             0% {
                 opacity: 0;
-                transform: translateX(40px) scale(0.95);
+                transform: translateX(100%) scale(0.95);
             }
 
             50% {
                 opacity: 0.8;
-                transform: translateX(10px) scale(0.98);
+                transform: translateX(20px) scale(0.98);
             }
 
             100% {
                 opacity: 1;
                 transform: translateX(0) scale(1);
+            }
+        }
+
+        /* Animasi tutup untuk mobile */
+        .dropdown:not(.open) .dropdown-menu {
+            animation: fadeOutDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes fadeOutDown {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                visibility: visible;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(100%) scale(0.95);
+                visibility: hidden;
+            }
+        }
+
+        /* Mobile: Animasi tutup */
+        @media (max-width: 992px) {
+            .dropdown:not(.open) .dropdown-menu {
+                animation: slideOutRight 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+
+            @keyframes slideOutRight {
+                0% {
+                    opacity: 1;
+                    right: 0;
+                }
+
+                100% {
+                    opacity: 0;
+                    right: -100%;
+                }
             }
         }
 
@@ -940,32 +1119,235 @@
             transform: scale(1.1);
         }
 
-        /* === SPESIFIKASI SIDEBAR === */
+        /* === SPESIFIKASI DROPDOWN === */
+        .notification-dropdown .dropdown-menu,
+        .cart-dropdown .dropdown-menu,
+
+        /* === NOTIFIKASI DROPDOWN === */
         .notification-dropdown .dropdown-menu {
-            width: 320px;
+            min-width: 320px;
+            padding: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #ffffff !important;
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 10px 25px -5px rgba(0, 0, 0, 0.15);
         }
 
-        .cart-dropdown .dropdown-menu {
-            width: 320px;
+        /* Header Notifikasi */
+        .notif-header {
+            background: linear-gradient(135deg, rgba(27, 127, 91, 0.08) 0%, rgba(27, 127, 91, 0.04) 100%) !important;
+            border-bottom: 1px solid rgba(27, 127, 91, 0.15) !important;
+            padding: 16px 20px;
+            margin: 0;
         }
 
-        .user-dropdown .dropdown-menu {
-            width: 280px;
+        .notif-header h6 {
+            font-size: 1rem;
+            color: #1b7f5b !important;
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .notif-header .badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Item Notifikasi */
+        .notif-item {
+            border-bottom: 1px solid rgba(27, 127, 91, 0.08) !important;
+            padding: 0;
+            margin: 0;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-item:hover {
+            background: linear-gradient(135deg, rgba(27, 127, 91, 0.06) 0%, rgba(27, 127, 91, 0.03) 100%) !important;
+        }
+
+        .notif-link {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notif-link:hover {
+            background: linear-gradient(135deg, rgba(27, 127, 91, 0.08) 0%, rgba(27, 127, 91, 0.04) 100%) !important;
+            transform: translateX(2px);
+            padding-left: 24px;
+        }
+
+        .notif-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+            margin-top: 2px;
+        }
+
+        .notif-icon i {
+            font-size: 1.1rem;
+            color: #1b7f5b !important;
+        }
+
+        .notif-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .notif-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151 !important;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .notif-time {
+            font-size: 0.75rem;
+            color: #6b7280 !important;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .notif-time i {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .notif-indicator {
+            position: absolute;
+            left: 16px;
+            top: 18px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444 !important;
+            border-radius: 50%;
+            border: 2px solid #ffffff !important;
+            box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        /* Empty State */
+        .notif-empty {
+            padding: 24px 20px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .empty-icon {
+            font-size: 2rem;
+            color: #d1d5db !important;
+            margin-bottom: 4px;
+        }
+
+        .empty-text {
+            font-size: 0.9rem;
+            color: #6b7280 !important;
+            font-weight: 500;
+        }
+
+        .empty-subtext {
+            font-size: 0.75rem;
+            color: #9ca3af !important;
+        }
+
+        /* More Indicator */
+        .notif-more {
+            border-top: 1px solid rgba(27, 127, 91, 0.12) !important;
+            margin: 0;
+            background: rgba(27, 127, 91, 0.03) !important;
+        }
+
+        .notif-more small {
+            font-size: 0.8rem;
+            color: #6b7280 !important;
+            font-style: italic;
+        }
+
+        /* Footer Notifikasi */
+        .notif-footer {
+            border-top: 1px solid rgba(27, 127, 91, 0.12) !important;
+            padding: 0;
+            margin: 0;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.7) 100%) !important;
+        }
+
+        .view-all-btn {
+            display: block;
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1b7f5b !important;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0;
+        }
+
+        .view-all-btn:hover {
+            background: linear-gradient(135deg, rgba(27, 127, 91, 0.12) 0%, rgba(27, 127, 91, 0.06) 100%) !important;
+            color: #166749 !important;
+            transform: translateY(-1px);
+        }
+
+        .view-all-btn i {
+            font-size: 0.9rem;
         }
 
         /* === ITEM STYLING === */
-        .notif-item,
         .cart-item,
         .user-menu li {
             border-bottom: 1px solid #f1f1f1;
-            padding: 15px 0;
+            padding: 12px 0;
         }
 
-        .notif-item:last-child,
         .cart-item:last-child,
         .user-menu li:last-child {
             border-bottom: none;
         }
+
 
         .user-info {
             margin-bottom: 20px;
@@ -991,15 +1373,103 @@
         /* === RESPONSIVE === */
         @media (max-width: 992px) {
             .dropdown-menu {
-                width: 300px;
+                width: 320px;
+                padding: 70px 20px 20px;
+                /* Kurangi padding top untuk mobile */
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .dropdown-menu .mobile-close-btn {
-                top: 20px;
-                right: 20px;
-                width: 36px;
-                height: 36px;
-                font-size: 22px;
+                top: 15px;
+                right: 15px;
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+
+            /* Perbesar font untuk mobile */
+            .notif-item a,
+            .cart-item,
+            .user-menu a {
+                font-size: 0.95rem;
+                padding: 14px 16px;
+            }
+
+            .notif-text span {
+                font-size: 0.9rem;
+            }
+
+            .notif-time {
+                font-size: 0.75rem;
+            }
+
+            .user-details .user-name {
+                font-size: 1rem;
+            }
+
+            .user-details .user-email {
+                font-size: 0.85rem;
+            }
+
+            .user-menu a {
+                font-size: 0.9rem;
+                padding: 14px 20px;
+            }
+
+            .user-footer button {
+                font-size: 0.9rem;
+                padding: 10px 18px;
+            }
+
+            /* Badge notifikasi mobile */
+            .notif-header .badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+                border-radius: 16px;
+            }
+        }
+
+        @media (min-width: 993px) {
+
+            /* Desktop - perbesar sedikit untuk readability */
+            .notif-item a,
+            .cart-item,
+            .user-menu a {
+                font-size: 0.95rem;
+                padding: 14px 20px;
+            }
+
+            .notif-text span {
+                font-size: 0.9rem;
+            }
+
+            .user-details .user-name {
+                font-size: 1.1rem;
+            }
+
+            .user-details .user-email {
+                font-size: 0.9rem;
+            }
+
+            .user-menu a {
+                font-size: 0.95rem;
+                padding: 16px 24px;
+            }
+
+            .user-footer button {
+                font-size: 0.95rem;
+                padding: 12px 20px;
+            }
+
+            /* Icon notifikasi desktop - perbesar */
+            .notif-icon {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            .notif-icon i {
+                font-size: 1.2rem !important;
             }
         }
 
@@ -1009,8 +1479,9 @@
             }
 
             .navbar::after {
-                width:300px ;
+                width: 300px;
             }
+
             .cart-dropdown .dropdown-menu {
                 min-width: 260px;
             }
@@ -1077,7 +1548,15 @@
                 const wasOpen = drop.classList.contains("open");
                 drop.classList.toggle("open");
                 const isNowOpen = drop.classList.contains("open");
-                overlay.classList.toggle("active", isNowOpen);
+
+                // Toggle overlay berdasarkan device - hanya untuk dropdown selain notifikasi
+                if (!drop.classList.contains("notification-dropdown")) {
+                    if (window.innerWidth <= 992) {
+                        // Mobile: gunakan overlay
+                        overlay.classList.toggle("active", isNowOpen);
+                    }
+                    // Desktop: tidak menggunakan overlay untuk dropdown normal
+                }
 
                 // Load cart items when cart dropdown is opened
                 if (!wasOpen && isNowOpen && drop.classList.contains("cart-dropdown")) {
@@ -1101,12 +1580,15 @@
             overlay.classList.remove("active");
         });
 
+
+
         // Close mobile sidebars when clicking the close button
         document.addEventListener("click", (e) => {
             if (e.target.classList.contains("mobile-close-btn")) {
                 const dropdown = e.target.closest(".dropdown");
                 if (dropdown) {
                     dropdown.classList.remove("open");
+                    // Tutup overlay
                     overlay.classList.remove("active");
                 }
             }
@@ -1138,6 +1620,7 @@
                 const dropdown = e.target.closest(".dropdown");
                 if (dropdown && dropdown.classList.contains("open")) {
                     dropdown.classList.remove("open");
+                    // Tutup overlay
                     overlay.classList.remove("active");
                     isSwiping = false;
                 }

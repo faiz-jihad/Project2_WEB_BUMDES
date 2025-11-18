@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use App\Models\KategoriBerita;
+use App\Providers\Filament\CustomLogoutResponse;
+use Filament\Panel;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(\Filament\Http\Responses\Auth\Contracts\LogoutResponse::class, \App\Providers\Filament\CustomLogoutResponse::class);
     }
 
     /**

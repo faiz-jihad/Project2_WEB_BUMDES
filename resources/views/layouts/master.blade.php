@@ -10,21 +10,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Custom CSS -->
-    {{-- <link rel="stylesheet" href="{{ asset('css/navbar.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('css/input.css') }}">
     @stack('styles')
 
     <!-- Custom JS -->
 
     <!-- Laravel Notify -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css">
-    <script src="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/js/notify.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/css/notify.css"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@mckenziearts/laravel-notify@2.7.0/dist/js/notify.js" crossorigin="anonymous">
+    </script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- CSRF Token for AJAX -->
+    <!-- CSRF Token AJAX -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name'))</title>
@@ -250,6 +253,17 @@
             setTimeout(() => {
                 preloader.classList.add('hide');
             }, 500);
+        });
+    </script>
+
+    <!-- OneSignal Initialization -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "be91d72a-0e8e-4eaa-800d-92ad1bc1c776",
+            });
         });
     </script>
 

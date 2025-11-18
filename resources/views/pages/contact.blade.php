@@ -85,7 +85,7 @@
                 <div class="row g-5">
                     <div class="col-lg-6" data-aos="fade-right">
                         <h3 class="fw-bold text-success mb-4">Kirim Pesan</h3>
-                        <form id="contactForm" action="{{ url('/kontak/kirim') }}" method="POST" class="needs-validation"
+                        <form id="contactForm" action="{{ route('contact.kirim') }}" method="POST" class="needs-validation"
                             novalidate>
                             @csrf
                             <div class="row g-3">
@@ -271,7 +271,51 @@
                     }
                 }, false);
             }
+
+            // Show success/error messages
+            @if (session('success'))
+                showToast('{{ session('success') }}', 'success');
+            @endif
+
+            @if (session('error'))
+                showToast('{{ session('error') }}', 'error');
+            @endif
         });
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+
+            const toast = document.createElement('div');
+            toast.className =
+            `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+            document.body.appendChild(toastContainer);
+
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+
+            // Remove toast after it's hidden
+            toast.addEventListener('hidden.bs.toast', () => {
+                toastContainer.remove();
+            });
+        }
     </script>
 
     <style>

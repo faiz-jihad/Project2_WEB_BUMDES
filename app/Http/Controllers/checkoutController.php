@@ -71,8 +71,8 @@ class CheckoutController extends Controller
             $items = [];
             $total = 0;
             foreach ($keranjangItems as $item) {
-                // Check stock availability
-                if ($item->produk->stok < $item->jumlah) {
+                // Check stock availability (hanya untuk COD, transfer dicek saat konfirmasi pembayaran)
+                if ($request->pembayaran === 'cod' && $item->produk->stok < $item->jumlah) {
                     return redirect()->route('checkout.index')->with('error', 'Stok produk ' . $item->produk->nama . ' tidak mencukupi.');
                 }
 
@@ -101,12 +101,6 @@ class CheckoutController extends Controller
                 'catatan' => $request->catatan,
             ]);
 
-            // Kurangi stok produk
-            foreach ($keranjangItems as $item) {
-                $produk = $item->produk;
-                $produk->decrement('stok', $item->jumlah);
-            }
-
             // Kosongkan keranjang dari database
             Keranjang::where('user_id', Auth::id())->delete();
 
@@ -127,9 +121,9 @@ class CheckoutController extends Controller
             $items = [];
             $total = 0;
             foreach ($keranjang as $item) {
-                // Check stock availability for guest users
+                // Check stock availability for guest users (hanya untuk COD)
                 $produk = \App\Models\Produk::find($item['id']);
-                if ($produk && $produk->stok < $item['jumlah']) {
+                if ($request->pembayaran === 'cod' && $produk && $produk->stok < $item['jumlah']) {
                     return redirect()->route('checkout.index')->with('error', 'Stok produk ' . $item['nama'] . ' tidak mencukupi.');
                 }
 
@@ -157,14 +151,6 @@ class CheckoutController extends Controller
                 'total_harga' => $total,
                 'catatan' => $request->catatan,
             ]);
-
-            // Kurangi stok produk untuk guest users
-            foreach ($keranjang as $item) {
-                $produk = \App\Models\Produk::find($item['id']);
-                if ($produk) {
-                    $produk->decrement('stok', $item['jumlah']);
-                }
-            }
 
             // Kosongkan keranjang dari session
             session()->forget('keranjang');

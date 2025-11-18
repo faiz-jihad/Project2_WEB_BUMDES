@@ -2,16 +2,12 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Pesanan;
 
-class PesananStatusUpdated extends Notification implements ShouldQueue
+class PesananStatusUpdated extends Notification
 {
-    use Queueable;
-
     protected $pesanan;
     protected $oldStatus;
     protected $newStatus;
@@ -33,7 +29,7 @@ class PesananStatusUpdated extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database'];
     }
 
     /**
@@ -50,15 +46,17 @@ class PesananStatusUpdated extends Notification implements ShouldQueue
             'dibatalkan' => 'Dibatalkan',
         ];
 
+        $produkNames = $this->getProdukNames();
+
         return (new MailMessage)
-            ->subject('Status Pesanan #' . $this->pesanan->id_pesanan . ' Telah Diperbarui')
+            ->subject('Status Pesanan ' . $this->pesanan->nama_pemesan . ' Telah Diperbarui')
             ->greeting('Halo ' . $notifiable->name . '!')
-            ->line('Status pesanan Anda telah diperbarui.')
-            ->line('ID Pesanan: #' . $this->pesanan->id_pesanan)
+            ->line('Status pesanan atas nama ' . $this->pesanan->nama_pemesan . ' telah diperbarui.')
+            ->line('Produk: ' . $produkNames)
             ->line('Status Lama: ' . ($statusLabels[$this->oldStatus] ?? $this->oldStatus))
             ->line('Status Baru: ' . ($statusLabels[$this->newStatus] ?? $this->newStatus))
             ->line('Total: Rp ' . number_format($this->pesanan->total_harga, 0, ',', '.'))
-            ->action('Lihat Detail Pesanan', route('pesanan.show', $this->pesanan->id_pesanan))
+            ->action('Lihat Detail Pesanan', route('pesanan.show', $this->pesanan->uuid))
             ->line('Terima kasih telah berbelanja di toko kami.')
             ->salutation('Salam, Sistem E-commerce');
     }
@@ -79,6 +77,8 @@ class PesananStatusUpdated extends Notification implements ShouldQueue
             'dibatalkan' => 'Dibatalkan',
         ];
 
+        $produkNames = $this->getProdukNames();
+
         return [
             'pesanan_id' => $this->pesanan->id_pesanan,
             'old_status' => $this->oldStatus,
@@ -86,8 +86,34 @@ class PesananStatusUpdated extends Notification implements ShouldQueue
             'old_status_label' => $statusLabels[$this->oldStatus] ?? $this->oldStatus,
             'new_status_label' => $statusLabels[$this->newStatus] ?? $this->newStatus,
             'total_harga' => $this->pesanan->total_harga,
-            'message' => 'Status pesanan #' . $this->pesanan->id_pesanan . ' telah diperbarui dari "' . ($statusLabels[$this->oldStatus] ?? $this->oldStatus) . '" menjadi "' . ($statusLabels[$this->newStatus] ?? $this->newStatus) . '"',
-            'url' => route('pesanan.show', $this->pesanan->id_pesanan),
+            'message' => 'Status pesanan atas nama ' . $this->pesanan->nama_pemesan . ' (' . $produkNames . ') telah diperbarui dari "' . ($statusLabels[$this->oldStatus] ?? $this->oldStatus) . '" menjadi "' . ($statusLabels[$this->newStatus] ?? $this->newStatus) . '"',
+            'url' => route('pesanan.show', $this->pesanan->uuid),
         ];
+    }
+
+    /**
+     * Get produk names from the order items
+     */
+    private function getProdukNames(): string
+    {
+        $items = $this->pesanan->items ?? [];
+        if (is_string($items)) {
+            $items = json_decode($items, true) ?? [];
+        }
+
+        if (isset($items['produk_id'])) {
+            $items = [$items];
+        }
+
+        $names = [];
+        foreach ($items as $item) {
+            if (isset($item['nama'])) {
+                $names[] = $item['nama'];
+            } elseif (isset($item['nama_produk'])) {
+                $names[] = $item['nama_produk'];
+            }
+        }
+
+        return implode(', ', $names) ?: 'Produk tidak ditemukan';
     }
 }

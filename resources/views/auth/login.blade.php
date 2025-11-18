@@ -134,7 +134,7 @@
     <div class="blur-circle blur1"></div>
     <div class="blur-circle blur2"></div>
 
-    <div class="login-card">
+    <div class="login-card" data-aos="fade-up" data-aos-duration="1000">
         <h1 class="text-center">Login</h1>
         <p class="text-center text-light mb-4">Masukan akun Anda </p>
 
@@ -189,8 +189,12 @@
         </form>
     </div>
 
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         const password = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
@@ -224,6 +228,9 @@
                 showConfirmButton: false
             });
         @endif
+
+        // Initialize AOS
+        AOS.init();
     </script>
 
     <!-- Bootstrap Icons -->

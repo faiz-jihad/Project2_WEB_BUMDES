@@ -29,6 +29,14 @@ class PenulisResource extends Resource
                 ->required()
                 ->maxLength(255),
 
+            // Email
+            Forms\Components\TextInput::make('email')
+                ->email()
+                ->nullable()
+                ->maxLength(255)
+                ->unique(ignoreRecord: true)
+                ->helperText('Email digunakan untuk mengirim notifikasi status berita'),
+
             // Username
             Forms\Components\TextInput::make('Username')
                 ->required()
@@ -77,6 +85,7 @@ class PenulisResource extends Resource
                     ->defaultImageUrl('/images/no-avatar.png'),
                 Tables\Columns\TextColumn::make('id_penulis')->label('No')->sortable(),
                 Tables\Columns\TextColumn::make('nama_penulis')->label('Nama Penulis')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('email')->label('Email')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('Username')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('Bio')->limit(50)->wrap(),
                 Tables\Columns\TextColumn::make('created_at')

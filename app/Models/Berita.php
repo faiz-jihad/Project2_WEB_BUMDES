@@ -20,6 +20,13 @@ class Berita extends Model
         'Thumbnail',
         'Isi_Berita',
         'status',
+        'publish_at',
+        'views_count',
+    ];
+
+    protected $casts = [
+        'publish_at' => 'datetime',
+        'views_count' => 'integer',
     ];
 
     /*
@@ -60,6 +67,16 @@ class Berita extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | VIEW LOGS RELATIONSHIP
+    |--------------------------------------------------------------------------
+    */
+    public function viewLogs()
+    {
+        return $this->morphMany(ViewLog::class, 'entity');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | ACCESSOR (opsional)
     |--------------------------------------------------------------------------
     | Supaya path relatif seperti `thumbnails/foo.jpg` otomatis
@@ -85,6 +102,22 @@ class Berita extends Model
     public function likesCount()
     {
         return $this->likedByUsers()->count();
+    }
+
+    /**
+     * Increment views count
+     */
+    public function incrementViews()
+    {
+        $this->increment('views_count');
+    }
+
+    /**
+     * Get formatted view count
+     */
+    public function getFormattedViewsAttribute()
+    {
+        return number_format($this->views_count ?? 0);
     }
 
     /*

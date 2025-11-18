@@ -20,6 +20,7 @@ use App\Http\Controllers\IotController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\Penulis\BeritaController as PenulisBeritaController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\ContactController;
 
 
 Route::get('/iot', [App\Http\Controllers\iotController::class, 'index'])->name('iot.index');
@@ -36,7 +37,10 @@ Route::get('/beranda', [HomeController::class, 'index'])->name('home');
 
 // Static pages
 Route::view('/services', 'pages.services')->name('services');
-Route::view('/contact', 'pages.contact')->name('contact');
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+Route::post('/kontak/kirim', [ContactController::class, 'kirim'])->name('contact.kirim');
 Route::view('/akun', 'pages.akun')->name('akun');
 Route::view('/settings', 'pages.settings')->name('settings');
 
@@ -71,15 +75,20 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:penulis')->group(function () {
         Route::get('/penulis/dashboard', [PenulisBeritaController::class, 'index'])->name('penulis.dashboard');
         Route::get('/penulis/berita', [PenulisBeritaController::class, 'index'])->name('penulis.berita.index');
-        Route::get('/penulis/berita/{id}', [PenulisBeritaController::class, 'show'])->name('penulis.berita.show');
+        Route::get('/penulis/berita/{id_berita}', [PenulisBeritaController::class, 'show'])->name('penulis.berita.show');
         Route::post('/penulis/berita', [PenulisBeritaController::class, 'store'])->name('penulis.berita.store');
-        Route::put('/penulis/berita/{id}', [PenulisBeritaController::class, 'update'])->name('penulis.berita.update');
+        Route::put('/penulis/berita/{id_berita}', [PenulisBeritaController::class, 'update'])->name('penulis.berita.update');
+        Route::delete('/penulis/berita/{id_berita}', [PenulisBeritaController::class, 'destroy'])->name('penulis.berita.destroy');
     });
 
-    // Pesanan routes - for authenticated users
-    Route::resource('pesanan', PesananController::class)->except(['create', 'store']);
-    Route::post('/pesanan/{pesanan}/mark-paid', [PesananController::class, 'markAsPaid'])->name('pesanan.mark-paid');
-    Route::get('/pesanan/{pesanan}/nota', [PesananController::class, 'nota'])->name('pesanan.nota');
+    // Pesanan routes - for authenticated users using UUID
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
+    Route::get('/pesanan/{uuid}', [PesananController::class, 'show'])->name('pesanan.show');
+    Route::get('/pesanan/{uuid}/edit', [PesananController::class, 'edit'])->name('pesanan.edit');
+    Route::put('/pesanan/{uuid}', [PesananController::class, 'update'])->name('pesanan.update');
+    Route::delete('/pesanan/{uuid}', [PesananController::class, 'destroy'])->name('pesanan.destroy');
+    Route::post('/pesanan/{uuid}/mark-paid', [PesananController::class, 'markAsPaid'])->name('pesanan.mark-paid');
+    Route::get('/pesanan/{uuid}/nota', [PesananController::class, 'nota'])->name('pesanan.nota');
 });
 
 
@@ -104,10 +113,10 @@ Route::post('/keranjang/hapus', [KeranjangController::class, 'hapus'])->name('ke
 Route::post('/keranjang/update-jumlah', [KeranjangController::class, 'updateJumlah'])->name('keranjang.updateJumlah');
 
 // Menampilkan halaman checkout
-Route::get('/checkout', [checkoutController::class, 'index'])->name('checkout.index');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
 // Proses pesanan setelah submit form
-Route::post('/checkout/proses', [checkoutController::class, 'proses'])->name('checkout.proses');
+Route::post('/checkout/proses', [CheckoutController::class, 'proses'])->name('checkout.proses');
 
 // galeri
 Route::get('/galeri', [GaleriController::class, 'foto'])->name('galeri.index');
@@ -115,8 +124,9 @@ Route::get('/galeri', [GaleriController::class, 'foto'])->name('galeri.index');
 // Notif
 Route::middleware(['auth'])->group(function () {
     Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
-    Route::get('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.read');
-    Route::get('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.readAll');
+    Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::post('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.readAll');
+    Route::post('/notifikasi/mark-read/{id}', [NotifikasiController::class, 'markRead'])->name('notifikasi.markRead');
 });
 
 

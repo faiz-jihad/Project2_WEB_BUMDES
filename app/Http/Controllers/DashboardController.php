@@ -30,11 +30,20 @@ class DashboardController extends Controller
     }
 
     /**
-     * Redirect to Filament admin panel
+     * Redirect to appropriate admin panel based on user role
      */
     public function goToAdmin()
     {
-        return redirect('/admin');
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            return redirect('/admin');
+        } elseif ($user->role === 'penulis') {
+            return redirect()->route('penulis.dashboard');
+        }
+
+        // Fallback for other roles
+        return redirect()->route('beranda');
     }
 
     /**

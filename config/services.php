@@ -41,4 +41,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL') . '/auth/google/callback'),
     ],
 
+    'onesignal' => [
+        'app_id' => env('ONESIGNAL_APP_ID', 'wm3qsitomeg4v75aov5fqaegl'),
+        'rest_api_key' => env('ONESIGNAL_REST_API_KEY'),
+        'user_auth_key' => env('ONESIGNAL_USER_AUTH_KEY'),
+    ],
+
 ];

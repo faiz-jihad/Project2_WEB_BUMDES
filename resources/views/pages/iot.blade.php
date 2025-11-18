@@ -3,7 +3,7 @@
 @section('title', 'SmartFarm IoT - Realtime Control')
 
 @section('content')
-<br><br>
+    <br><br>
     <section class="iot-section">
         <div class="container">
             <div class="iot-header">
@@ -26,7 +26,7 @@
                 <!-- Sensor Cards -->
                 <div class="sensor-grid">
                     <div class="sensor-card temperature-card">
-                        <div class="sensor-icon">🌡️</div>
+                        <div class="sensor-icon"><i class="fas fa-thermometer-half"></i></div>
                         <div class="sensor-info">
                             <div class="sensor-label">Suhu Udara</div>
                             <div id="tempCard" class="sensor-value">{{ $data->first()->temperature ?? '--' }}°C</div>
@@ -35,16 +35,16 @@
                     </div>
 
                     <div class="sensor-card humidity-card">
-                        <div class="sensor-icon">💧</div>
+                        <div class="sensor-icon"><i class="fas fa-tint"></i></div>
                         <div class="sensor-info">
-                            <div class="sensor-label">Kelembapan</div>
+                            <div class="sensor-label">Kelembapan Udara</div>
                             <div id="humCard" class="sensor-value">{{ $data->first()->humidity ?? '--' }}%</div>
                         </div>
                         <div class="sensor-status" id="humStatus">Normal</div>
                     </div>
 
                     <div class="sensor-card soil-card">
-                        <div class="sensor-icon">🌱</div>
+                        <div class="sensor-icon"><i class="fas fa-seedling"></i></div>
                         <div class="sensor-info">
                             <div class="sensor-label">Kelembapan Tanah</div>
                             <div id="soilCard" class="sensor-value">{{ $data->first()->soil ?? '--' }}%</div>
@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="sensor-card water-card">
-                        <div class="sensor-icon">🌊</div>
+                        <div class="sensor-icon"><i class="fas fa-water"></i></div>
                         <div class="sensor-info">
                             <div class="sensor-label">Ketinggian Air</div>
                             <div id="waterCard" class="sensor-value">{{ $data->first()->water ?? '--' }}cm</div>
@@ -67,19 +67,19 @@
                     <h2 class="control-title">Kontrol Sistem</h2>
                     <div class="control-buttons">
                         <button id="btnOn" class="control-btn on-btn">
-                            <span class="btn-icon">💧</span>
+                            <span class="btn-icon"><i class="fas fa-play"></i></span>
                             <span class="btn-text">Pompa ON</span>
                         </button>
                         <button id="btnOff" class="control-btn off-btn">
-                            <span class="btn-icon">🚫</span>
+                            <span class="btn-icon"><i class="fas fa-stop"></i></span>
                             <span class="btn-text">Pompa OFF</span>
                         </button>
                         <button id="btnAuto" class="control-btn auto-btn">
-                            <span class="btn-icon">🤖</span>
+                            <span class="btn-icon"><i class="fas fa-robot"></i></span>
                             <span class="btn-text">Mode AUTO</span>
                         </button>
                         <button id="btnManual" class="control-btn manual-btn">
-                            <span class="btn-icon">👤</span>
+                            <span class="btn-icon"><i class="fas fa-hand-paper"></i></span>
                             <span class="btn-text">Mode MANUAL</span>
                         </button>
                     </div>
@@ -100,6 +100,12 @@
                 <!-- Sensor Log -->
                 <div class="sensor-log">
                     <h2 class="log-title">Log Sensor Terbaru</h2>
+                    <div class="log-navigation">
+                        <button id="prevPage" class="nav-btn" disabled><i class="fas fa-chevron-left"></i>
+                            Sebelumnya</button>
+                        <span id="pageInfo" class="page-info">Halaman 1</span>
+                        <button id="nextPage" class="nav-btn"><i class="fas fa-chevron-right"></i> Selanjutnya</button>
+                    </div>
                     <div class="log-table-container">
                         <table id="sensorTable" class="sensor-table">
                             <thead class="table-header">
@@ -112,7 +118,7 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                @foreach ($data as $d)
+                                @foreach ($data->take(10) as $d)
                                     <tr class="table-row">
                                         <td class="table-cell">{{ $d->created_at->format('d/m/Y H:i:s') }}</td>
                                         <td class="table-cell temperature-data">{{ $d->temperature }}</td>
@@ -135,7 +141,7 @@
     <style>
         /* IoT Page Styles */
         .iot-section {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             min-height: 100vh;
             padding: 2rem 0;
         }
@@ -161,7 +167,7 @@
         .iot-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1e40af;
+            color: #166534;
             margin: 0;
         }
 
@@ -223,13 +229,26 @@
         }
 
         .sensor-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sensor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+            border-radius: 20px 20px 0 0;
         }
 
         .sensor-card:hover {
@@ -258,9 +277,15 @@
         }
 
         .sensor-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
             display: block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            color: #166534;
+        }
+
+        .sensor-icon i {
+            color: #166534;
         }
 
         .sensor-info {
@@ -290,17 +315,31 @@
         }
 
         .control-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+            border-radius: 20px 20px 0 0;
         }
 
         .control-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: #166534;
             margin-bottom: 1.5rem;
             text-align: center;
         }
@@ -374,6 +413,7 @@
 
         .btn-icon {
             font-size: 1.25rem;
+            color: inherit;
         }
 
         .status-display {
@@ -393,17 +433,31 @@
         }
 
         .chart-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+            border-radius: 20px 20px 0 0;
         }
 
         .chart-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: #166534;
             margin-bottom: 1.5rem;
             text-align: center;
         }
@@ -415,17 +469,75 @@
         }
 
         .sensor-log {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sensor-log::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .log-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .page-info {
+            font-weight: 600;
+            color: #166534;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
         .log-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: #166534;
             margin-bottom: 1.5rem;
             text-align: center;
         }
@@ -953,7 +1065,70 @@
             if (tbody.children.length > 10) {
                 tbody.removeChild(tbody.lastChild);
             }
+
+            // Update pagination
+            updatePagination();
         }
+
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let allData = @json($data->toArray());
+
+        // Update pagination controls
+        function updatePagination() {
+            const totalPages = Math.ceil(allData.length / itemsPerPage);
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+        }
+
+        // Show page function
+        function showPage(page) {
+            const tbody = document.querySelector('.table-body');
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = allData.slice(start, end);
+
+            tbody.innerHTML = '';
+            pageData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <td class="table-cell">${new Date(item.created_at).toLocaleString('id-ID')}</td>
+                    <td class="table-cell temperature-data">${item.temperature}</td>
+                    <td class="table-cell humidity-data">${item.humidity}</td>
+                    <td class="table-cell soil-data">${item.soil}</td>
+                    <td class="table-cell water-data">${item.water}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Pagination event listeners
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+                updatePagination();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(allData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+                updatePagination();
+            }
+        });
+
+        // Initialize pagination
+        updatePagination();
 
         // Fallback AJAX polling
         function fetchLatestData() {

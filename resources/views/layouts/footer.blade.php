@@ -216,7 +216,7 @@
             <!-- Email -->
             <div class="footer-column">
                 <h4>EMAIL</h4>
-                <a href="mailto:bumdesmadusari@gmail.com">bumdesmadusari@gmail.com</a>
+                <a href="mailto:bumdesmadusari@gmail.com">bumdesmadusari2025@gmail.com</a>
             </div>
 
             <!-- Media Sosial -->

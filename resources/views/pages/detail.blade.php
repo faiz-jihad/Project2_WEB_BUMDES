@@ -3,217 +3,343 @@
 @section('title', $berita->Judul ?? 'Detail Berita')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
+    <div class="container my-5 pt-5">
+
         @if (isset($berita))
-            <!-- Breadcrumb -->
-            <nav class="mb-6" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-600">
-                    <li><a href="{{ route('beranda') }}" class="hover:text-blue-600">Beranda</a></li>
-                    <li><span class="text-gray-400">/</span></li>
-                    <li><a href="{{ route('berita.index') }}" class="hover:text-blue-600">Berita</a></li>
-                    <li><span class="text-gray-400">/</span></li>
-                    <li class="text-gray-900 font-medium">{{ Str::limit($berita->Judul, 60) }}</li>
+
+            {{-- Breadcrumb --}}
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb bg-white p-3 rounded shadow-sm">
+                    <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Beranda</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('berita.index') }}">Berita</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ Str::limit($berita->Judul, 70) }}
+                    </li>
                 </ol>
             </nav>
 
-            <!-- Article Header -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{{ $berita->Judul }}</h1>
+            {{-- Artikel --}}
+            <article class="card shadow-sm border-0 mb-5">
+                @if ($berita->Thumbnail)
+                    <figure class="position-relative m-0">
+                        <img src="{{ asset('storage/' . $berita->Thumbnail) }}"
+                            class="card-img-top img-fluid rounded-top article-img" alt="{{ $berita->Judul }}">
+                    </figure>
+                @endif
 
-                <!-- Article Meta -->
-                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
-                    <div class="flex items-center">
-                        <i class="fas fa-user mr-2"></i>
-                        <span>{{ $berita->penulis ? $berita->penulis->nama : 'Administrator' }}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>{{ $berita->created_at->format('d M Y') }}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-clock mr-2"></i>
-                        <span>{{ $berita->created_at->format('H:i') }}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-tag mr-2"></i>
-                        <span>{{ $berita->kategoriBerita ? $berita->kategoriBerita->Judul : 'Berita' }}</span>
-                    </div>
-                </div>
+                <div class="card-body p-4 p-md-5">
 
-                <!-- Share Button -->
-                <div class="border-t pt-4">
-                    <div class="flex items-center justify-between">
-                        <button onclick="navigator.share({title: '{{ $berita->Judul }}', url: '{{ url()->current() }}'})"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">
-                            <i class="fas fa-share mr-2"></i>
-                            Bagikan
-                        </button>
+                    {{-- Judul --}}
+                    <h1 class="fw-bold mb-3 text-dark">{{ $berita->Judul }}</h1>
 
-                        <!-- Like Button -->
+                    {{-- Meta Data --}}
+                    <div class="d-flex flex-wrap text-muted small mb-4">
+                        <span class="me-3">
+                            <i class="fas fa-user text-success me-1"></i>
+                            {{ $berita->penulis->nama_penulis ?? 'Administrator' }}
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-calendar text-success me-1"></i>
+                            {{ $berita->created_at->format('d M Y') }}
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-clock text-success me-1"></i>
+                            {{ $berita->created_at->format('H:i') }}
+                        </span>
+                        <span>
+                            <i class="fas fa-tag text-success me-1"></i>
+                            {{ $berita->kategoriBerita->Judul ?? 'Umum' }}
+                        </span>
+                    </div>
+
+                    {{-- Isi Artikel --}}
+                    <div class="article-content mb-4">
+                        {!! nl2br(e($berita->Isi_Berita)) !!}
+                    </div>
+
+                    {{-- Share & Like --}}
+                    <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+
+                        {{-- Social Share Icons --}}
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm px-3 shadow-sm share-btn"
+                                onclick="shareToFacebook('{{ url()->current() }}', '{{ $berita->Judul }}')"
+                                title="Bagikan ke Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-sm px-3 shadow-sm share-btn"
+                                onclick="shareToTwitter('{{ url()->current() }}', '{{ $berita->Judul }}')"
+                                title="Bagikan ke Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+                            <button class="btn btn-outline-success btn-sm px-3 shadow-sm share-btn"
+                                onclick="shareToWhatsApp('{{ url()->current() }}', '{{ $berita->Judul }}')"
+                                title="Bagikan ke WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm px-3 shadow-sm share-btn"
+                                onclick="copyLink('{{ url()->current() }}')" title="Salin Link">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+
+                        {{-- Like --}}
                         @auth
                             <button id="likeBtn" onclick="toggleLike('{{ $berita->slug }}')"
-                                class="inline-flex items-center px-4 py-2 {{ $berita->isLikedBy(auth()->user()) ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-700' }} text-white rounded font-medium">
-                                <i class="fas {{ $berita->isLikedBy(auth()->user()) ? 'fa-heart' : 'fa-heart-o' }} mr-2"></i>
+                                class="btn btn-sm px-3 text-white shadow-sm like-btn
+                                        {{ $berita->isLikedBy(auth()->user()) ? 'btn-danger' : 'btn-outline-danger' }}">
+                                <i class="fas {{ $berita->isLikedBy(auth()->user()) ? 'fa-heart' : 'fa-heart' }} me-2"></i>
                                 <span id="likeCount">{{ $berita->likesCount() }}</span>
                             </button>
                         @else
-                            <a href="{{ route('login') }}"
-                                class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded font-medium">
-                                <i class="fas fa-heart-o mr-2"></i>
-                                <span>{{ $berita->likesCount() }}</span>
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-danger px-3 shadow-sm like-btn"
+                                title="Login untuk like">
+                                <i class="fas fa-heart me-2"></i>{{ $berita->likesCount() }}
                             </a>
                         @endauth
-                    </div>
-                </div>
-            </div>
 
-            <!-- Featured Image -->
-            @if ($berita->Thumbnail)
-                <div class="mb-6">
-                    <img src="{{ asset('storage/' . $berita->Thumbnail) }}" alt="{{ $berita->Judul }}"
-                        class="w-full max-h-96 object-cover rounded-lg shadow-md">
-                </div>
-            @endif
+                    </div>
 
-            <!-- Article Content -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div class="prose max-w-none">
-                    {!! nl2br(e($berita->Isi_Berita)) !!}
                 </div>
-            </div>
+            </article>
 
-            <!-- Article Info -->
-            <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                <h3 class="text-lg font-semibold mb-4">Informasi Artikel</h3>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-sm text-gray-600">Kategori</p>
-                        <p class="font-medium">{{ $berita->kategoriBerita ? $berita->kategoriBerita->Judul : 'Umum' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Penulis</p>
-                        <p class="font-medium">{{ $berita->penulis ? $berita->penulis->nama_penulis : 'Administrator' }}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Diterbitkan</p>
-                        <p class="font-medium">{{ $berita->created_at->format('d M Y H:i') }}</p>
-                    </div>
-                    @if ($berita->updated_at != $berita->created_at)
-                        <div>
-                            <p class="text-sm text-gray-600">Diperbarui</p>
-                            <p class="font-medium">{{ $berita->updated_at->format('d M Y H:i') }}</p>
+            {{-- Informasi Artikel --}}
+            <section class="card border-0 shadow-sm mb-5">
+                <div class="card-header bg-light fw-semibold">Informasi Artikel</div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Kategori</small>
+                            <div>{{ $berita->kategoriBerita->Judul ?? 'Umum' }}</div>
                         </div>
-                    @endif
-                </div>
-            </div>
 
-            <!-- Navigation -->
-            <div class="text-center">
-                <a href="{{ route('berita.index') }}"
-                    class="inline-flex items-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded font-medium">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Kembali ke Berita
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Penulis</small>
+                            <div>{{ $berita->penulis->nama_penulis ?? 'Administrator' }}</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Diterbitkan</small>
+                            <div>{{ $berita->created_at->format('d M Y H:i') }}</div>
+                        </div>
+
+                        @if ($berita->updated_at != $berita->created_at)
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted">Diperbarui</small>
+                                <div>{{ $berita->updated_at->format('d M Y H:i') }}</div>
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+            </section>
+
+            {{-- Tombol Kembali --}}
+            <div class="text-center mb-5">
+                <a href="{{ route('berita.index') }}" class="btn btn-dark px-4 shadow-sm">
+                    <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar Berita
                 </a>
             </div>
         @else
-            <!-- 404 State -->
-            <div class="text-center py-12">
-                <div class="mb-6">
-                    <i class="fas fa-newspaper text-6xl text-gray-400"></i>
-                </div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">Berita Tidak Ditemukan</h1>
-                <p class="text-gray-600 mb-6">Maaf, berita yang Anda cari tidak tersedia.</p>
-                <a href="{{ route('berita.index') }}"
-                    class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">
-                    <i class="fas fa-list mr-2"></i>
-                    Lihat Semua Berita
+            {{-- 404 --}}
+            <div class="text-center py-5">
+                <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                <h2 class="fw-bold text-dark">Berita Tidak Ditemukan</h2>
+                <p class="text-muted mb-4">Berita yang Anda cari tidak tersedia atau telah dihapus.</p>
+                <a href="{{ route('berita.index') }}" class="btn btn-primary px-4">
+                    <i class="fas fa-list me-2"></i>Lihat Semua Berita
                 </a>
             </div>
+
         @endif
+
     </div>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    {{-- JS Like & Share --}}
     <script>
         function toggleLike(slug) {
             fetch(`/berita/${slug}/like`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     }
                 })
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
                     const likeBtn = document.getElementById('likeBtn');
+                    const icon = likeBtn.querySelector('i');
                     const likeCount = document.getElementById('likeCount');
 
+                    likeCount.textContent = data.likes_count;
+
                     if (data.liked) {
-                        likeBtn.classList.remove('bg-gray-600', 'hover:bg-gray-700');
-                        likeBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-                        likeBtn.innerHTML = '<i class="fas fa-heart mr-2"></i><span id="likeCount">' + data
-                            .likes_count + '</span>';
+                        likeBtn.classList.remove('btn-outline-danger');
+                        likeBtn.classList.add('btn-danger');
+                        icon.classList.add('animate-pulse');
+                        setTimeout(() => icon.classList.remove('animate-pulse'), 500);
                     } else {
-                        likeBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                        likeBtn.classList.add('bg-gray-600', 'hover:bg-gray-700');
-                        likeBtn.innerHTML = '<i class="fas fa-heart-o mr-2"></i><span id="likeCount">' + data
-                            .likes_count + '</span>';
+                        likeBtn.classList.remove('btn-danger');
+                        likeBtn.classList.add('btn-outline-danger');
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat memproses like.');
-                });
+                .catch(() => alert('Terjadi kesalahan.'));
         }
+
+        function shareToFacebook(url, title) {
+            const shareUrl =
+                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function shareToTwitter(url, title) {
+            const shareUrl =
+                `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function shareToWhatsApp(url, title) {
+            const shareUrl = `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        function copyLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                // Show success feedback
+                const btn = event.target.closest('.share-btn');
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-outline-secondary');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalIcon;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-secondary');
+                }, 2000);
+            }).catch(() => {
+                alert('Gagal menyalin link');
+            });
+        }
+
+        // Add hover effects for share buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const shareBtns = document.querySelectorAll('.share-btn');
+            shareBtns.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            const likeBtn = document.querySelector('.like-btn');
+            if (likeBtn) {
+                likeBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                likeBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
+        });
     </script>
 
+    {{-- CSS --}}
     <style>
-        .prose {
-            color: #374151;
-            line-height: 1.7;
+        .article-img {
+            transition: transform .6s ease;
         }
 
-        .prose p {
+        .article-img:hover {
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .article-content p {
             margin-bottom: 1rem;
         }
 
-        .prose h2,
-        .prose h3,
-        .prose h4 {
-            color: #111827;
-            font-weight: 600;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+        .article-content h2,
+        .article-content h3 {
+            margin: 2rem 0 1rem;
+            font-weight: 700;
         }
 
-        .prose img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .prose blockquote {
-            border-left: 4px solid #3b82f6;
-            padding-left: 1rem;
-            font-style: italic;
-            color: #4b5563;
-            background: #f8fafc;
+        .article-content blockquote {
+            border-left: 4px solid #0b560b;
+            background: #f8f9fa;
             padding: 1rem;
-            border-radius: 0.25rem;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            font-style: italic;
         }
 
-        .prose ul,
-        .prose ol {
-            padding-left: 1.5rem;
-            margin: 1rem 0;
+        /* Share & Like Styles */
+        .share-btn {
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
         }
 
-        .prose li {
-            margin-bottom: 0.5rem;
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .like-btn {
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            min-width: 80px;
+        }
+
+        .like-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .animate-pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .share-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .like-btn {
+                min-width: 70px;
+                font-size: 0.9rem;
+            }
         }
     </style>
+
 @endsection

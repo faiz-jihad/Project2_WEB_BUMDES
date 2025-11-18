@@ -18,7 +18,7 @@ class NotifikasiController extends Controller
         $user = Auth::user();
 
         // Check if user is a penulis
-        $penulis = Penulis::where('Username', $user->email)->first();
+        $penulis = Penulis::where('email', $user->email)->first();
 
         if ($penulis) {
             // If user is a penulis, get notifications for the penulis
@@ -27,6 +27,8 @@ class NotifikasiController extends Controller
             // Otherwise, get notifications for the user
             $notifications = $user->notifications()->paginate(10);
         }
+
+
 
         return view('pages.notifikasi.index', compact('notifications'));
     }
@@ -39,7 +41,7 @@ class NotifikasiController extends Controller
         }
 
         $user = Auth::user();
-        $penulis = Penulis::where('Username', $user->email)->first();
+        $penulis = Penulis::where('email', $user->email)->first();
 
         if ($penulis) {
             $notification = $penulis->notifications()->find($id);
@@ -49,9 +51,10 @@ class NotifikasiController extends Controller
 
         if ($notification) {
             $notification->markAsRead();
+            return response()->json(['success' => true, 'message' => 'Notifikasi telah ditandai sebagai dibaca']);
         }
 
-        return back();
+        return response()->json(['success' => false, 'message' => 'Notifikasi tidak ditemukan'], 404);
     }
 
     // Tandai semua notifikasi sebagai sudah dibaca
@@ -62,7 +65,7 @@ class NotifikasiController extends Controller
         }
 
         $user = Auth::user();
-        $penulis = Penulis::where('Username', $user->email)->first();
+        $penulis = Penulis::where('email', $user->email)->first();
 
         if ($penulis) {
             $penulis->unreadNotifications->markAsRead();
@@ -70,14 +73,14 @@ class NotifikasiController extends Controller
             $user->unreadNotifications->markAsRead();
         }
 
-        return back();
+        return response()->json(['success' => true, 'message' => 'Semua notifikasi telah ditandai sebagai dibaca']);
     }
 
     // API endpoint to get unread notification count
     public function getUnreadCount()
     {
         $user = Auth::user();
-        $penulis = Penulis::where('Username', $user->email)->first();
+        $penulis = Penulis::where('email', $user->email)->first();
 
         if ($penulis) {
             $count = $penulis->unreadNotifications->count();

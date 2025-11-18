@@ -26,3 +26,4 @@ Route::middleware('auth')->group(function () {
 
 // IoT Sensor API routes
 Route::get('/sensors/latest', [App\Http\Controllers\iotController::class, 'getLatestData']);
+

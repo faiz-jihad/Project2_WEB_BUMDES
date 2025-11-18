@@ -7,6 +7,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "berkayk/onesignal-laravel": "^2.4",
         "filament/filament": "3.3@dev",
         "laravel/framework": "^12.0",
         "laravel/socialite": "*",
@@ -14,7 +16,9 @@
         "leandrocfe/filament-apex-charts": "^3.2",
         "mckenziearts/laravel-notify": "^2.7",
         "php-mqtt/client": "^2.3",
-        "pusher/pusher-php-server": "^7.2"
+        "pusher/pusher-php-server": "^7.2",
+        "spatie/browsershot": "^5.0",
+        "spatie/laravel-permission": "^6.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

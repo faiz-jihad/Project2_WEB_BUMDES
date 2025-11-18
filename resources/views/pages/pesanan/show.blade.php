@@ -49,7 +49,7 @@
 
                     <div class="status-actions">
                         @if ($pesanan->status == 'pending' && $pesanan->metode_pembayaran == 'transfer')
-                            <form action="{{ route('pesanan.mark-paid', $pesanan->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('pesanan.mark-paid', $pesanan->uuid) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('POST')
                                 <button type="submit" class="btn btn-success btn-sm">
@@ -59,11 +59,10 @@
                         @endif
 
                         @if ($pesanan->status == 'pending')
-                            <a href="{{ route('pesanan.edit', $pesanan->id_pesanan) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('pesanan.edit', $pesanan->uuid) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i> Edit Pesanan
                             </a>
-                            <form action="{{ route('pesanan.destroy', $pesanan->id_pesanan) }}" method="POST"
-                                class="d-inline"
+                            <form action="{{ route('pesanan.destroy', $pesanan->uuid) }}" method="POST" class="d-inline"
                                 onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                 @csrf
                                 @method('DELETE')
@@ -73,7 +72,7 @@
                             </form>
                         @endif
 
-                        <a href="{{ route('pesanan.nota', $pesanan->id_pesanan) }}" class="btn btn-primary btn-sm"
+                        <a href="{{ route('pesanan.nota', $pesanan->uuid) }}" class="btn btn-primary btn-sm"
                             target="_blank">
                             <i class="fas fa-print"></i> Lihat Nota
                         </a>

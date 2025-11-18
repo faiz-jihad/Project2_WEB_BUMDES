@@ -48,14 +48,14 @@ class PesananController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Check if user owns this order or is admin
         if (Auth::check()) {
             if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-                abort(403, 'Anda tidak memiliki akses ke pesanan ini.');
+                return response()->view('layouts.403page', [], 403);
             }
         } else {
             // Guest users can't view orders
@@ -68,9 +68,9 @@ class PesananController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Only allow editing if status is pending
         if ($pesanan->status !== 'pending') {
@@ -79,7 +79,7 @@ class PesananController extends Controller
 
         // Check ownership
         if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            abort(403);
+            return response()->view('layouts.403page', [], 403);
         }
 
         return view('pages.pesanan.edit', compact('pesanan'));
@@ -88,9 +88,9 @@ class PesananController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Only allow updating if status is pending
         if ($pesanan->status !== 'pending') {
@@ -99,7 +99,7 @@ class PesananController extends Controller
 
         // Check ownership
         if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            abort(403);
+            return response()->view('layouts.403page', [], 403);
         }
 
         $request->validate([
@@ -116,15 +116,15 @@ class PesananController extends Controller
             'catatan' => $request->catatan,
         ]);
 
-        return redirect()->route('pesanan.show', $pesanan->id_pesanan)->with('success', 'Pesanan berhasil diperbarui.');
+        return redirect()->route('pesanan.show', $pesanan->uuid)->with('success', 'Pesanan berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Only allow canceling if status is pending
         if ($pesanan->status !== 'pending') {
@@ -133,7 +133,7 @@ class PesananController extends Controller
 
         // Check ownership
         if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            abort(403);
+            return response()->view('layouts.403page', [], 403);
         }
 
         // Restore stock for each item in the order
@@ -152,9 +152,9 @@ class PesananController extends Controller
     /**
      * Mark order as paid (for transfer payments)
      */
-    public function markAsPaid($id)
+    public function markAsPaid($uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Only allow if payment method is transfer and status is pending
         if ($pesanan->metode_pembayaran !== 'transfer' || $pesanan->status !== 'pending') {
@@ -163,7 +163,7 @@ class PesananController extends Controller
 
         // Check ownership
         if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-            abort(403);
+            return response()->view('layouts.403page', [], 403);
         }
 
         $pesanan->update(['status' => 'sudah_bayar']);
@@ -174,14 +174,14 @@ class PesananController extends Controller
     /**
      * Show order nota/invoice
      */
-    public function nota($id)
+    public function nota($uuid)
     {
-        $pesanan = Pesanan::findOrFail($id);
+        $pesanan = Pesanan::where('uuid', $uuid)->firstOrFail();
 
         // Check if user owns this order or is admin
         if (Auth::check()) {
             if ($pesanan->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-                abort(403, 'Anda tidak memiliki akses ke pesanan ini.');
+                return response()->view('layouts.403page', [], 403);
             }
         } else {
             // Guest users can't view orders

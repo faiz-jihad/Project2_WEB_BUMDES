@@ -17,7 +17,14 @@ class Produk extends Model
         'harga',
         'gambar',
         'slug',
-        'stok'
+        'stok',
+        'views_count'
+    ];
+
+    protected $casts = [
+        'harga' => 'decimal:2',
+        'stok' => 'integer',
+        'views_count' => 'integer',
     ];
 
     protected static function boot()
@@ -47,8 +54,50 @@ class Produk extends Model
         return $this->hasMany(Keranjang::class, 'produk_id');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | VIEW LOGS RELATIONSHIP
+    |--------------------------------------------------------------------------
+    */
+    public function viewLogs()
+    {
+        return $this->morphMany(ViewLog::class, 'entity');
+    }
+
     public function getKategoriAttribute()
     {
         return $this->kategoriProduk->nama_kategori ?? '';
+    }
+
+    /**
+     * Increment views count
+     */
+    public function incrementViews()
+    {
+        $this->increment('views_count');
+    }
+
+    /**
+     * Get formatted view count
+     */
+    public function getFormattedViewsAttribute()
+    {
+        return number_format($this->views_count ?? 0);
+    }
+
+    /**
+     * Get formatted price
+     */
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rp ' . number_format($this->harga, 0, ',', '.');
+    }
+
+    /**
+     * Check if product is in stock
+     */
+    public function isInStock()
+    {
+        return $this->stok > 0;
     }
 }

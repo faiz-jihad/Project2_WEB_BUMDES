@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
@@ -184,7 +186,7 @@
     <div class="blur-circle blur1"></div>
     <div class="blur-circle blur2"></div>
 
-    <div class="card">
+    <div class="card" data-aos="fade-up" data-aos-duration="1000">
         <h1>Reset Password</h1>
         <p>Masukkan email dan password baru Anda.</p>
 
@@ -258,6 +260,9 @@
                 text.style.color = "#22c55e";
             }
         });
+
+        // Initialize AOS
+        AOS.init();
     </script>
 </body>
 

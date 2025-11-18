@@ -97,15 +97,16 @@
                                         data-bs-target="#detailModal{{ $pesanan->id_pesanan }}">
                                         <i class="bi bi-eye"></i> Detail
                                     </button>
-                                    <a href="{{ route('pesanan.nota', $pesanan->id_pesanan) }}"
+                                    <a href="{{ route('pesanan.nota', $pesanan->uuid) }}"
                                         class="btn btn-outline-success btn-sm" target="_blank">
                                         <i class="bi bi-receipt"></i> Nota
                                     </a>
                                     @if ($pesanan->status == 'pending')
-                                        <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $pesanan->id_pesanan }}">
+                                        <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#editModal{{ $pesanan->id_pesanan }}">
                                             <i class="bi bi-pencil"></i> Edit
                                         </button>
-                                        <form action="{{ route('pesanan.destroy', $pesanan->id_pesanan) }}" method="POST"
+                                        <form action="{{ route('pesanan.destroy', $pesanan->uuid) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                                             @csrf
@@ -122,12 +123,15 @@
 
                     {{-- Detail Modal --}}
                     @foreach ($pesanans as $pesanan)
-                        <div class="modal fade" id="detailModal{{ $pesanan->id_pesanan }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
+                        <div class="modal fade" id="detailModal{{ $pesanan->id_pesanan }}" tabindex="-1"
+                            aria-labelledby="detailModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="detailModalLabel{{ $pesanan->id_pesanan }}">Detail Pesanan #{{ $pesanan->id_pesanan }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title" id="detailModalLabel{{ $pesanan->id_pesanan }}">Detail
+                                            Pesanan #{{ $pesanan->id_pesanan }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
@@ -136,24 +140,43 @@
                                                 <p><strong>Status:</strong>
                                                     <span class="status-badge status-{{ $pesanan->status }}">
                                                         @switch($pesanan->status)
-                                                            @case('pending') Menunggu Pembayaran @break
-                                                            @case('sudah_bayar') Sudah Bayar @break
-                                                            @case('diproses') Diproses @break
-                                                            @case('dikirim') Dikirim @break
-                                                            @case('selesai') Selesai @break
-                                                            @case('dibatalkan') Dibatalkan @break
+                                                            @case('pending')
+                                                                Menunggu Pembayaran
+                                                            @break
+
+                                                            @case('sudah_bayar')
+                                                                Sudah Bayar
+                                                            @break
+
+                                                            @case('diproses')
+                                                                Diproses
+                                                            @break
+
+                                                            @case('dikirim')
+                                                                Dikirim
+                                                            @break
+
+                                                            @case('selesai')
+                                                                Selesai
+                                                            @break
+
+                                                            @case('dibatalkan')
+                                                                Dibatalkan
+                                                            @break
                                                         @endswitch
                                                     </span>
                                                 </p>
-                                                <p><strong>Tanggal:</strong> {{ $pesanan->created_at->format('d/m/Y H:i') }}</p>
-                                                <p><strong>Metode Pembayaran:</strong> {{ ucfirst($pesanan->metode_pembayaran) }}</p>
+                                                <p><strong>Tanggal:</strong>
+                                                    {{ $pesanan->created_at->format('d/m/Y H:i') }}</p>
+                                                <p><strong>Metode Pembayaran:</strong>
+                                                    {{ ucfirst($pesanan->metode_pembayaran) }}</p>
                                             </div>
                                             <div class="col-md-6">
                                                 <h6>Informasi Pemesan</h6>
                                                 <p><strong>Nama:</strong> {{ $pesanan->nama_pemesan }}</p>
                                                 <p><strong>Alamat:</strong> {{ $pesanan->alamat }}</p>
                                                 <p><strong>No. HP:</strong> {{ $pesanan->no_hp }}</p>
-                                                @if($pesanan->catatan)
+                                                @if ($pesanan->catatan)
                                                     <p><strong>Catatan:</strong> {{ $pesanan->catatan }}</p>
                                                 @endif
                                             </div>
@@ -164,17 +187,21 @@
                                             @foreach ($pesanan->items as $item)
                                                 <div class="order-item">
                                                     <div class="item-image">
-                                                        <img src="{{ $item['gambar'] ?? asset('images/no-image.jpg') }}" alt="{{ $item['nama'] }}">
+                                                        <img src="{{ $item['gambar'] ?? asset('images/no-image.jpg') }}"
+                                                            alt="{{ $item['nama'] }}">
                                                     </div>
                                                     <div class="item-details">
                                                         <h4>{{ $item['nama'] }}</h4>
                                                         @if (isset($item['variasi']) && $item['variasi'])
                                                             <p class="item-variant">{{ $item['variasi'] }}</p>
                                                         @endif
-                                                        <p class="item-price">Rp {{ number_format($item['harga'], 0, ',', '.') }} x {{ $item['jumlah'] }}</p>
+                                                        <p class="item-price">Rp
+                                                            {{ number_format($item['harga'], 0, ',', '.') }} x
+                                                            {{ $item['jumlah'] }}</p>
                                                     </div>
                                                     <div class="item-total">
-                                                        <strong>Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</strong>
+                                                        <strong>Rp
+                                                            {{ number_format($item['subtotal'], 0, ',', '.') }}</strong>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -185,8 +212,10 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                        <a href="{{ route('pesanan.nota', $pesanan->id_pesanan) }}" class="btn btn-success" target="_blank">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Tutup</button>
+                                        <a href="{{ route('pesanan.nota', $pesanan->uuid) }}" class="btn btn-success"
+                                            target="_blank">
                                             <i class="bi bi-receipt"></i> Lihat Nota
                                         </a>
                                     </div>
@@ -197,35 +226,47 @@
 
                     {{-- Edit Modal --}}
                     @foreach ($pesanans as $pesanan)
-                        <div class="modal fade" id="editModal{{ $pesanan->id_pesanan }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
+                        <div class="modal fade" id="editModal{{ $pesanan->id_pesanan }}" tabindex="-1"
+                            aria-labelledby="editModalLabel{{ $pesanan->id_pesanan }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel{{ $pesanan->id_pesanan }}">Edit Pesanan #{{ $pesanan->id_pesanan }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title" id="editModalLabel{{ $pesanan->id_pesanan }}">Edit
+                                            Pesanan #{{ $pesanan->id_pesanan }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('pesanan.update', $pesanan->id_pesanan) }}" method="POST">
+                                        <form action="{{ route('pesanan.update', $pesanan->uuid) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">
-                                                <label for="nama_pemesan{{ $pesanan->id_pesanan }}" class="form-label">Nama Pemesan</label>
-                                                <input type="text" class="form-control" id="nama_pemesan{{ $pesanan->id_pesanan }}" name="nama_pemesan" value="{{ $pesanan->nama_pemesan }}" required>
+                                                <label for="nama_pemesan{{ $pesanan->id_pesanan }}"
+                                                    class="form-label">Nama Pemesan</label>
+                                                <input type="text" class="form-control"
+                                                    id="nama_pemesan{{ $pesanan->id_pesanan }}" name="nama_pemesan"
+                                                    value="{{ $pesanan->nama_pemesan }}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="alamat{{ $pesanan->id_pesanan }}" class="form-label">Alamat</label>
+                                                <label for="alamat{{ $pesanan->id_pesanan }}"
+                                                    class="form-label">Alamat</label>
                                                 <textarea class="form-control" id="alamat{{ $pesanan->id_pesanan }}" name="alamat" rows="3" required>{{ $pesanan->alamat }}</textarea>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="no_hp{{ $pesanan->id_pesanan }}" class="form-label">No. HP</label>
-                                                <input type="text" class="form-control" id="no_hp{{ $pesanan->id_pesanan }}" name="no_hp" value="{{ $pesanan->no_hp }}" required>
+                                                <label for="no_hp{{ $pesanan->id_pesanan }}" class="form-label">No.
+                                                    HP</label>
+                                                <input type="text" class="form-control"
+                                                    id="no_hp{{ $pesanan->id_pesanan }}" name="no_hp"
+                                                    value="{{ $pesanan->no_hp }}" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="catatan{{ $pesanan->id_pesanan }}" class="form-label">Catatan</label>
+                                                <label for="catatan{{ $pesanan->id_pesanan }}"
+                                                    class="form-label">Catatan</label>
                                                 <textarea class="form-control" id="catatan{{ $pesanan->id_pesanan }}" name="catatan" rows="2">{{ $pesanan->catatan }}</textarea>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
                                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                             </div>
                                         </form>
@@ -238,7 +279,66 @@
 
                 {{-- Pagination --}}
                 <div class="pagination-wrapper">
-                    {{ $pesanans->links() }}
+                    @if ($pesanans->hasPages())
+                        <nav aria-label="Pagination">
+                            <ul class="pagination pagination-custom">
+                                {{-- Previous Page Link --}}
+                                @if ($pesanans->onFirstPage())
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="bi bi-chevron-left"></i>
+                                            <span class="d-none d-sm-inline">Sebelumnya</span>
+                                        </span>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $pesanans->previousPageUrl() }}" rel="prev">
+                                            <i class="bi bi-chevron-left"></i>
+                                            <span class="d-none d-sm-inline">Sebelumnya</span>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                {{-- Pagination Elements --}}
+                                @foreach ($pesanans->getUrlRange(1, $pesanans->lastPage()) as $page => $url)
+                                    @if ($page == $pesanans->currentPage())
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ $page }}</span>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                        </li>
+                                    @endif
+                                @endforeach
+
+                                {{-- Next Page Link --}}
+                                @if ($pesanans->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $pesanans->nextPageUrl() }}" rel="next">
+                                            <span class="d-none d-sm-inline">Selanjutnya</span>
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <span class="d-none d-sm-inline">Selanjutnya</span>
+                                            <i class="bi bi-chevron-right"></i>
+                                        </span>
+                                    </li>
+                                @endif
+                            </ul>
+                        </nav>
+
+                        {{-- Pagination Info --}}
+                        <div class="pagination-info">
+                            <small class="text-muted">
+                                Menampilkan {{ $pesanans->firstItem() }}-{{ $pesanans->lastItem() }} dari
+                                {{ $pesanans->total() }} pesanan
+                            </small>
+                        </div>
+                    @endif
                 </div>
             @else
                 <div class="empty-orders">
@@ -452,8 +552,73 @@
 
         .pagination-wrapper {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
             margin-top: 40px;
+        }
+
+        .pagination-custom {
+            margin: 0;
+            gap: 5px;
+        }
+
+        .pagination-custom .page-item {
+            margin: 0;
+        }
+
+        .pagination-custom .page-link {
+            border: 2px solid #e9ecef;
+            color: #198754;
+            background: white;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pagination-custom .page-link:hover {
+            background: #f8fff9;
+            border-color: #198754;
+            color: #146c43;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(25, 135, 84, 0.2);
+        }
+
+        .pagination-custom .page-item.active .page-link {
+            background: linear-gradient(135deg, #198754, #146c43);
+            border-color: #198754;
+            color: white;
+            box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+        }
+
+        .pagination-custom .page-item.disabled .page-link {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        @media (max-width: 576px) {
+            .pagination-custom .page-link span {
+                display: none;
+            }
+
+            .pagination-custom .page-link {
+                padding: 8px 12px;
+                min-width: 40px;
+                justify-content: center;
+            }
         }
 
         .empty-orders {

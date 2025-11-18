@@ -9,31 +9,35 @@
 
     <div class="container-fluid bg-light">
         <!-- Hero Section -->
-        <section class="hero-section position-relative text-center text-white py-5 mb-5" data-aos="fade-down">
+        <section class="hero-section position-relative text-center text-white py-4 py-md-5 mb-4 mb-md-5" data-aos="fade-down">
             <div class="hero-overlay position-absolute w-100 h-100"></div>
-            <div class="container position-relative z-2 py-5">
-                <h1 class="fw-bold display-4 mb-3" data-aos="fade-up" data-aos-delay="200">BUMdes Madusari News</h1>
-                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="400">Berita terkini dan artikel eksklusif
+            <div class="container position-relative z-2 py-3 py-md-5">
+                <h1 class="fw-bold display-4 display-5-md mb-3" data-aos="fade-up" data-aos-delay="200">BUMdes Madusari News
+                </h1>
+                <p class="lead mb-4 fs-6 fs-md-5" data-aos="fade-up" data-aos-delay="400">Berita terkini dan artikel
+                    eksklusif
                     untuk Anda</p>
-                <a href="#berita-terbaru" class="btn btn-lg btn-green px-4 py-2 shadow-lg" data-aos="zoom-in"
+                <a href="#berita-terbaru" class="btn btn-lg btn-md btn-green px-3 px-md-4 py-2 shadow-lg" data-aos="zoom-in"
                     data-aos-delay="600">Lihat Berita</a>
             </div>
         </section>
 
         <!-- Main Content -->
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 <!-- Daftar Berita -->
-                <div class="col-lg-8" id="berita-terbaru">
-                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
-                        <h2 class="fw-bold text-gradient">Berita Terbaru</h2>
-                        <div class="d-flex align-items-center gap-2">
+                <div class="col-lg-8 col-12" id="berita-terbaru">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3"
+                        data-aos="fade-right">
+                        <h2 class="fw-bold text-gradient mb-0">Berita Terbaru</h2>
+                        <div
+                            class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100 w-md-auto">
                             @if (request('search'))
                                 <a href="{{ url()->current() }}" class="btn btn-outline-secondary btn-sm rounded-pill">
                                     <i class="bi bi-x-circle"></i> Hapus Filter
                                 </a>
                             @endif
-                            <div class="search-box">
+                            <div class="search-box flex-grow-1 flex-md-grow-0">
                                 <input type="text" id="beritaSearch" placeholder="Cari berita..."
                                     value="{{ request('search') }}" />
                             </div>
@@ -58,7 +62,7 @@
                                 </div>
 
                                 <!-- Desktop View -->
-                                <div class="row g-4 d-none d-md-flex kategori-grid"
+                                <div class="row g-3 g-md-4 d-none d-md-flex kategori-grid"
                                     id="beritaDesktopGrid-{{ Str::slug($kategoriJudul) }}">
                                     @forelse($beritaKategori as $b)
                                         <div class="col-md-6 col-lg-4 berita-item" style="color:#fff" data-aos="fade-up"
@@ -72,15 +76,15 @@
                                                     <span
                                                         class="badge bg-green position-absolute top-0 start-0 m-2">{{ $kategoriJudul }}</span>
                                                 </div>
-                                                <div class="card-body d-flex flex-column">
+                                                <div class="card-body d-flex flex-column p-3">
                                                     <small class="text-muted">{{ $b->created_at->format('d M Y') }}</small>
-                                                    <h5 class="fw-bold mt-2 text-dark hover-text-green">
+                                                    <h5 class="fw-bold mt-2 text-dark hover-text-green h6 h5-md">
                                                         {{ Str::limit($b->Judul, 70) }}
                                                     </h5>
-                                                    <p class="text-secondary flex-grow-1">
+                                                    <p class="text-secondary flex-grow-1 small">
                                                         {{ Str::limit(strip_tags($b->Isi_Berita), 100) }}</p>
                                                     <a href="{{ route('berita.show', $b->slug) }}"
-                                                        class="btn btn-outline-green mt-auto rounded-pill">Baca
+                                                        class="btn btn-outline-green mt-auto rounded-pill btn-sm">Baca
                                                         Selengkapnya</a>
                                                 </div>
                                             </div>
@@ -94,7 +98,7 @@
 
                                 <!-- Mobile View with 2-column Grid -->
                                 <div class="d-md-none kategori-grid" id="beritaMobileGrid-{{ Str::slug($kategoriJudul) }}">
-                                    <div class="row g-3">
+                                    <div class="row g-2 g-sm-3">
                                         @forelse($beritaKategori as $b)
                                             <div class="col-6 berita-item" data-aos="fade-up"
                                                 data-aos-delay="{{ $loop->index * 50 }}"
@@ -107,16 +111,16 @@
                                                         <span
                                                             class="badge bg-green position-absolute top-0 start-0 m-1">{{ $kategoriJudul }}</span>
                                                     </div>
-                                                    <div class="card-body d-flex flex-column">
+                                                    <div class="card-body d-flex flex-column p-2 p-sm-3">
                                                         <small
-                                                            class="text-muted">{{ $b->created_at->format('d M Y') }}</small>
-                                                        <h6 class="fw-bold mt-2 text-dark hover-text-green">
+                                                            class="text-muted small">{{ $b->created_at->format('d M Y') }}</small>
+                                                        <h6 class="fw-bold mt-2 text-dark hover-text-green small">
                                                             {{ Str::limit($b->Judul, 50) }}
                                                         </h6>
-                                                        <p class="text-secondary flex-grow-1 small">
+                                                        <p class="text-secondary flex-grow-1 small mb-2">
                                                             {{ Str::limit(strip_tags($b->Isi_Berita), 60) }}</p>
                                                         <a href="{{ route('berita.show', $b->slug) }}"
-                                                            class="btn btn-outline-green mt-auto rounded-pill btn-sm">Baca</a>
+                                                            class="btn btn-outline-green mt-auto rounded-pill btn-sm small">Baca</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,53 +147,55 @@
                     @endif
 
                     @if (isset($berita) && $berita)
-                        <div class="d-flex justify-content-center mt-5" data-aos="fade-up">{{ $berita->links() }}</div>
+                        <div class="d-flex justify-content-center mt-4 mt-md-5" data-aos="fade-up">{{ $berita->links() }}
+                        </div>
                     @endif
                 </div>
 
                 <!-- Sidebar -->
-                <div class="col-lg-4" data-aos="fade-left">
+                <div class="col-lg-4 col-12" data-aos="fade-left">
                     <div class="sticky-top" style="top: 90px;">
-                        <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-body">
-                                <h5 class="fw-bold text-gradient mb-3"><i class="bi bi-list"></i> Kategori</h5>
+                        <div class="card border-0 shadow-sm mb-3 mb-md-4">
+                            <div class="card-body p-3 p-md-4">
+                                <h5 class="fw-bold text-gradient mb-3 h6 h5-md"><i class="bi bi-list"></i> Kategori</h5>
                                 <ul class="list-unstyled">
                                     @if (isset($kategori) && $kategori)
                                         @foreach ($kategori as $k)
                                             <li class="mb-2" data-aos="fade-up"
                                                 data-aos-delay="{{ $loop->index * 100 }}">
                                                 <a href="?kategori={{ $k->id }}"
-                                                    class="text-dark text-decoration-none d-flex align-items-center">
+                                                    class="text-dark text-decoration-none d-flex align-items-center small">
                                                     <i class="bi bi-tag-fill text-green me-2"></i>{{ $k->Judul }}
                                                 </a>
                                             </li>
                                         @endforeach
                                     @else
-                                        <li class="text-muted">Tidak ada kategori</li>
+                                        <li class="text-muted small">Tidak ada kategori</li>
                                     @endif
                                 </ul>
                             </div>
                         </div>
 
                         <div class="card border-0 shadow-sm" data-aos="fade-up">
-                            <div class="card-body">
-                                <h5 class="fw-bold text-gradient mb-3"><i class="bi bi-fire"></i> Berita Populer</h5>
+                            <div class="card-body p-3 p-md-4">
+                                <h5 class="fw-bold text-gradient mb-3 h6 h5-md"><i class="bi bi-fire"></i> Berita Populer
+                                </h5>
                                 @if (isset($populer) && $populer)
                                     @foreach ($populer as $p)
                                         @if (is_object($p))
                                             <div class="d-flex mb-3 align-items-center" data-aos="fade-up"
                                                 data-aos-delay="{{ $loop->index * 100 }}">
                                                 <div class="overflow-hidden rounded me-3"
-                                                    style="width:70px; height:70px;">
+                                                    style="width:60px; height:60px;">
                                                     <img src="{{ $p->Thumbnail ? asset('storage/' . $p->Thumbnail) : asset('images/no-image.webp') }}"
                                                         class="zoom-img"
                                                         style="width:100%; height:100%; object-fit:cover;">
                                                 </div>
-                                                <div>
+                                                <div class="flex-grow-1">
                                                     <a href="{{ route('berita.show', $p->slug) }}"
-                                                        class="text-dark fw-semibold text-decoration-none hover-text-green">{{ Str::limit($p->Judul, 60) }}</a>
+                                                        class="text-dark fw-semibold text-decoration-none hover-text-green small">{{ Str::limit($p->Judul, 60) }}</a>
                                                     <small
-                                                        class="d-block text-muted">{{ $p->created_at->format('d M Y') }}</small>
+                                                        class="d-block text-muted small">{{ $p->created_at->format('d M Y') }}</small>
                                                 </div>
                                             </div>
                                         @endif
@@ -328,10 +334,10 @@
         .search-box input {
             width: 100%;
             max-width: 300px;
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid #ccc;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         /* Mobile image sizing */
@@ -339,6 +345,59 @@
             .berita-card .card-img-top {
                 height: 120px;
                 object-fit: cover;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-section {
+                border-radius: 0 0 30px 30px;
+            }
+
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .card-body {
+                padding: 1rem !important;
+            }
+
+            .berita-card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+
+            .hero-section h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero-section p {
+                font-size: 0.9rem;
+            }
+
+            .btn-green {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .search-box input {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+
+            .berita-card .card-img-top {
+                height: 100px;
+            }
+
+            .badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.4rem;
             }
         }
     </style>

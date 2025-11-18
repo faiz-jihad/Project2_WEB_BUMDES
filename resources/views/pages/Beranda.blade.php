@@ -58,84 +58,102 @@
                 </div>
 
                 <div class="row g-4">
-                    <!-- Timeline Item 1 -->
+
+                    <!-- Timeline 1: Persetujuan Nama 2021 -->
                     <div class="col-md-6" data-aos="fade-right">
                         <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
-                                2018
+                                2021
                             </div>
-                            <h5 class="fw-bold text-success mb-3">Pembentukan BUMDes</h5>
-                            <p class="text-muted mb-0">BUMDes Madusari resmi didirikan berdasarkan Peraturan Desa Bayalangu
-                                Kidul Nomor 5 Tahun 2018. Awalnya berfokus pada pengelolaan potensi pertanian dan
-                                perdagangan hasil bumi.</p>
+                            <h5 class="fw-bold text-success mb-3">Persetujuan Nama BUMDes</h5>
+                            <p class="text-muted mb-0">
+                                Nama <strong>BUM Desa Madusari Bayalangu Kidul</strong> resmi memperoleh persetujuan dari
+                                Kementerian Desa pada <strong>4 Juli 2021</strong> dengan nomor pendaftaran
+                                <strong>3209282014-1-005205</strong>. Ini menjadi fondasi awal pembentukan BUMDes.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Timeline Item 2 -->
+                    <!-- Timeline 2: Pembentukan Struktur & Administrasi -->
                     <div class="col-md-6" data-aos="fade-left">
                         <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
-                                2019
+                                2021–2022
                             </div>
-                            <h5 class="fw-bold text-success mb-3">Pengembangan UMKM</h5>
-                            <p class="text-muted mb-0">Mulai mengembangkan program pemberdayaan UMKM dengan memberikan
-                                pelatihan kewirausahaan dan akses permodalan kepada masyarakat desa.</p>
+                            <h5 class="fw-bold text-success mb-3">Pembentukan Struktur & Administrasi</h5>
+                            <p class="text-muted mb-0">
+                                Pemerintah desa mulai menyusun struktur organisasi, AD/ART, dan regulasi internal untuk
+                                mempersiapkan operasional BUMDes secara resmi dan terarah.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Timeline Item 3 -->
+                    <!-- Timeline 3: Perintisan Unit Usaha -->
                     <div class="col-md-6" data-aos="fade-right">
                         <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
-                                2020
+                                2022
                             </div>
-                            <h5 class="fw-bold text-success mb-3">Digitalisasi Layanan</h5>
-                            <p class="text-muted mb-0">Memasuki era digital dengan meluncurkan platform online untuk
-                                pemasaran produk desa dan layanan administrasi yang lebih efisien.</p>
+                            <h5 class="fw-bold text-success mb-3">Perintisan Unit Usaha</h5>
+                            <p class="text-muted mb-0">
+                                BUMDes mulai menjalankan beberapa unit usaha berbasis potensi desa seperti pertanian,
+                                perdagangan hasil bumi, dan pemberdayaan UMKM lokal.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Timeline Item 4 -->
+                    <!-- Timeline 4: Penguatan Operasional -->
                     <div class="col-md-6" data-aos="fade-left">
                         <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
-                                2021-2023
+                                2023–2024
                             </div>
-                            <h5 class="fw-bold text-success mb-3">Ekspansi & Inovasi</h5>
-                            <p class="text-muted mb-0">Mengembangkan berbagai program inovasi seperti pertanian organik,
-                                kerajinan tangan, dan layanan teknologi untuk mendukung pertumbuhan ekonomi desa.</p>
+                            <h5 class="fw-bold text-success mb-3">Penguatan Operasional & Inovasi</h5>
+                            <p class="text-muted mb-0">
+                                BUMDes memperkuat sistem operasional, meningkatkan kapasitas sumber daya manusia, dan
+                                membuat
+                                rencana pengembangan lebih besar menuju legalitas badan hukum nasional.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Timeline Item 5 -->
+                    <!-- Timeline 5: Badan Hukum Resmi 2025 -->
                     <div class="col-md-6" data-aos="fade-right">
                         <div class="timeline-item bg-light p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-success text-white rounded-pill d-inline-block px-3 py-1 mb-3">
-                                2024
+                                2025
                             </div>
-                            <h5 class="fw-bold text-success mb-3">Menuju Desa Mandiri</h5>
-                            <p class="text-muted mb-0">BUMDes Madusari terus berkomitmen untuk mewujudkan kemandirian
-                                ekonomi desa melalui kolaborasi dengan berbagai stakeholder dan inovasi berkelanjutan.</p>
+                            <h5 class="fw-bold text-success mb-3">Resmi Menjadi Badan Hukum</h5>
+                            <p class="text-muted mb-0">
+                                Pada <strong>4 September 2025</strong>, BUM Desa Madusari Bayalangu Kidul resmi terdaftar
+                                sebagai
+                                badan hukum dengan nomor sertifikat <strong>AHU-11861.AH.01.33.TAHUN 2025</strong>,
+                                memberikan
+                                kewenangan penuh untuk mengembangkan usaha dan kemitraan secara legal.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Current Status -->
+                    <!-- Timeline 6: Masa Kini & Masa Depan -->
                     <div class="col-md-6" data-aos="fade-left">
                         <div class="timeline-item bg-success text-white p-4 rounded-4 shadow-sm">
                             <div class="timeline-year bg-white text-success rounded-pill d-inline-block px-3 py-1 mb-3">
                                 Sekarang
                             </div>
-                            <h5 class="fw-bold mb-3">Masa Depan Cerah</h5>
-                            <p class="mb-0">Dengan semangat gotong royong dan inovasi, BUMDes Madusari siap menghadapi
-                                tantangan masa depan untuk kesejahteraan masyarakat desa.</p>
+                            <h5 class="fw-bold mb-3">Ekspansi & Masa Depan</h5>
+                            <p class="mb-0">
+                                Dengan legalitas penuh dan struktur kuat, BUMDes Madusari fokus pada pengembangan inovasi,
+                                digitalisasi layanan, peningkatan ekonomi masyarakat, dan perluasan jaringan usaha desa.
+                            </p>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Background Pattern -->
-            <div class="position-absolute top-0 start-0 w-100 h-100"
-                style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.03;"></div>
+                </div>
+
+
+                <!-- Background Pattern -->
+                <div class="position-absolute top-0 start-0 w-100 h-100"
+                    style="background: url('{{ asset('images/pattern.png') }}') repeat; opacity: 0.03;"></div>
         </section>
 
         {{-- PRODUK --}}
@@ -151,42 +169,77 @@
                         <div class="swiper-wrapper">
                             @foreach ($produk as $item)
                                 <div class="swiper-slide">
-                                    <div class="produk-card" data-aos="fade-up">
-                                        <div class="produk-img">
+                                    <div class="produk-card position-relative overflow-hidden" data-aos="fade-up">
+                                        <!-- Badge Stok -->
+                                        @if ($item->stok <= 0)
+                                            <div class="badge-stok bg-danger position-absolute top-0 end-0 m-3 z-index-1">
+                                                <i class="fas fa-times-circle me-1"></i>Habis
+                                            </div>
+                                        @elseif($item->stok <= 5)
+                                            <div
+                                                class="badge-stok bg-warning text-dark position-absolute top-0 end-0 m-3 z-index-1">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Terbatas
+                                            </div>
+                                        @else
+                                            <div class="badge-stok bg-success position-absolute top-0 end-0 m-3 z-index-1">
+                                                <i class="fas fa-check-circle me-1"></i>Tersedia
+                                            </div>
+                                        @endif
+
+                                        <!-- Gambar Produk -->
+                                        <div class="produk-img position-relative overflow-hidden">
                                             <img src="{{ asset('storage/' . $item->gambar) }}" loading="lazy"
-                                                alt="{{ $item->nama }}">
+                                                alt="{{ $item->nama }}" class="w-100 h-100 object-fit-cover">
+                                            <div
+                                                class="produk-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center opacity-0">
+                                                <div class="text-center">
+                                                    <i class="fas fa-eye text-white fs-3 mb-2"></i>
+                                                    <p class="text-white fw-bold mb-0">Lihat Detail</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="produk-info">
-                                            <h3>{{ $item->nama }}</h3>
-                                            <p>{{ Str::limit($item->deskripsi, 90) }}</p>
-                                            <span class="harga">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
-                                            <div class="stok-info mb-2">
-                                                <small class="text-muted">
-                                                    <i class="bi bi-box-seam"></i>
-                                                    Stok: {{ $item->stok }}
-                                                    @if ($item->stok <= 0)
-                                                        <span class="badge bg-danger">Habis</span>
-                                                    @elseif($item->stok <= 5)
-                                                        <span class="badge bg-warning text-dark">Terbatas</span>
-                                                    @else
-                                                        <span class="badge bg-success">Tersedia</span>
-                                                    @endif
+
+                                        <!-- Info Produk -->
+                                        <div class="produk-info p-3">
+                                            <h3 class="produk-title fw-bold text-dark mb-2 fs-6">
+                                                {{ Str::limit($item->nama, 40) }}</h3>
+                                            <p class="produk-desc text-muted small mb-3">
+                                                {{ Str::limit($item->deskripsi, 80) }}</p>
+
+                                            <div class="produk-price-section mb-3">
+                                                <div class="harga fw-bold text-success fs-5 mb-2">Rp
+                                                    {{ number_format($item->harga, 0, ',', '.') }}</div>
+                                                <div class="produk-rating d-flex align-items-center mb-2">
+                                                    <div class="stars me-2">
+                                                        <i class="fas fa-star text-warning"></i>
+                                                        <i class="fas fa-star text-warning"></i>
+                                                        <i class="fas fa-star text-warning"></i>
+                                                        <i class="fas fa-star text-warning"></i>
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    </div>
+                                                    <small class="text-muted">(4.5)</small>
+                                                </div>
+                                                <small class="stok-info text-muted d-block">
+                                                    <i class="fas fa-boxes me-1"></i>{{ $item->stok }} tersedia
                                                 </small>
                                             </div>
-                                            <div class="produk-actions">
+
+                                            <div class="produk-actions d-flex gap-2">
                                                 <a href="{{ route('produk.show', $item->id) }}"
-                                                    class="produk-btn lihat-detail">
-                                                    Lihat Detail
+                                                    class="btn btn-outline-success flex-fill rounded-pill btn-sm">
+                                                    <i class="fas fa-eye me-1"></i>Detail
                                                 </a>
                                                 @auth
-                                                    <button class="produk-btn btn-keranjang-home"
+                                                    <button
+                                                        class="btn btn-success flex-fill rounded-pill btn-keranjang-home btn-sm"
                                                         data-id="{{ $item->id }}" data-nama="{{ $item->nama }}"
                                                         data-harga="{{ $item->harga }}" data-gambar="{{ $item->gambar }}">
-                                                        <i class="bi bi-cart-plus"></i> Keranjang
+                                                        <i class="fas fa-cart-plus me-1"></i>Keranjang
                                                     </button>
                                                 @else
-                                                    <a href="{{ route('login') }}" class="produk-btn btn-login">
-                                                        <i class="bi bi-person"></i> Login untuk Tambah Keranjang
+                                                    <a href="{{ route('login') }}"
+                                                        class="btn btn-outline-secondary flex-fill rounded-pill btn-sm">
+                                                        <i class="fas fa-sign-in-alt me-1"></i>Login
                                                     </a>
                                                 @endauth
                                             </div>
@@ -299,7 +352,7 @@
                 <h2 class="fw-bold mb-5" data-aos="fade-down">Capaian Kami</h2>
                 <div class="row g-4">
                     <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
-                        <h2 class="counter fw-bold" data-target="75">0</h2>
+                        <h2 class="counter fw-bold" data-target="{{ $anggotaAktif ?? 75 }}">0</h2>
                         <p>Anggota Aktif</p>
                     </div>
                     <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
@@ -404,15 +457,15 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <h4 class="fw-bold mb-1">BUMDes Madusari</h4>
-                                    <p class="text-muted mb-2">Bayalangu Kidul, Kabupaten Indramayu</p>
+                                    <p class="text-muted mb-2">Bayalangu Kidul, Kabupaten Cirebon</p>
 
                                     <div class="d-flex flex-wrap gap-2 mb-3">
                                         <button class="btn btn-outline-success btn-sm copy-btn"
-                                            data-copy="Bayalangu Kidul, Kabupaten Indramayu" aria-label="Salin alamat">
+                                            data-copy="Bayalangu Kidul, Kabupaten Cirebon" aria-label="Salin alamat">
                                             <i class="bi bi-geo-alt me-1" aria-hidden="true"></i> Salin Alamat
                                         </button>
                                         <button class="btn btn-outline-success btn-sm copy-btn"
-                                            data-copy="info@bumdesmadusari.id" aria-label="Salin email">
+                                            data-copy="bumdesmadusari2025@gmail.com" aria-label="Salin email">
                                             <i class="bi bi-envelope me-1" aria-hidden="true"></i> Salin Email
                                         </button>
                                         <a href="https://wa.me/6281234567890" target="_blank" rel="noopener"
@@ -487,6 +540,7 @@
                             <div class="mb-2">
                                 <label for="contactPesan" class="form-label small">Pesan</label>
                                 <textarea id="contactPesan" name="pesan" rows="4" class="form-control" required></textarea>
+
                                 <div class="invalid-feedback">Tolong isi pesan Anda.</div>
                             </div>
                         </div>
@@ -1071,240 +1125,261 @@
         }
 
         .produk-card {
-            flex: 0 0 260px;
-            /* setiap card lebar tetap 260px */
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 280px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
             overflow: hidden;
+            position: relative;
+            border: 1px solid #e1e5e9;
+            height: 70%;
+            display: flex;
+            flex-direction: column;
         }
 
         .produk-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .produk-img {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            background: #f8f9fa;
+            flex-shrink: 0;
         }
 
         .produk-img img {
             width: 100%;
-            height: 220px;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.2s ease;
+        }
+
+        .produk-card:hover .produk-img img {
+            transform: scale(1.03);
+        }
+
+        .produk-overlay {
+            background: linear-gradient(45deg, rgba(25, 135, 84, 0.9), rgba(15, 112, 83, 0.9));
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .produk-card:hover .produk-overlay {
+            opacity: 1 !important;
         }
 
         .produk-info {
-            text-align: left;
-            padding: 18px;
+            background: white;
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .produk-info h3 {
-            color: var(--green-dark);
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+        .produk-title {
+            color: #1a202c;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .produk-info p {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            min-height: 48px;
+        .produk-desc {
+            color: #718096;
+            font-size: 0.65rem;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .produk-price-section {
+            margin-bottom: 8px;
         }
 
         .harga {
-            color: var(--green-dark);
+            color: #e53e3e;
+            font-size: 0.95rem;
             font-weight: 700;
-            display: block;
-            margin-bottom: 10px;
+            margin-bottom: 2px;
+        }
+
+        .produk-rating {
+            margin-bottom: 4px;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .stars i {
+            font-size: 0.7rem;
+            margin-right: 1px;
+        }
+
+        .produk-rating small {
+            color: #a0aec0;
+            font-size: 0.65rem;
         }
 
         .stok-info {
-            font-size: 0.85rem;
+            color: #68d391;
+            font-size: 0.65rem;
+            font-weight: 500;
         }
 
-        .stok-info .badge {
-            font-size: 0.75rem;
-            padding: 0.25em 0.5em;
+        .badge-stok {
+            font-size: 0.55rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .produk-actions {
+            margin-top: auto;
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .produk-btn {
-            background: var(--green);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            flex: 1;
-            min-width: 100px;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .produk-btn:hover {
-            background: var(--green-dark);
-            transform: translateY(-2px);
-            text-decoration: none;
-            color: white;
-        }
-
-        .btn-keranjang-home {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .btn-keranjang-home:hover {
-            background: #e0a800;
-            color: #333;
-        }
-
-        .btn-keranjang-home:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-login {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-login:hover {
-            background: #5a6268;
-            color: white;
-        }
+            gap: 6px;
 
 
-        .hover-zoom:hover {
-            transform: scale(1.1);
-            transition: .4s ease;
-        }
+            .hover-zoom:hover {
+                transform: scale(1.1);
+                transition: .4s ease;
+            }
 
-        .hover-float:hover {
-            transform: translateY(-8px);
-            transition: .3s ease;
-        }
+            .hover-float:hover {
+                transform: translateY(-8px);
+                transition: .3s ease;
+            }
 
-        /* Modal Produk */
-        #produkModal .modal-content {
-            border-radius: 12px;
-            padding: 15px;
-        }
+            /* Modal Produk */
+            #produkModal .modal-content {
+                border-radius: 12px;
+                padding: 15px;
+            }
 
-        #produkModal .modal-body {
-            gap: 20px;
-        }
+            #produkModal .modal-body {
+                gap: 20px;
+            }
 
-        #produkModal .produk-info p {
-            font-size: 0.95rem;
-            color: #555;
-        }
+            #produkModal .produk-info p {
+                font-size: 0.95rem;
+                color: #555;
+            }
 
-        #produkModal .produk-info h5 {
-            font-size: 1.2rem;
-        }
+            #produkModal .produk-info h5 {
+                font-size: 1.2rem;
+            }
 
-        #produkModal .btn-success {
-            background: #198754;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
+            #produkModal .btn-success {
+                background: #198754;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-weight: 600;
+            }
 
-        #produkModal .btn-success:hover {
-            background: #146c43;
-        }
+            #produkModal .btn-success:hover {
+                background: #146c43;
+            }
 
-        /* Swiper Galeri Styles */
-        .galeri-swiper {
-            width: 100%;
-            height: 300px;
-            margin-bottom: 2rem;
-        }
-
-        .galeri-swiper .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .galeri-item {
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .galeri-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .galeri-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .galeri-item:hover img {
-            transform: scale(1.1);
-        }
-
-        /* Swiper Navigation Customization */
-        .galeri-swiper .swiper-button-next,
-        .galeri-swiper .swiper-button-prev {
-            color: var(--green);
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-top: -20px;
-        }
-
-        .galeri-swiper .swiper-button-next:after,
-        .galeri-swiper .swiper-button-prev:after {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .galeri-swiper .swiper-pagination {
-            bottom: -40px;
-        }
-
-        .galeri-swiper .swiper-pagination-bullet {
-            background: var(--green);
-            opacity: 0.5;
-        }
-
-        .galeri-swiper .swiper-pagination-bullet-active {
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
+            /* Swiper Galeri Styles */
             .galeri-swiper {
-                height: 250px;
+                width: 100%;
+                height: 300px;
+                margin-bottom: 2rem;
+            }
+
+            .galeri-swiper .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .galeri-item {
-                height: 200px;
+                width: 100%;
+                height: 250px;
+                overflow: hidden;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
 
+            .galeri-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .galeri-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .galeri-item:hover img {
+                transform: scale(1.1);
+            }
+
+            /* Swiper Navigation Customization */
             .galeri-swiper .swiper-button-next,
             .galeri-swiper .swiper-button-prev {
-                width: 35px;
-                height: 35px;
+                color: var(--green);
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                margin-top: -20px;
             }
-        }
+
+            .galeri-swiper .swiper-button-next:after,
+            .galeri-swiper .swiper-button-prev:after {
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .galeri-swiper .swiper-pagination {
+                bottom: -40px;
+            }
+
+            .galeri-swiper .swiper-pagination-bullet {
+                background: var(--green);
+                opacity: 0.5;
+            }
+
+            .galeri-swiper .swiper-pagination-bullet-active {
+                opacity: 1;
+            }
+
+            @media (max-width: 768px) {
+                .galeri-swiper {
+                    height: 250px;
+                }
+
+                .galeri-item {
+                    height: 200px;
+                }
+
+                .galeri-swiper .swiper-button-next,
+                .galeri-swiper .swiper-button-prev {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
     </style>
     </style>
 @endsection

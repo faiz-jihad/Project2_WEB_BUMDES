@@ -23,7 +23,7 @@ class RoleMiddleware
         $user = Auth::user();
 
         if (!in_array($user->role, $roles)) {
-            abort(403, 'Unauthorized. You do not have permission to access this page.');
+            return response()->view('layouts.403page', [], 403);
         }
 
         return $next($request);

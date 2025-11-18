@@ -17,6 +17,7 @@ class Penulis extends Model
 
     protected $fillable = [
         'nama_penulis',
+        'email',
         'Username',
         'Password',
         'Avatar',
@@ -26,5 +27,22 @@ class Penulis extends Model
     public function berita()
     {
         return $this->hasMany(Berita::class, 'id_penulis', 'id_penulis');
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Return the email address from the penulis table
+        return $this->email;
+    }
+
+    /**
+     * Route notifications for the database channel.
+     */
+    public function routeNotificationForDatabase($notification)
+    {
+        return $this->getKey();
     }
 }

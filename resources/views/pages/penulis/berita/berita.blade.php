@@ -2,17 +2,18 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/berita.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <main class="main-content">
-        <!-- Laravel Notify -->
-        @include('notify::components.notify')
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- Header Section -->
         <section class="header-section">
             <!-- Main Header Card -->
             <div class="header-card">
                 <h1 class="header-title">
-                    <i class="bi bi-newspaper"></i>
+                    <i class="fas fa-newspaper"></i>
                     Manajemen Berita Saya
                 </h1>
                 <p class="header-subtitle">Buat Beritamu Sekarang</p>
@@ -20,46 +21,49 @@
 
             <!-- Info Cards Section -->
             <div class="header-info">
-                <!-- Date Card -->
-                <div class="info-card">
-                    <div class="date-badge">
-                        <i class="bi bi-calendar3"></i>
-                        {{ now()->timezone('Asia/Jakarta')->isoFormat('dddd, D MMMM Y') }}
-                    </div>
-                </div>
-
-                <!-- Welcome Card -->
-                <div class="info-card welcome-card">
-                    <div class="welcome-label">Welcome back,</div>
-                    <div class="welcome-name">
-                        <i class="bi bi-person-circle"></i>
-                        {{ ucwords(auth()->user()->name) }}
-                    </div>
-                </div>
-
-                <!-- Stats Summary Card -->
-                <div class="info-card stats-summary">
-                    <div class="stats-grid">
-                        <div class="stats-item">
-                            <div class="stats-label">
-                                <i class="bi bi-check-circle-fill text-success"></i>
-                                Disetujui
-                            </div>
-                            <div class="stats-value">{{ $berita->where('status', 'approved')->count() }}</div>
+                <!-- Combined Info Card -->
+                <div class="info-card combined-card">
+                    <div class="card-content">
+                        <!-- Date -->
+                        <div class="date-badge">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ now()->timezone('Asia/Jakarta')->isoFormat('dddd, D MMMM Y') }}
                         </div>
-                        <div class="stats-item">
-                            <div class="stats-label">
-                                <i class="bi bi-clock-fill text-warning"></i>
-                                Menunggu
+
+                        <!-- Welcome -->
+                        <div class="welcome-section">
+                            <div class="welcome-label">Welcome back,</div>
+                            <div class="welcome-name">
+                                <i class="fas fa-user-circle"></i>
+                                {{ ucwords(auth()->user()->name) }}
                             </div>
-                            <div class="stats-value">{{ $berita->where('status', 'pending')->count() }}</div>
                         </div>
-                        <div class="stats-item">
-                            <div class="stats-label">
-                                <i class="bi bi-x-circle-fill text-danger"></i>
-                                Ditolak
+
+                        <!-- Stats Summary -->
+                        <div class="stats-summary">
+                            <div class="stats-grid">
+                                <div class="stats-item">
+                                    <div class="stats-label">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        Disetujui
+                                    </div>
+                                    <div class="stats-value">{{ $berita->where('status', 'approved')->count() }}</div>
+                                </div>
+                                <div class="stats-item">
+                                    <div class="stats-label">
+                                        <i class="fas fa-clock text-warning"></i>
+                                        Menunggu
+                                    </div>
+                                    <div class="stats-value">{{ $berita->where('status', 'pending')->count() }}</div>
+                                </div>
+                                <div class="stats-item">
+                                    <div class="stats-label">
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                        Ditolak
+                                    </div>
+                                    <div class="stats-value">{{ $berita->where('status', 'rejected')->count() }}</div>
+                                </div>
                             </div>
-                            <div class="stats-value">{{ $berita->where('status', 'rejected')->count() }}</div>
                         </div>
                     </div>
                 </div>
@@ -74,7 +78,7 @@
             <div class="stat-card" style="background: linear-gradient(135deg, #059669, #059669aa);">
                 <div class="card stats-card shadow-sm border-0 rounded-4 text-center p-4 bg-gradient"
                     style="background:linear-gradient(135deg,#059669,#059669aa);color:white;">
-                    <i class="bi bi-newspaper fs-2 mb-2"></i>
+                    <i class="fas fa-newspaper fs-2 mb-2"></i>
                     <h3 class="fw-bold mb-0">{{ $berita->total() }}</h3>
                     <p class="mb-0">Total Berita</p>
                 </div>
@@ -82,7 +86,7 @@
             <div class="stat-card" style="background: linear-gradient(135deg, #075c0e, #105f22aa);">
                 <div class="card stats-card shadow-sm border-0 rounded-4 text-center p-4 bg-gradient"
                     style="background:linear-gradient(135deg,#07701e,#0a7915aa);color:white;">
-                    <i class="bi bi-tags fs-2 mb-2"></i>
+                    <i class="fas fa-tags fs-2 mb-2"></i>
                     <h3 class="fw-bold mb-0">{{ $kategori->count() }}</h3>
                     <p class="mb-0">Kategori</p>
                 </div>
@@ -90,7 +94,7 @@
             <div class="stat-card" style="background: linear-gradient(135deg, #d97706, #d97706aa);">
                 <div class="card stats-card shadow-sm border-0 rounded-4 text-center p-4 bg-gradient"
                     style="background:linear-gradient(135deg,#d97706,#d97706aa);color:white;">
-                    <i class="bi bi-calendar3 fs-2 mb-2"></i>
+                    <i class="fas fa-calendar-alt fs-2 mb-2"></i>
                     <h3 class="fw-bold mb-0">{{ $thisMonth }}</h3>
                     <p class="mb-0">Bulan Ini</p>
                 </div>
@@ -100,7 +104,7 @@
         <!-- Form Section -->
         <section class="form-section" id="formTambahBerita">
             <div class="form-header">
-                <i class="bi bi-plus-circle-fill form-header-icon"></i>
+                <i class="fas fa-plus-circle form-header-icon"></i>
                 <div class="form-header-content">
                     <h5>Buat Berita Baru</h5>
                     <small>Tulis dan publikasikan berita berkualitas untuk pembaca Anda</small>
@@ -136,7 +140,7 @@
                     <div class="form-step active" data-step="1">
                         <div class="step-header">
                             <h6 class="step-title">
-                                <i class="bi bi-info-circle"></i>
+                                <i class="fas fa-info-circle"></i>
                                 Informasi Dasar Berita
                             </h6>
                             <p class="step-description">Masukkan informasi utama berita Anda</p>
@@ -145,7 +149,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-type-h1"></i>
+                                    <i class="fas fa-heading"></i>
                                     Judul Berita *
                                 </label>
                                 <input type="text" name="judul" id="judul" class="form-input"
@@ -155,7 +159,7 @@
 
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-link-45deg"></i>
+                                    <i class="fas fa-link"></i>
                                     Slug URL (Opsional)
                                 </label>
                                 <input type="text" name="slug" id="slug" class="form-input"
@@ -165,7 +169,7 @@
 
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-tags-fill"></i>
+                                    <i class="fas fa-tags"></i>
                                     Kategori Berita *
                                 </label>
                                 <select name="kategori_id" id="kategori_id" class="form-select" required>
@@ -179,7 +183,7 @@
 
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-hash"></i>
+                                    <i class="fas fa-hashtag"></i>
                                     Tag/Keyword (Opsional)
                                 </label>
                                 <input type="text" name="tags" id="tags" class="form-input"
@@ -202,12 +206,12 @@
                         <div class="form-grid">
                             <div class="form-group" style="grid-column: 1 / -1;">
                                 <label class="form-label">
-                                    <i class="bi bi-image-fill"></i>
+                                    <i class="fas fa-image"></i>
                                     Thumbnail/Gambar Utama *
                                 </label>
                                 <div class="file-upload-area" id="thumbnailUpload">
                                     <div class="upload-placeholder">
-                                        <i class="bi bi-cloud-upload"></i>
+                                        <i class="fas fa-cloud-upload-alt"></i>
                                         <p>Klik untuk upload gambar atau drag & drop</p>
                                         <small>Format: JPG, PNG, WebP. Maksimal 2MB</small>
                                     </div>
@@ -220,7 +224,7 @@
                                     <div class="preview-info">
                                         <span id="fileName"></span>
                                         <button type="button" class="btn-remove" onclick="removeThumbnail()">
-                                            <i class="bi bi-x"></i>
+                                            <i class="fas fa-times"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -228,43 +232,43 @@
 
                             <div class="form-group" style="grid-column: 1 / -1;">
                                 <label class="form-label">
-                                    <i class="bi bi-pencil-square"></i>
+                                    <i class="fas fa-edit"></i>
                                     Isi Berita *
                                 </label>
                                 <div class="editor-toolbar">
                                     <button type="button" class="toolbar-btn" onclick="formatText('bold')"
                                         title="Bold">
-                                        <i class="bi bi-type-bold"></i>
+                                        <i class="fas fa-bold"></i>
                                     </button>
                                     <button type="button" class="toolbar-btn" onclick="formatText('italic')"
                                         title="Italic">
-                                        <i class="bi bi-type-italic"></i>
+                                        <i class="fas fa-italic"></i>
                                     </button>
                                     <button type="button" class="toolbar-btn" onclick="formatText('underline')"
                                         title="Underline">
-                                        <i class="bi bi-type-underline"></i>
+                                        <i class="fas fa-underline"></i>
                                     </button>
                                     <div class="toolbar-separator"></div>
                                     <button type="button" class="toolbar-btn"
                                         onclick="formatText('insertUnorderedList')" title="Bullet List">
-                                        <i class="bi bi-list-ul"></i>
+                                        <i class="fas fa-list-ul"></i>
                                     </button>
                                     <button type="button" class="toolbar-btn" onclick="formatText('insertOrderedList')"
                                         title="Numbered List">
-                                        <i class="bi bi-list-ol"></i>
+                                        <i class="fas fa-list-ol"></i>
                                     </button>
                                     <div class="toolbar-separator"></div>
                                     <button type="button" class="toolbar-btn" onclick="formatText('justifyLeft')"
                                         title="Align Left">
-                                        <i class="bi bi-text-left"></i>
+                                        <i class="fas fa-align-left"></i>
                                     </button>
                                     <button type="button" class="toolbar-btn" onclick="formatText('justifyCenter')"
                                         title="Align Center">
-                                        <i class="bi bi-text-center"></i>
+                                        <i class="fas fa-align-center"></i>
                                     </button>
                                     <button type="button" class="toolbar-btn" onclick="formatText('justifyRight')"
                                         title="Align Right">
-                                        <i class="bi bi-text-right"></i>
+                                        <i class="fas fa-align-right"></i>
                                     </button>
                                 </div>
                                 <textarea name="isi_berita" id="isi_berita" class="form-textarea editor" required
@@ -288,20 +292,21 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-calendar-event"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                     Jadwalkan Publikasi (Opsional)
                                 </label>
-                                <input type="datetime-local" name="publish_at" id="publish_at" class="form-input">
+                                <input type="datetime-local" name="publish_at" id="publish_at" class="form-input"
+                                    min="{{ now()->format('Y-m-d\TH:i') }}">
                                 <small class="form-help">Biarkan kosong untuk publikasikan segera</small>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">
-                                    <i class="bi bi-info-circle"></i>
+                                    <i class="fas fa-info-circle"></i>
                                     Catatan
                                 </label>
                                 <div class="alert alert-info">
-                                    <i class="bi bi-info-circle-fill"></i>
+                                    <i class="fas fa-info-circle"></i>
                                     <strong>Informasi:</strong> Berita yang Anda buat akan otomatis dalam status "Menunggu
                                     Persetujuan" dan akan ditinjau oleh admin sebelum dipublikasikan.
                                 </div>
@@ -309,7 +314,7 @@
 
                             <div class="form-group" style="grid-column: 1 / -1;">
                                 <label class="form-label">
-                                    <i class="bi bi-card-text"></i>
+                                    <i class="fas fa-file-alt"></i>
                                     Ringkasan/Summary (Opsional)
                                 </label>
                                 <textarea name="summary" id="summary" class="form-textarea" rows="3"
@@ -322,19 +327,19 @@
                     <!-- Form Actions -->
                     <div class="form-actions">
                         <button type="button" class="btn btn-outline-secondary" id="btnPrev" disabled>
-                            <i class="bi bi-arrow-left"></i>
+                            <i class="fas fa-arrow-left"></i>
                             Sebelumnya
                         </button>
                         <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <i class="fas fa-undo"></i>
                             Reset Form
                         </button>
                         <button type="button" class="btn btn-primary" id="btnNext">
                             Selanjutnya
-                            <i class="bi bi-arrow-right"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </button>
                         <button type="submit" class="btn btn-success d-none" id="btnSubmit">
-                            <i class="bi bi-check-circle"></i>
+                            <i class="fas fa-check-circle"></i>
                             Publikasikan Berita
                         </button>
                     </div>
@@ -370,7 +375,7 @@
                         <p class="empty-text">Mulai buat berita pertama Anda dengan mengisi form di atas.</p>
                         <button class="btn btn-success"
                             onclick="document.getElementById('formTambahBerita').scrollIntoView({behavior:'smooth'})">
-                            <span>➕</span> Buat Berita Pertama
+                            <i class="fas fa-plus"></i> Buat Berita Pertama
                         </button>
                     </div>
                 @else
@@ -399,29 +404,29 @@
                                     <p class="news-excerpt">{{ Str::limit(strip_tags($b->Isi_Berita), 120) }}</p>
                                     <div class="news-meta">
                                         <div class="news-date">
-                                            <span></span>
+                                            <i class="fas fa-calendar-alt"></i>
                                             {{ $b->created_at->format('d M Y') }}
                                         </div>
                                         <div class="news-slug">
-                                            <span></span>
+                                            <i class="fas fa-link"></i>
                                             {{ Str::limit($b->slug, 20) }}
                                         </div>
                                     </div>
                                     <div class="news-actions">
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#previewModal" onclick="viewBerita({{ $b->id }})">
-                                            <i class="bi bi-eye"></i> Lihat
+                                            data-bs-target="#previewModal" onclick="viewBerita({{ $b->id_berita }})">
+                                            <i class="fas fa-eye"></i> Lihat
                                         </button>
-                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $b->id }}">
-                                            <span></span> Edit
+                                        <button class="btn btn-sm btn-outline-warning"
+                                            onclick="editBerita({{ $b->id_berita }})">
+                                            <i class="fas fa-edit"></i> Edit
                                         </button>
-                                        <form action="/penulis/berita/{{ $b->id }}" method="POST"
-                                            class="d-inline">
-                                            @csrf @method('DELETE')
+                                        <form action="{{ route('penulis.berita.destroy', $b->id_berita) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-danger"
                                                 onclick="return confirm('Hapus berita ini?')">
-                                                <span></span> Hapus
+                                                <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
                                     </div>
@@ -447,7 +452,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="previewModalLabel">
-                        <i class="bi bi-eye"></i> Detail Berita
+                        <i class="fas fa-eye"></i> Detail Berita
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -461,7 +466,7 @@
                             <div class="berita-meta">
                                 <span class="badge bg-primary me-2" id="previewCategory"></span>
                                 <small class="text-muted">
-                                    <i class="bi bi-calendar3"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                     <span id="previewDate"></span>
                                 </small>
                             </div>
@@ -471,9 +476,103 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle"></i> Tutup
+                        <i class="fas fa-times-circle"></i> Tutup
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">
+                        <i class="fas fa-edit"></i> Edit Berita
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-heading"></i>
+                                    Judul Berita *
+                                </label>
+                                <input type="text" name="judul" id="edit_judul" class="form-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-tags"></i>
+                                    Kategori Berita *
+                                </label>
+                                <select name="kategori_id" id="edit_kategori_id" class="form-select" required>
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @foreach ($kategori as $k)
+                                        <option value="{{ $k->id_kategori }}">{{ $k->Judul }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label class="form-label">
+                                    <i class="fas fa-image"></i>
+                                    Thumbnail/Gambar Utama
+                                </label>
+                                <div class="file-upload-area" id="editThumbnailUpload">
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Klik untuk upload gambar baru atau drag & drop</p>
+                                        <small>Format: JPG, PNG, WebP. Maksimal 2MB</small>
+                                    </div>
+                                    <input type="file" name="thumbnail" id="edit_thumbnail" class="file-input"
+                                        accept="image/*" onchange="handleEditFileUpload(event)">
+                                </div>
+                                <div class="thumbnail-preview">
+                                    <img id="edit_preview" src="{{ asset('images/no-image.webp') }}"
+                                        class="preview-image" alt="Preview">
+                                    <div class="preview-info">
+                                        <span id="edit_fileName"></span>
+                                        <button type="button" class="btn-remove" onclick="removeEditThumbnail()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Jadwalkan Publikasi (Opsional)
+                                </label>
+                                <input type="datetime-local" name="publish_at" id="edit_publish_at" class="form-input"
+                                    min="{{ now()->format('Y-m-d\TH:i') }}">
+                                <small class="form-help">Biarkan kosong untuk publikasikan segera</small>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label class="form-label">
+                                    <i class="fas fa-edit"></i>
+                                    Isi Berita *
+                                </label>
+                                <textarea name="isi_berita" id="edit_isi_berita" class="form-textarea editor" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times-circle"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle"></i> Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -756,13 +855,24 @@
             if (btnPrevEl) btnPrevEl.addEventListener('click', prevStep);
         });
 
-        // Notification system
+        // Notification system using SweetAlert2
         function showNotification(message, type = 'info') {
-            // Simple notification - you can enhance this with a proper notification library
-            alert(message);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: type,
+                title: message,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
         }
 
-        // Modal
+        // Modal functions
         function viewBerita(id) {
             // Fetch berita data via AJAX
             fetch(`/penulis/berita/${id}`)
@@ -776,7 +886,8 @@
                             `/storage/${berita.thumbnail}` :
                             '{{ asset('images/no-image.webp') }}';
                         document.getElementById('previewTitle').textContent = berita.judul;
-                        document.getElementById('previewCategory').textContent = berita.kategori_berita?.judul ||
+                        document.getElementById('previewCategory').textContent = berita.kategori_berita
+                            ?.judul ||
                             'Tidak ada kategori';
                         document.getElementById('previewDate').textContent = new Date(berita.created_at)
                             .toLocaleDateString('id-ID', {
@@ -793,6 +904,88 @@
                     console.error('Error:', error);
                     showNotification('Terjadi kesalahan saat memuat berita', 'error');
                 });
+        }
+
+        // Edit Modal
+        function editBerita(id) {
+            // Fetch berita data via AJAX
+            fetch(`/penulis/berita/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const berita = data.berita;
+
+                        // Populate edit modal with berita data
+                        document.getElementById('edit_judul').value = berita.judul;
+                        document.getElementById('edit_kategori_id').value = berita.kategori_berita?.id ||
+                            '';
+                        document.getElementById('edit_isi_berita').value = berita.isi_berita;
+
+                        // Handle publish_at field
+                        if (berita.publish_at) {
+                            const publishDate = new Date(berita.publish_at);
+                            const formattedDate = publishDate.toISOString().slice(0, 16); // Format for datetime-local
+                            document.getElementById('edit_publish_at').value = formattedDate;
+                        } else {
+                            document.getElementById('edit_publish_at').value = '';
+                        }
+
+                        // Set thumbnail preview
+                        const editPreview = document.getElementById('edit_preview');
+                        editPreview.src = berita.thumbnail ?
+                            `/storage/${berita.thumbnail}` :
+                            '{{ asset('images/no-image.webp') }}';
+                        editPreview.classList.remove('d-none');
+
+                        // Update form action
+                        document.getElementById('editForm').action = `/penulis/berita/${id}`;
+
+                        // Show modal
+                        const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                        editModal.show();
+                    } else {
+                        showNotification('Gagal memuat data berita untuk edit', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Terjadi kesalahan saat memuat data berita', 'error');
+                });
+        }
+
+        // Handle edit file upload
+        function handleEditFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    showNotification('Format file tidak didukung. Gunakan JPG, PNG, atau WebP', 'error');
+                    return;
+                }
+
+                // Validate file size (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showNotification('Ukuran file maksimal 2MB', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('edit_preview');
+                    img.src = e.target.result;
+                    img.classList.remove('d-none');
+                    document.getElementById('edit_fileName').textContent = file.name;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeEditThumbnail() {
+            document.getElementById('edit_thumbnail').value = '';
+            document.getElementById('edit_preview').classList.add('d-none');
+            document.getElementById('edit_preview').src = '{{ asset('images/no-image.webp') }}';
+            document.getElementById('edit_fileName').textContent = '';
         }
     </script>
 @endsection

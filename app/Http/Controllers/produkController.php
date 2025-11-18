@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Services\ViewTrackingService;
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
+    protected $viewTrackingService;
+
+    public function __construct(ViewTrackingService $viewTrackingService)
+    {
+        $this->viewTrackingService = $viewTrackingService;
+    }
+
     /**
      * Tampilkan semua produk di halaman utama produk.
      */
@@ -36,6 +44,9 @@ class ProdukController extends Controller
         if (!$produk) {
             return redirect()->route('produk.index')->with('error', 'Produk tidak ditemukan.');
         }
+
+        // Track view
+        $this->viewTrackingService->trackView($produk);
 
         // Ambil produk lain yang berbeda dari produk saat ini
         $produkLainnya = Produk::where('id', '!=', $produk->id)

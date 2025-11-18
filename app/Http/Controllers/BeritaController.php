@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\Berita;
 use App\Models\KategoriBerita;
+use App\Services\ViewTrackingService;
 use Illuminate\Http\Request;
 
 class BeritaController extends Controller
 {
+    protected $viewTrackingService;
+
+    public function __construct(ViewTrackingService $viewTrackingService)
+    {
+        $this->viewTrackingService = $viewTrackingService;
+    }
+
     public function index(Request $request)
     {
         // Ambil query pencarian
@@ -30,10 +38,10 @@ class BeritaController extends Controller
         // Ambil kategori berita untuk navigasi
         $kategori = KategoriBerita::all();
 
-        // Ambil berita populer (berdasarkan jumlah views atau created_at terbaru) - hanya yang approved
+        // Ambil berita populer (berdasarkan jumlah views) - hanya yang approved
         $populer = Berita::with('kategoriBerita', 'penulis')
             ->where('status', 'approved')
-            ->latest()
+            ->orderBy('views_count', 'desc')
             ->take(5)
             ->get();
 
@@ -68,10 +76,10 @@ class BeritaController extends Controller
         // Ambil semua kategori untuk navigasi
         $kategoriBerita = KategoriBerita::all();
 
-        // Ambil berita populer - hanya yang approved
+        // Ambil berita populer (berdasarkan views) - hanya yang approved
         $populer = Berita::with('kategoriBerita', 'penulis')
             ->where('status', 'approved')
-            ->latest()
+            ->orderBy('views_count', 'desc')
             ->take(5)
             ->get();
 
@@ -83,6 +91,9 @@ class BeritaController extends Controller
         $berita = Berita::with('kategoriBerita', 'penulis')
             ->where('slug', $slug)
             ->firstOrFail();
+
+        // Track view
+        $this->viewTrackingService->trackView($berita);
 
         return view('pages.detail', compact('berita'));
     }

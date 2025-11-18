@@ -78,6 +78,13 @@ class BeritaResource extends Resource
                 ->required()
                 ->default('Isi berita belum tersedia.'),
 
+            // ====== Publish At ======
+            Forms\Components\DateTimePicker::make('publish_at')
+                ->label('Jadwalkan Publikasi')
+                ->placeholder('Biarkan kosong untuk publikasikan segera')
+                ->minDate(now())
+                ->helperText('Jika diisi, berita akan dipublikasikan pada waktu yang ditentukan'),
+
             // ====== Status ======
             Forms\Components\Select::make('status')
                 ->label('Status')
@@ -160,6 +167,22 @@ class BeritaResource extends Resource
                         'approved' => 'Disetujui',
                         'rejected' => 'Ditolak',
                     }),
+
+                // ====== Publish At ======
+                Tables\Columns\TextColumn::make('publish_at')
+                    ->label('Jadwal Publikasi')
+                    ->formatStateUsing(function ($state) {
+                        if (!$state || $state === '-' || trim($state) === '') {
+                            return 'Segera';
+                        }
+                        try {
+                            return \Carbon\Carbon::parse($state)->format('d M Y, H:i');
+                        } catch (\Exception $e) {
+                            return 'Segera';
+                        }
+                    })
+                    ->sortable()
+                    ->placeholder('Segera'),
 
                 // ====== Created At ======
                 Tables\Columns\TextColumn::make('created_at')

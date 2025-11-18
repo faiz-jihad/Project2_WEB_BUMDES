@@ -45,23 +45,48 @@
                             @csrf
                             <div class="form-group">
                                 <label for="nama">Nama Penerima</label>
-                                <input type="text" id="nama" name="nama" class="form-control" required>
+                                <input type="text" id="nama" name="nama" class="form-control"
+                                    value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="alamat">Alamat Lengkap</label>
-                                <textarea id="alamat" name="alamat" class="form-control" rows="3" required></textarea>
+                                <textarea id="alamat" name="alamat" class="form-control" rows="3" required>{{ old('alamat') }}</textarea>
+                                @error('alamat')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="no_hp">No. HP</label>
-                                <input type="text" id="no_hp" name="no_hp" class="form-control" required>
+                                <input type="text" id="no_hp" name="no_hp" class="form-control"
+                                    value="{{ old('no_hp') }}" required>
+                                @error('no_hp')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="pembayaran">Metode Pembayaran</label>
                                 <select name="pembayaran" id="pembayaran" class="form-control" required>
                                     <option value="">-- Pilih --</option>
-                                    <option value="transfer">Transfer Bank</option>
-                                    <option value="cod">Cash on Delivery</option>
+                                    <option value="transfer" {{ old('pembayaran') == 'transfer' ? 'selected' : '' }}>
+                                        Transfer Bank (Bayar dalam 2 jam)</option>
+                                    <option value="cod" {{ old('pembayaran') == 'cod' ? 'selected' : '' }}>Cash on
+                                        Delivery</option>
                                 </select>
+                                <small class="text-muted">* Pesanan transfer bank yang tidak dibayar dalam 2 jam akan
+                                    otomatis dibatalkan</small>
+                                @error('pembayaran')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="catatan">Catatan (Opsional)</label>
+                                <textarea id="catatan" name="catatan" class="form-control" rows="2">{{ old('catatan') }}</textarea>
+                                @error('catatan')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <button type="submit" class="btn btn-checkout">Konfirmasi Pesanan</button>
@@ -70,7 +95,7 @@
                 </div>
             @else
                 <div class="checkout-empty text-center">
-                    <img src="{{ asset('images/empty-cart.svg') }}" alt="Kosong" class="empty-img mb-3">
+                    <img src="{{ asset('images/bgche.png') }}" alt="" class="empty-img c-3">
                     <p>Keranjang kamu masih kosong.</p><br>
                     <a href="{{ route('produk.index') }}" class="btn-lanjut">Lihat Produk</a>
                 </div>

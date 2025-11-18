@@ -5,6 +5,8 @@ namespace App\Notifications;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Berkayk\OneSignal\OneSignalChannel;
+use Berkayk\OneSignal\OneSignalMessage;
 use App\Models\Berita;
 use App\Models\Penulis;
 
@@ -30,7 +32,7 @@ class BeritaCreated extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail', 'broadcast'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -81,5 +83,19 @@ class BeritaCreated extends Notification
             'message' => 'Berita baru "' . $this->berita->Judul . '" telah dibuat oleh ' . $this->penulis->nama_penulis,
             'url' => route('berita.show', $this->berita->slug),
         ];
+    }
+
+    /**
+     * Get the OneSignal representation of the notification.
+     */
+    public function toOneSignal(object $notifiable): OneSignalMessage
+    {
+        return OneSignalMessage::create()
+            ->setSubject('Berita Baru')
+            ->setBody('Berita baru "' . $this->berita->Judul . '" telah dibuat oleh ' . $this->penulis->nama_penulis)
+            ->setUrl(route('berita.show', $this->berita->slug))
+            ->setData('berita_id', $this->berita->id_berita)
+            ->setData('type', 'berita')
+            ->setData('url', route('berita.show', $this->berita->slug));
     }
 }
