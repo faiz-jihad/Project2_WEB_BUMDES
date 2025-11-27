@@ -58,7 +58,7 @@
                 </div>
             @else
                 <div class="keranjang-empty text-center">
-                    <img src="{{ asset('images/empty-cart.svg') }}" alt="Kosong" class="empty-img mb-3">
+                    <img src="{{ asset('images/bgche.png') }}" alt="Kosong" class="empty-img mb-3">
                     <p>Keranjang kamu masih kosong.</p>
                     <a href="{{ route('produk.index') }}" class="btn-lanjut">Lihat Produk</a>
                 </div>

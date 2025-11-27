@@ -206,7 +206,6 @@
 
         function copyLink(url) {
             navigator.clipboard.writeText(url).then(() => {
-                // Show success feedback
                 const btn = event.target.closest('.share-btn');
                 const originalIcon = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check"></i>';

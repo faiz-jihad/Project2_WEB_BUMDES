@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications/unread-count', [NotifikasiController::class, 'getUnreadCount']);
 });
 
-// IoT Sensor API routes
-Route::get('/sensors/latest', [App\Http\Controllers\iotController::class, 'getLatestData']);
+// IoT Sensor API routes (protected for admin only)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/sensors/latest', [App\Http\Controllers\iotController::class, 'getLatestData']);
+});
 
+// Produk API routes (public for real-time filtering)
+Route::get('/produk/filter', [App\Http\Controllers\produkController::class, 'filter'])->name('api.produk.filter');

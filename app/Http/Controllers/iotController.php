@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\SensorData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IotController extends Controller
 {
     public function index()
     {
+        // Check if user is admin
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return response()->view('layouts.403page', [], 403);
+        }
+
         // Ambil data terbaru
         $data = SensorData::latest()->take(20)->get();
         return view('pages.iot', compact('data'));
@@ -16,6 +22,11 @@ class IotController extends Controller
 
     public function getLatestData()
     {
+        // Check if user is admin
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $latestData = SensorData::latest()->first();
 
         if ($latestData) {

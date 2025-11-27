@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Request;
+use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\KategoriBerita;
 use App\Providers\Filament\CustomLogoutResponse;
 use Filament\Panel;
@@ -24,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Define rate limiters
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(1000); // Allow 1000 requests per minute globally
+        });
+
         // Membagikan data kategori ke semua view
         View::composer('*', function ($view) {
             // Simpan hasil query ke cache selama 1 jam (3600 detik)

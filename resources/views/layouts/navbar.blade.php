@@ -3,7 +3,7 @@
     <div class="nav-container">
         <!-- Logo -->
         <a href="/" class="nav-logo">
-            <img src="{{ asset('images/Bumdes.jpg') }}" alt="Logo" />
+            <img src="{{ asset('images/logo.jpg') }}" alt="Logo" />
             {{-- <span><strong>BUMDes Madusari</strong></span> --}}
         </a>
         <!-- Menu Links -->
@@ -43,9 +43,9 @@
                             <li class="notif-header">
                                 <h6 class="mb-0 fw-bold text-dark">
                                     <i class="bi bi-bell me-2"></i>Notifikasi
-                                     @if (auth()->user()->unreadNotifications->count() > 0)
-                                    <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span>
-                                @endif
+                                    @if (auth()->user()->unreadNotifications->count() > 0)
+                                        <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                    @endif
 
                                 </h6>
 
@@ -179,7 +179,10 @@
 
 <!-- Icon Library -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+<!-- Navbar Styles -->
+<link href="{{ asset('css/navbar.css') }}" rel="stylesheet" />
 <!-- Navbar Script -->
+<script src="{{ asset('js/navbar.js') }}"></script>
 
 <style>
     * {
@@ -205,21 +208,33 @@
 
     /* === NAVBAR === */
     .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        z-index: 1000;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        background-color: #ffffff;
-        /* warna sisi kiri */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        overflow: visible;
-        /* supaya dropdown tidak terhalang */
-    }
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    overflow: visible; 
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efek saat discroll */
+.navbar.scrolled {
+    background-color: #f9f9f9; /* warna sedikit lebih gelap */
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Supaya konten tidak ketutup navbar */
+body {
+    padding-top: 80px;
+}
 
     /* Bagian biru miring di kanan */
     .navbar::after {
@@ -383,6 +398,9 @@
         animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         z-index: 999;
         border: 1px solid rgba(27, 127, 91, 0.06);
+        /* Allow dynamic positioning adjustments */
+        left: auto;
+        bottom: auto;
     }
 
     /* Responsive dropdown width */
@@ -990,7 +1008,10 @@
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 320px;
+                left: auto;
+                width: min(320px, calc(100vw - 10px));
+                max-width: calc(100vw - 10px);
+                min-width: 280px;
                 height: 100vh;
                 background: #ffffff;
                 background-image:
@@ -1006,12 +1027,15 @@
                 transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
                 opacity: 0;
                 z-index: 1001;
-                padding: 80px 20px 20px;
+                padding: 80px 15px 20px;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
                 touch-action: pan-y;
                 transform: none;
                 visibility: visible;
+                /* Ensure it doesn't go off-screen */
+                margin: 0;
+                box-sizing: border-box;
             }
         }
 
@@ -1373,7 +1397,8 @@
         /* === RESPONSIVE === */
         @media (max-width: 992px) {
             .dropdown-menu {
-                width: 320px;
+                width: min(320px, 90vw);
+                max-width: calc(100vw - 20px);
                 padding: 70px 20px 20px;
                 /* Kurangi padding top untuk mobile */
                 overflow-y: auto;
@@ -1480,6 +1505,12 @@
 
             .navbar::after {
                 width: 300px;
+            }
+
+            .dropdown-menu {
+                width: calc(100vw - 10px);
+                min-width: 260px;
+                padding: 70px 10px 20px;
             }
 
             .cart-dropdown .dropdown-menu {
@@ -1732,6 +1763,93 @@
         // Listen for cart updates from other pages (like keranjang page)
         document.addEventListener('cartUpdated', () => {
             updateCartBadge();
+        });
+
+        // Function to adjust dropdown position to prevent going off-screen
+        function adjustDropdownPosition(dropdown) {
+            const menu = dropdown.querySelector('.dropdown-menu');
+            if (!menu) return;
+
+            // For mobile fixed dropdowns, no position adjustment needed as they slide in from right
+            if (window.innerWidth <= 992 && menu.style.position === 'fixed') {
+                return;
+            }
+
+            // Reset any previous adjustments
+            menu.style.left = '';
+            menu.style.right = '';
+            menu.style.top = '';
+            menu.style.bottom = '';
+            menu.style.transformOrigin = '';
+
+            const rect = menu.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            // Check if dropdown goes off the right edge
+            if (rect.right > viewportWidth) {
+                menu.style.left = 'auto';
+                menu.style.right = '0';
+                menu.style.transformOrigin = 'top right';
+            }
+
+            // Check if dropdown goes off the left edge
+            if (rect.left < 0) {
+                menu.style.left = '0';
+                menu.style.right = 'auto';
+                menu.style.transformOrigin = 'top left';
+            }
+
+            // Check if dropdown goes off the bottom edge
+            if (rect.bottom > viewportHeight) {
+                // Position above the trigger instead
+                menu.style.top = 'auto';
+                menu.style.bottom = '110%';
+                menu.style.transformOrigin = 'bottom right';
+            }
+        }
+
+        // Modify existing dropdown click handlers to include position adjustment
+        const adjustPositionAfterOpen = (dropdown) => {
+            setTimeout(() => {
+                if (dropdown.classList.contains('open')) {
+                    adjustDropdownPosition(dropdown);
+                }
+            }, 10);
+        };
+
+        // Add position adjustment to existing notification dropdown handler
+        if (notifBtn) {
+            const originalNotifHandler = notifBtn.onclick;
+            notifBtn.onclick = function(e) {
+                if (originalNotifHandler) originalNotifHandler.call(this, e);
+                adjustPositionAfterOpen(this.parentElement);
+            };
+        }
+
+        // Add position adjustment to existing cart dropdown handler
+        if (cartBtn) {
+            const originalCartHandler = cartBtn.onclick;
+            cartBtn.onclick = function(e) {
+                if (originalCartHandler) originalCartHandler.call(this, e);
+                adjustPositionAfterOpen(this.parentElement);
+            };
+        }
+
+        // Add position adjustment to existing user dropdown handler
+        if (userBtn) {
+            const originalUserHandler = userBtn.onclick;
+            userBtn.onclick = function(e) {
+                if (originalUserHandler) originalUserHandler.call(this, e);
+                adjustPositionAfterOpen(this.parentElement);
+            };
+        }
+
+        // Adjust position on window resize
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+                adjustDropdownPosition(dropdown);
+            });
         });
     });
 </script>

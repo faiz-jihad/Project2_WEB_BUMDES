@@ -18,12 +18,16 @@
         {{ $trigger }}
     </div>
 
-    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-        class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
-        style="display: none;" @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
+    <div x-show="open" x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200 transform"
+        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+        x-transition:leave-end="opacity-0 scale-95 translate-y-1"
+        class="absolute z-50 mt-2 {{ $width }} rounded-xl shadow-2xl backdrop-blur-sm bg-white/95 border border-gray-200/50 {{ $alignmentClasses }}"
+        style="display: none; filter: none !important; color: #f8fafc !important;" @click="open = false">
+        <div class="rounded-xl ring-2 ring-gray-100 ring-opacity-20 {{ $contentClasses }}"
+            style="color: #f8fafc !important;">
             {{ $content }}
         </div>
     </div>

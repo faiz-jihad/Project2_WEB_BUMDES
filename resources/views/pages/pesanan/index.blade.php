@@ -5,7 +5,7 @@
 @section('content')
     <section class="orders-section">
         <div class="container" data-aos="fade-up">
-            <div class="orders-header">
+            <div class="orders-header" data-aos="fade-down" data-aos-delay="200">
                 <h1>Pesanan Saya</h1>
                 <p>Kelola dan pantau status pesanan Anda</p>
             </div>
@@ -278,7 +278,7 @@
                 </div>
 
                 {{-- Pagination --}}
-                <div class="pagination-wrapper">
+                <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="500">
                     @if ($pesanans->hasPages())
                         <nav aria-label="Pagination">
                             <ul class="pagination pagination-custom">
@@ -341,13 +341,14 @@
                     @endif
                 </div>
             @else
-                <div class="empty-orders">
-                    <div class="empty-icon">
+                <div class="empty-orders" data-aos="fade-up" data-aos-delay="400">
+                    <div class="empty-icon" data-aos="zoom-in" data-aos-delay="600">
                         <i class="bi bi-receipt"></i>
                     </div>
-                    <h3>Belum ada pesanan</h3>
-                    <p>Anda belum memiliki pesanan. Mulai berbelanja sekarang!</p>
-                    <a href="{{ route('produk.index') }}" class="btn btn-success">
+                    <h3 data-aos="fade-up" data-aos-delay="700">Belum ada pesanan</h3>
+                    <p data-aos="fade-up" data-aos-delay="800">Anda belum memiliki pesanan. Mulai berbelanja sekarang!</p>
+                    <a href="{{ route('produk.index') }}" class="btn btn-success" data-aos="zoom-in"
+                        data-aos-delay="900">
                         <i class="bi bi-shop"></i> Mulai Belanja
                     </a>
                 </div>

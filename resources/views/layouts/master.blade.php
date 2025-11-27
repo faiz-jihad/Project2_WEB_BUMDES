@@ -174,8 +174,8 @@
                     <span class="word">Pertanian</span>
                     <span class="word">Perikanan</span>
                     <span class="word">Pekembangan</span>
-                    <span class="word">Entertaint</span>
-                    <span class="word">Edukation</span>
+                    <span class="word">Pemberdayaan</span>
+                    <span class="word">Edukasi</span>
                 </div>
             </div>
         </div>
@@ -258,14 +258,52 @@
 
     <!-- OneSignal Initialization -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
+    {{-- <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             await OneSignal.init({
                 appId: "be91d72a-0e8e-4eaa-800d-92ad1bc1c776",
             });
         });
-    </script>
+    </script> --}}
+    <script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+        .then(() => console.log("Service worker registered"));
+}
+</script>
+<button id="subscribe">Aktifkan Notifikasi</button>
+
+<script>
+document.getElementById('subscribe').addEventListener('click', async () => {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+        alert("Izinkan notifikasi dulu");
+        return;
+    }
+
+    const reg = await navigator.serviceWorker.ready;
+
+    const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+applicationServerKey: "{{ config('webpush.vapid.public_key') }}"
+    });
+
+    // simpan ke server
+    await fetch("/save-subscription", {
+        method: "POST",
+        body: JSON.stringify(sub),
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        }
+    });
+
+    alert("Notifikasi browser berhasil diaktifkan!");
+});
+</script>
+
+
 
     @stack('scripts')
 </body>

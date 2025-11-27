@@ -16,19 +16,31 @@ body {
 .navbar {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 70px;
     background: linear-gradient(180deg, var(--green), var(--dark-green));
     box-shadow: var(--shadow);
     color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
     z-index: 1000;
-    transition: var(--transition);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Efek saat discroll */
 .navbar.scrolled {
     background: var(--dark-green);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px); /* opsional */
 }
+
+/* Agar konten tidak tertutup navbar */
+body {
+    padding-top: 70px;
+}
+
 
 .nav-container {
     max-width: 1200px;

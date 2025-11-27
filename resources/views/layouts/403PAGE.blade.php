@@ -262,7 +262,7 @@
     // Because this script is a module, regular function declarations are module-scoped and not reachable
     // from inline onclick attributes. Attach handlers to window or, better, use event listeners on elements.
     window.goHome = function(){ window.location.href = '/'; };
-    window.contact = function(){ alert('Minta akses: Hubungi Admin atau kirim Permintaan Resm.'); };
+    window.contact = function(){ alert('Minta akses: Hubungi Admin atau kirim Permintaan Resmi Anda.'); };
 
     // Connect the buttons (data-action) to the module-scoped handlers
     document.querySelectorAll('[data-action]').forEach(btn => {
