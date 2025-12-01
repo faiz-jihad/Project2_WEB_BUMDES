@@ -4,7 +4,7 @@
 
 Repositori ini berisi kode sumber untuk pengembangan **Sistem Informasi Manajemen Badan Usaha Milik Desa (BUMDES)**. Aplikasi web ini dikembangkan dengan tujuan untuk memodernisasi dan mempermudah pengelolaan data operasional, inventaris, keuangan, serta informasi produk/layanan BUMDES.
 
-Proyek ini dikembangkan sebagai bagian dari tugas akhir/proyek kelompok mata kuliah [**Sebutkan Nama Mata Kuliah**] oleh Kelompok 5 (berdasarkan file `FlowCHart_kelompok5.drawio`).
+Proyek ini dikembangkan sebagai bagian dari tugas akhir/proyek kelompok mata kuliah [**Proyek 2**] oleh Kelompok 5 
 
 ## Fitur Utama
 
