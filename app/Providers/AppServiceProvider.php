@@ -11,6 +11,17 @@ use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\KategoriBerita;
 use App\Providers\Filament\CustomLogoutResponse;
 use Filament\Panel;
+use Filament\Facades\Filament;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\NavigationStack;
+use Filament\Navigation\NavigationTab;
+use Filament\Navigation\NavigationTree;
+use Filament\Navigation\NavigationView;
+use Filament\Navigation\NavigationViewInterface;
+use Filament\Navigation\NavigationViewInterface as NavigationViewInterfaceAlias;
+use Filament\Navigation\NavigationViewInterface as NavigationViewInterfaceAliasAlias;
+use Filament\Navigation\NavigationViewInterface as NavigationViewInterfaceAliasAliasAlias;
 
 class AppServiceProvider extends ServiceProvider
 {

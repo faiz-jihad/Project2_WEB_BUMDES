@@ -92,6 +92,29 @@ class PesananStatusUpdated extends Notification
     }
 
     /**
+     * Get the web push representation of the notification.
+     */
+    public function toWebPush(object $notifiable, $notification)
+    {
+        $statusLabels = [
+            'pending' => 'Menunggu Pembayaran',
+            'sudah_bayar' => 'Sudah Bayar',
+            'diproses' => 'Diproses',
+            'dikirim' => 'Dikirim',
+            'selesai' => 'Selesai',
+            'dibatalkan' => 'Dibatalkan',
+        ];
+
+        $produkNames = $this->getProdukNames();
+
+        return [
+            'title' => 'Status Pesanan Diperbarui',
+            'body' => 'Status pesanan atas nama ' . $this->pesanan->nama_pemesan . ' (' . $produkNames . ') telah diperbarui menjadi "' . ($statusLabels[$this->newStatus] ?? $this->newStatus) . '"',
+            'url' => route('pesanan.show', $this->pesanan->uuid),
+        ];
+    }
+
+    /**
      * Get produk names from the order items
      */
     private function getProdukNames(): string

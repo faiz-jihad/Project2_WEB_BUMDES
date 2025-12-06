@@ -504,17 +504,31 @@
         }
 
         @media print {
+            body {
+                margin: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
             .nota-section {
-                padding: 0;
-                background: #fff;
+                padding: 0 !important;
+                background: #fff !important;
             }
 
             .nota-wrapper {
-                box-shadow: none;
-                padding: 20px;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 20px !important;
             }
 
-            .actions {
+            .actions,
+            header,
+            footer,
+            nav {
+                display: none !important;
+            }
+
+            ::-webkit-scrollbar {
                 display: none;
             }
         }

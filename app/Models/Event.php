@@ -107,7 +107,7 @@ class Event extends Model
             'session_id' => session()->getId(),
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'metadata' => array_merge($metadata, [
+            'metadata' => array_merge((array) $metadata, [
                 'url' => $request->fullUrl(),
                 'referrer' => $request->header('referer'),
                 'method' => $request->method(),
@@ -115,4 +115,12 @@ class Event extends Model
             'occurred_at' => now(),
         ]);
     }
+
+    protected static function booted()
+{
+    static::created(function ($event) {
+        broadcast(new \App\Events\EventLogged($event));
+    });
+}
+
 }

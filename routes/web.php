@@ -22,11 +22,16 @@ use App\Http\Controllers\{
     ContactController,
 };
 use App\Http\Controllers\Penulis\BeritaController as PenulisBeritaController;
+use App\Models\Event;
+use Illuminate\Support\Facades\Broadcast;
+
+
 
 /* =============================================================
 |  GLOBAL SECURITY MIDDLEWARE (RATE LIMIT)
 |  throttle:global
 */
+
 Route::middleware('throttle:global')->group(function () {
 
     /* ----------------------- PUBLIC STATIC PAGES ----------------------- */
@@ -119,7 +124,7 @@ Route::middleware(['auth', 'throttle:global'])->group(function () {
     /* NOTIFIKASI */
     Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
     Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.read');
-    Route::post('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.readAll');
+    Route::post('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllRead');
     Route::post('/notifikasi/mark-read/{id}', [NotifikasiController::class, 'markRead'])->name('notifikasi.markRead');
 
     /* PESANAN (UUID) */
@@ -141,15 +146,19 @@ Route::middleware(['auth', 'throttle:global'])->group(function () {
         Route::delete('/penulis/berita/{id_berita}', [PenulisBeritaController::class, 'destroy'])->name('penulis.berita.destroy');
     });
 });
-Route::post('/save-subscription', [WebPushController::class, 'saveSubscription']);
-Route::get('/send-push/{id}', [WebPushController::class, 'sendPush']);
-
+Route::get('/test-event', function () {
+    Event::track("test_event", null, 1, ["info" => "testing"]);
+    return "Event terkirim!";
+});
 /* =============================================================
 |  ADMIN ROUTES (IP + ROLE PROTECTION)
 */
 Route::middleware(['auth', 'role:admin', 'throttle:global'])->group(function () {
     Route::get('/iot', [IotController::class, 'index'])->name('iot.index');
 });
+
+
+Broadcast::routes(['middleware' => ['auth']]);
 
 /* ============================================================= */
 require __DIR__ . '/auth.php';

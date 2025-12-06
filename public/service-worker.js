@@ -1,23 +1,17 @@
-self.addEventListener("push",(event)=>{
+self.addEventListener("push", (event) => {
     const notifications = event.data.json();
 
-
-    event.waitUntik(
-        self.registration.showNotifications(
+    event.waitUntil(
+        self.registration.showNotification(notifications.title, {
             body: notifications.body,
-            title: notifications.title,
-            icon :"./images/bumdes.jpg",
-            data:{
-                url: notification.url
-            }
-        )
-    )
+            icon: "./images/bumdes.jpg",
+            data: {
+                url: notifications.url,
+            },
+        })
+    );
+});
 
-})
-
-self.addEventListener("notificationclick",(event)=>{
-    event.WaitUntil(
-        clients.openWindow(event.notification.data.url)
-    )
-
-})
+self.addEventListener("notificationclick", (event) => {
+    event.waitUntil(clients.openWindow(event.notification.data.url));
+});

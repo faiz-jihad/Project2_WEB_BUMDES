@@ -3,6 +3,7 @@
 @section('title', 'Notifikasi')
 
 @section('content')
+<br>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
@@ -37,7 +38,7 @@
     .header-icon {
         width: 55px;
         height: 55px;
-        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        background: linear-gradient(135deg, #058a34, #0a7e1d);
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         display: flex;
@@ -103,7 +104,7 @@
     }
 
     .notif-card.unread {
-        border-left: 6px solid #0ea5e9;
+        border-left: 6px solid #0e901b;
     }
 
     .notif-title {
@@ -134,7 +135,7 @@
 
     /* BUTTONS */
     .btn-read {
-        background: #0ea5e9;
+        background: #088a2f;
         padding: 9px 14px;
         border: none;
         color: white;
@@ -147,7 +148,7 @@
         gap: 6px;
     }
     .btn-read:hover {
-        background: #0284c7;
+        background: #0c9207;
     }
 
     .btn-view {
@@ -171,7 +172,7 @@
     .mark-all-btn {
         width: 100%;
         padding: 12px;
-        background: #0ea5e9;
+        background: #087e04;
         border: none;
         color: white;
         font-weight: 600;
@@ -182,7 +183,7 @@
         box-shadow: 0 4px 12px rgba(14,165,233,0.3);
     }
     .mark-all-btn:hover {
-        background: #0284c7;
+        background: #049033;
     }
 
     .hidden { display: none; }
@@ -295,7 +296,7 @@
         <p style="color:#64748b;">Silakan masuk untuk melihat notifikasi Anda.</p>
 
         <a href="{{ route('login') }}" style="
-            padding:12px 20px; background:#0ea5e9; color:white;
+            padding:12px 20px; background:#069523; color:white;
             text-decoration:none; border-radius:10px; font-weight:600;">
             <i class="bi bi-box-arrow-in-right"></i> Login
         </a>
@@ -337,7 +338,7 @@
     }
 
     function markAll() {
-        fetch('{{ route("notifikasi.readAll") }}', {
+        fetch('{{ route("notifikasi.markAllRead") }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

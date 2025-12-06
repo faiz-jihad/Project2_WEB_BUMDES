@@ -48,9 +48,10 @@ class SocialiteController extends Controller
                 'email' => $socialUser->getEmail() ?? 'noemail_' . $socialUser->getId() . '@example.com',
                 'email_verified_at' => now(),
                 'password' => bcrypt(Str::random(16)),
-                'avatar' => $socialUser->getAvatar() ?? 'pp.jpg',
+                'avatar' => $socialUser->getAvatar() ? $socialUser->getAvatar() : 'images/pp.jpg',
                 'provider' => $provider,
                 'provider_id' => $socialUser->getId(),
+                'role' => 'user',
             ]);
         }
 

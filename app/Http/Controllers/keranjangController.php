@@ -163,6 +163,7 @@ class KeranjangController extends Controller
     public function get()
     {
         $total_items = 0;
+        $total_price = 0;
         $items = [];
 
         if (Auth::check()) {
@@ -180,6 +181,7 @@ class KeranjangController extends Controller
                     'variasi' => $item->variasi,
                 ];
                 $total_items += $item->jumlah;
+                $total_price += $item->produk->harga * $item->jumlah;
             }
         } else {
             // Jika tidak login, ambil dari session
@@ -187,11 +189,13 @@ class KeranjangController extends Controller
             foreach ($keranjang as $item) {
                 $items[] = $item;
                 $total_items += $item['jumlah'];
+                $total_price += $item['harga'] * $item['jumlah'];
             }
         }
 
         return response()->json([
             'total_items' => $total_items,
+            'total_price' => $total_price,
             'items' => $items
         ]);
     }

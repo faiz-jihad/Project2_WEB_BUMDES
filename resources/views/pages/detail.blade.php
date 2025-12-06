@@ -280,7 +280,6 @@
             font-style: italic;
         }
 
-        /* Share & Like Styles */
         .share-btn {
             transition: all 0.3s ease;
             border-radius: 50%;
@@ -326,7 +325,7 @@
             }
         }
 
-        /* Responsive adjustments */
+        /* Responsive  */
         @media (max-width: 768px) {
             .share-btn {
                 width: 35px;

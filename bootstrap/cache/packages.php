@@ -106,6 +106,13 @@
       0 => 'Kirschbaum\\PowerJoins\\PowerJoinsServiceProvider',
     ),
   ),
+  'laravel-notification-channels/webpush' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'NotificationChannels\\WebPush\\WebPushServiceProvider',
+    ),
+  ),
   'laravel/breeze' => 
   array (
     'providers' => 
@@ -167,6 +174,17 @@
       0 => 'Livewire\\LivewireServiceProvider',
     ),
   ),
+  'maatwebsite/excel' => 
+  array (
+    'aliases' => 
+    array (
+      'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+    ),
+    'providers' => 
+    array (
+      0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    ),
+  ),
   'mckenziearts/laravel-notify' => 
   array (
     'aliases' => 
@@ -204,6 +222,13 @@
     'providers' => 
     array (
       0 => 'Pest\\Laravel\\PestServiceProvider',
+    ),
+  ),
+  'pxlrbt/filament-excel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'pxlrbt\\FilamentExcel\\FilamentExcelServiceProvider',
     ),
   ),
   'ryangjchandler/blade-capture-directive' => 

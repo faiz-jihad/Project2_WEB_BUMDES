@@ -12,6 +12,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
 
     <!-- Custom CSS -->
     @stack('styles')
@@ -255,56 +256,56 @@
             }, 500);
         });
     </script>
-
-    <!-- OneSignal Initialization -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    {{-- <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
-                appId: "be91d72a-0e8e-4eaa-800d-92ad1bc1c776",
-            });
-        });
-    </script> --}}
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+@auth
     <script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
-        .then(() => console.log("Service worker registered"));
-}
-</script>
-<button id="subscribe">Aktifkan Notifikasi</button>
+        Pusher.logToConsole = false;
 
-<script>
-document.getElementById('subscribe').addEventListener('click', async () => {
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-        alert("Izinkan notifikasi dulu");
-        return;
-    }
+        var pusher = new Pusher("{{ config('broadcasting.connections.pusher.key') }}", {
+            cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+            forceTLS: true,
+            authEndpoint: "/broadcasting/auth",
+            auth: {
+                headers: {
+                    "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+                }
+            }
+        });
 
-    const reg = await navigator.serviceWorker.ready;
+        var channel = pusher.subscribe("private-user.{{ auth()->id() }}");
 
-    const sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-applicationServerKey: "{{ config('webpush.vapid.public_key') }}"
-    });
+        channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
 
-    // simpan ke server
-    await fetch("/save-subscription", {
-        method: "POST",
-        body: JSON.stringify(sub),
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        }
-    });
+            console.log("Notifikasi masuk:", data);
 
-    alert("Notifikasi browser berhasil diaktifkan!");
-});
-</script>
+            const title = data.title ?? "Notifikasi Baru";
+            const body = data.body ?? "Anda mendapat notifikasi baru";
 
+            if ("Notification" in window) {
 
+                if (Notification.permission === "granted") {
+                    new Notification(title, {
+                        body: body,
+                        icon: "{{ asset('images/notif.png') }}"
+                    });
+                }
 
+                else if (Notification.permission === "default") {
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === "granted") {
+                            new Notification(title, {
+                                body: body,
+                                icon: "{{ asset('images/notif.png') }}"
+                            });
+                        }
+                    });
+                }
+            }
+
+        });
+    </script>
+    @endauth
+    <!-- Custom JS -->
     @stack('scripts')
 </body>
 

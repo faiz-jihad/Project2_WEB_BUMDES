@@ -4,8 +4,8 @@
         <!-- Logo -->
         <a href="/" class="nav-logo">
             <img src="{{ asset('images/logo.jpg') }}" alt="Logo" />
-            {{-- <span><strong>BUMDes Madusari</strong></span> --}}
         </a>
+
         <!-- Menu Links -->
         <ul class="nav-links" id="navLinks">
             <li><a href="/" data-route="/">Beranda</a></li>
@@ -19,153 +19,352 @@
             <li><a href="/galeri" data-route="/galeri">Galeri</a></li>
         </ul>
 
+        <!-- Overlay for mobile -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+
         <!-- Right Icons -->
         <div class="nav-right">
-            <div class="header-icons d-flex align-items-center gap-3">
+            <!-- ICON NOTIFIKASI -->
+            <div class="dropdown notification-dropdown">
+                @auth
+                    <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
+                        <i class="bi bi-bell"></i>
+                        @if (auth()->user()->unreadNotifications->count() > 0)
+                            <span class="badge">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </a>
 
-                <!-- ICON NOTIFIKASI -->
-                <div class="dropdown notification-dropdown">
-                    @auth
-                        <a href="#" class="icon-btn dropbtn" aria-label="Notifikasi" aria-expanded="false">
-                            <i class="bi bi-bell"></i>
+                    <!-- Desktop Notification Dropdown -->
+                    <div class="dropdown-menu notif-menu desktop-menu">
+                        <div class="notif-header">
+                            <h6 class="mb-0 fw-bold">
+                                <i class="bi bi-bell me-2"></i>Notifikasi
+                                @if (auth()->user()->unreadNotifications->count() > 0)
+                                    <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                @endif
+                            </h6>
+                        </div>
 
-                            @if (auth()->user()->unreadNotifications->count() > 0)
-                                <span class="badge">
-                                    {{ auth()->user()->unreadNotifications->count() }}
-                                </span>
-                            @endif
-                        </a>
-
-                        <ul class="dropdown-menu notif-menu">
-                            <button class="mobile-close-btn" aria-label="Tutup">×</button>
-
-                            <!-- Header Notifikasi -->
-                            <li class="notif-header">
-                                <h6 class="mb-0 fw-bold text-dark">
-                                    <i class="bi bi-bell me-2"></i>Notifikasi
-                                    @if (auth()->user()->unreadNotifications->count() > 0)
-                                        <span class="badge">{{ auth()->user()->unreadNotifications->count() }}</span>
-                                    @endif
-
-                                </h6>
-
-                            </li>
-
+                        <div class="notif-list">
                             @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
-                                <li class="notif-item unread">
-                                    <a href="{{ $notification->data['url'] ?? '#' }}" class="notif-link">
-                                        <div class="notif-icon">
-                                            @if (isset($notification->data['type']))
-                                                @if ($notification->data['type'] === 'berita')
-                                                    <i class="bi bi-newspaper text-primary"></i>
-                                                @elseif($notification->data['type'] === 'produk')
-                                                    <i class="bi bi-box-seam text-success"></i>
-                                                @elseif($notification->data['type'] === 'pesanan')
-                                                    <i class="bi bi-receipt text-warning"></i>
-                                                @else
-                                                    <i class="bi bi-bell-fill text-info"></i>
-                                                @endif
+                                <a href="{{ $notification->data['url'] ?? '#' }}" class="notif-item unread">
+                                    <div class="notif-icon">
+                                        @if (isset($notification->data['type']))
+                                            @if ($notification->data['type'] === 'berita')
+                                                <i class="bi bi-newspaper text-primary"></i>
+                                            @elseif($notification->data['type'] === 'produk')
+                                                <i class="bi bi-box-seam text-success"></i>
+                                            @elseif($notification->data['type'] === 'pesanan')
+                                                <i class="bi bi-receipt text-warning"></i>
                                             @else
                                                 <i class="bi bi-bell-fill text-info"></i>
                                             @endif
+                                        @else
+                                            <i class="bi bi-bell-fill text-info"></i>
+                                        @endif
+                                    </div>
+                                    <div class="notif-content">
+                                        <div class="notif-text">
+                                            <span
+                                                class="notif-title">{{ Str::limit($notification->data['message'] ?? 'Notifikasi baru', 80) }}</span>
+                                            <small class="notif-time">
+                                                <i
+                                                    class="bi bi-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
+                                            </small>
                                         </div>
-                                        <div class="notif-content">
-                                            <div class="notif-text">
-                                                <span
-                                                    class="notif-title">{{ Str::limit($notification->data['message'] ?? 'Notifikasi baru', 80) }}</span>
-                                                <small class="notif-time">
-                                                    <i
-                                                        class="bi bi-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
-                                                </small>
-                                            </div>
-                                            <div class="notif-indicator"></div>
-                                        </div>
-                                    </a>
-                                </li>
+                                        <div class="notif-indicator"></div>
+                                    </div>
+                                </a>
                             @empty
-                                <li class="notif-empty">
+                                <div class="notif-empty">
                                     <div class="empty-state">
                                         <i class="bi bi-bell-slash empty-icon"></i>
                                         <span class="empty-text">Tidak ada notifikasi baru</span>
-                                        <small class="empty-subtext">Semua notifikasi sudah dibaca</small>
                                     </div>
-                                </li>
+                                </div>
                             @endforelse
 
                             @if (auth()->user()->unreadNotifications->count() > 5)
-                                <li class="notif-more">
-                                    <div class="text-center py-2">
-                                        <small class="text-muted">
-                                            +{{ auth()->user()->unreadNotifications->count() - 5 }} notifikasi lainnya
+                                <div class="notif-more">
+                                    <small class="text-muted">
+                                        +{{ auth()->user()->unreadNotifications->count() - 5 }} notifikasi lainnya
+                                    </small>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="notif-footer">
+                            <a href="{{ route('notifikasi.index') }}" class="view-all-btn">
+                                <i class="bi bi-eye me-2"></i>Lihat Semua Notifikasi
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Notification Sidebar -->
+                    <div class="mobile-sidebar notif-sidebar">
+                        <div class="sidebar-header">
+                            <h5><i class="bi bi-bell me-2"></i>Notifikasi</h5>
+                            <button class="sidebar-close" aria-label="Tutup">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="sidebar-content">
+                            @forelse(auth()->user()->unreadNotifications as $notification)
+                                <a href="{{ $notification->data['url'] ?? '#' }}" class="notif-item unread">
+                                    <div class="notif-icon">
+                                        @if (isset($notification->data['type']))
+                                            @if ($notification->data['type'] === 'berita')
+                                                <i class="bi bi-newspaper text-primary"></i>
+                                            @elseif($notification->data['type'] === 'produk')
+                                                <i class="bi bi-box-seam text-success"></i>
+                                            @elseif($notification->data['type'] === 'pesanan')
+                                                <i class="bi bi-receipt text-warning"></i>
+                                            @else
+                                                <i class="bi bi-bell-fill text-info"></i>
+                                            @endif
+                                        @else
+                                            <i class="bi bi-bell-fill text-info"></i>
+                                        @endif
+                                    </div>
+                                    <div class="notif-content">
+                                        <span
+                                            class="notif-title">{{ Str::limit($notification->data['message'] ?? 'Notifikasi baru', 80) }}</span>
+                                        <small class="notif-time">
+                                            <i
+                                                class="bi bi-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
                                         </small>
                                     </div>
-                                </li>
-                            @endif
-
-                            <!-- Footer Notifikasi -->
-                            <li class="notif-footer">
-                                <a href="{{ route('notifikasi.index') }}" class="view-all-btn">
-                                    <i class="bi bi-eye me-2"></i>Lihat Semua Notifikasi
                                 </a>
-                            </li>
-                        </ul>
-                    @endauth
+                            @empty
+                                <div class="notif-empty">
+                                    <i class="bi bi-bell-slash"></i>
+                                    <p>Tidak ada notifikasi baru</p>
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <div class="sidebar-footer">
+                            <a href="{{ route('notifikasi.index') }}" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye me-2"></i>Lihat Semua
+                            </a>
+                        </div>
+                    </div>
+                @endauth
+            </div>
+
+            <!-- CART -->
+            @auth
+                <div class="dropdown cart-dropdown">
+                    <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
+                        <i class="bi bi-cart"></i>
+                        <span class="badge" id="cartBadge">0</span>
+                    </a>
+
+                    <!-- Desktop Cart Dropdown -->
+                    <div class="dropdown-menu cart-menu desktop-menu">
+                        <div class="cart-header">
+                            <h6><i class="bi bi-cart me-2"></i>Keranjang Belanja</h6>
+                            <span class="badge bg-primary" id="cartCountBadge">0 item</span>
+                        </div>
+
+                        <div class="cart-list" id="cartList">
+                            <!-- Items will be loaded here -->
+                        </div>
+
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <strong id="cartTotal">Rp 0</strong>
+                            </div>
+                            <div class="cart-actions">
+                                <a href="/keranjang" class="btn btn-outline-secondary">Lihat Keranjang</a>
+                                <a href="/checkout" class="btn btn-primary">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Cart Sidebar -->
+                    <div class="mobile-sidebar cart-sidebar">
+                        <div class="sidebar-header">
+                            <h5><i class="bi bi-cart me-2"></i>Keranjang Belanja</h5>
+                            <button class="sidebar-close" aria-label="Tutup">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="sidebar-content" id="mobileCartList">
+                            <!-- Items will be loaded here -->
+                        </div>
+
+                        <div class="sidebar-footer">
+                            <div class="cart-summary">
+                                <div class="total-price">
+                                    <span>Total:</span>
+                                    <strong id="mobileCartTotal">Rp 0</strong>
+                                </div>
+                                <a href="/keranjang" class="btn btn-outline-primary w-100 mb-2">
+                                    Lihat Detail Keranjang
+                                </a>
+                                <a href="/checkout" class="btn btn-primary w-100">
+                                    <i class="bi bi-bag-check me-2"></i>Checkout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            {{-- Cart  --}}
-            <div class="dropdown cart-dropdown">
-                <a href="#" class="icon-btn dropbtn" aria-label="Keranjang" title="Keranjang Belanja">
-                    <i class="bi bi-cart"></i>
-                    <span class="badge" id="cartBadge" onclick="window.location.href='/keranjang'">0</span>
-                </a>
+            @endauth
 
-                <ul class="dropdown-menu cart-menu" id="cartMenu">
-                    <button class="mobile-close-btn" aria-label="Tutup">X</button>
-                    <li class="empty text-center p-2"><span>Keranjang kosong</span></li>
-                </ul>
-            </div>
-
-            <!-- User Login  -->
+            <!-- User Login -->
             @guest
-                <a href="{{ route('login') }}" class="login-btn" style="color: white">Masuk</a>
+                <a href="{{ route('login') }}" class="login-btn">Masuk</a>
             @endguest
 
             @auth
                 <div class="dropdown user-dropdown">
                     <a href="#" class="icon-btn dropbtn user-btn" aria-expanded="false">
-                        <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/bumdes.jpg') }}"
-                            alt="User" />
+                        @php
+                            $avatar = Auth::user()->avatar;
+                            $avatarUrl = null;
+
+                            if ($avatar) {
+                                // Jika avatar adalah URL (Google/Facebook)
+                                if (filter_var($avatar, FILTER_VALIDATE_URL)) {
+                                    $avatarUrl = $avatar;
+                                }
+                                // Jika avatar adalah path relatif
+                                elseif (strpos($avatar, 'http') === false && strpos($avatar, '//') === false) {
+                                    $avatarUrl = asset('storage/' . $avatar);
+                                }
+                            }
+
+                            // Fallback ke default
+                            $avatarUrl = $avatarUrl ?? asset('images/bumdes.jpg');
+                        @endphp
+
+                        <img src="{{ $avatarUrl }}" alt="{{ Auth::user()->name }}" class="user-avatar"
+                            onerror="this.src='{{ asset('images/bumdes.jpg') }}'">
                     </a>
 
-                    <ul class="dropdown-menu user-menu" id="userMenu">
-                        <button class="mobile-close-btn" aria-label="Tutup">X</button>
-                        <li class="user-info">
+                    <!-- Desktop User Dropdown -->
+                    <div class="dropdown-menu user-menu desktop-menu">
+                        <div class="user-info">
                             <div class="user-avatar">
-                                <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/bumdes.jpg') }}"
-                                    alt="User" />
+                                @php
+                                    $dropdownAvatar = Auth::user()->avatar;
+                                    $dropdownAvatarUrl = null;
+
+                                    if ($dropdownAvatar) {
+                                        // Jika avatar adalah URL (Google/Facebook)
+                                        if (filter_var($dropdownAvatar, FILTER_VALIDATE_URL)) {
+                                            $dropdownAvatarUrl = $dropdownAvatar;
+                                        }
+                                        // Jika avatar adalah path relatif
+                                        elseif (
+                                            strpos($dropdownAvatar, 'http') === false &&
+                                            strpos($dropdownAvatar, '//') === false
+                                        ) {
+                                            $dropdownAvatarUrl = asset('storage/' . $dropdownAvatar);
+                                        }
+                                    }
+
+                                    // Fallback ke default
+                                    $dropdownAvatarUrl = $dropdownAvatarUrl ?? asset('images/bumdes.jpg');
+                                @endphp
+                                <img src="{{ $dropdownAvatarUrl }}" alt="{{ Auth::user()->name }}"
+                                    class="user-avatar-img" onerror="this.src='{{ asset('images/bumdes.jpg') }}'">
                             </div>
                             <div class="user-details">
                                 <span class="user-name">{{ Auth::user()->name }}</span>
                                 <span class="user-email">{{ Auth::user()->email }}</span>
                             </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="/akun"><i class="bi bi-person"></i> Akun Saya</a></li>
-                        <li><a href="{{ route('pesanan.index') }}"><i class="bi bi-receipt"></i> Pesanan Saya</a></li>
-                        @auth
+                        </div>
+
+                        <div class="user-links">
+                            <a href="/akun"><i class="bi bi-person"></i> Akun Saya</a>
+                            <a href="{{ route('pesanan.index') }}"><i class="bi bi-receipt"></i> Pesanan Saya</a>
                             @if (Auth::user()->role === 'penulis')
-                                <li><a href="{{ route('penulis.berita.index') }}"><i class="bi bi-newspaper"></i>
-                                        Dashboard</a>
-                                </li>
+                                <a href="{{ route('penulis.berita.index') }}"><i class="bi bi-newspaper"></i>
+                                    Dashboard</a>
                             @endif
-                        @endauth
-                        <li class="user-footer">
+                        </div>
+
+                        <div class="user-footer">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit"><i class="bi bi-box-arrow-right"></i> Keluar</button>
+                                <button type="submit" class="btn btn-danger w-100">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar
+                                </button>
                             </form>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+
+                    <!-- Mobile User Sidebar -->
+                    <div class="mobile-sidebar user-sidebar">
+                        <div class="sidebar-header">
+                            <div class="user-profile">
+                                @php
+                                    $mobileAvatar = Auth::user()->avatar;
+                                    $mobileAvatarUrl = null;
+
+                                    if ($mobileAvatar) {
+                                        // Jika avatar adalah URL (Google/Facebook)
+                                        if (filter_var($mobileAvatar, FILTER_VALIDATE_URL)) {
+                                            $mobileAvatarUrl = $mobileAvatar;
+                                        }
+                                        // Jika avatar adalah path relatif
+                                        elseif (
+                                            strpos($mobileAvatar, 'http') === false &&
+                                            strpos($mobileAvatar, '//') === false
+                                        ) {
+                                            $mobileAvatarUrl = asset('storage/' . $mobileAvatar);
+                                        }
+                                    }
+
+                                    // Fallback ke default
+                                    $mobileAvatarUrl = $mobileAvatarUrl ?? asset('images/bumdes.jpg');
+                                @endphp
+                                <img src="{{ $mobileAvatarUrl }}" alt="{{ Auth::user()->name }}"
+                                    class="user-avatar-img" onerror="this.src='{{ asset('images/bumdes.jpg') }}'">
+                                <div>
+                                    <h6>{{ Auth::user()->name }}</h6>
+                                    <small>{{ Auth::user()->email }}</small>
+                                </div>
+                            </div>
+                            <button class="sidebar-close" aria-label="Tutup">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="sidebar-content">
+                            <a href="/akun" class="sidebar-link">
+                                <i class="bi bi-person"></i>
+                                <span>Akun Saya</span>
+                            </a>
+                            <a href="{{ route('pesanan.index') }}" class="sidebar-link">
+                                <i class="bi bi-receipt"></i>
+                                <span>Pesanan Saya</span>
+                            </a>
+                            @if (Auth::user()->role === 'penulis')
+                                <a href="{{ route('penulis.berita.index') }}" class="sidebar-link">
+                                    <i class="bi bi-newspaper"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            @endif
+                        </div>
+
+                        <div class="sidebar-footer">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             @endauth
 
@@ -179,10 +378,6 @@
 
 <!-- Icon Library -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
-<!-- Navbar Styles -->
-<link href="{{ asset('css/navbar.css') }}" rel="stylesheet" />
-<!-- Navbar Script -->
-<script src="{{ asset('js/navbar.js') }}"></script>
 
 <style>
     * {
@@ -208,35 +403,20 @@
 
     /* === NAVBAR === */
     .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    overflow: visible; 
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1000;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        overflow: visible;
+    }
 
-/* Efek saat discroll */
-.navbar.scrolled {
-    background-color: #f9f9f9; /* warna sedikit lebih gelap */
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
-}
-
-/* Supaya konten tidak ketutup navbar */
-body {
-    padding-top: 80px;
-}
-
-    /* Bagian biru miring di kanan */
     .navbar::after {
         content: "";
         position: absolute;
@@ -260,7 +440,6 @@ body {
         justify-content: space-between;
         padding: 0 60px;
         z-index: 2;
-        /* supaya di atas layer biru */
     }
 
     .nav-logo {
@@ -319,15 +498,6 @@ body {
     }
 
     /* === RIGHT ICONS === */
-    .nav-left {
-        justify-content: flex-start;
-    }
-
-    .nav-centre {
-        display: flex;
-        justify-content: center;
-    }
-
     .nav-right {
         display: flex;
         align-items: center;
@@ -336,22 +506,47 @@ body {
         justify-content: flex-end;
     }
 
-    /* icon umum */
     .nav-right .icon-btn {
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .nav-right .icon-btn .user-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    }
+
+    .nav-right .icon-btn:hover .user-avatar {
+        border-color: rgba(255, 255, 255, 0.9);
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav-right .icon-btn:active .user-avatar {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+
+    .nav-right .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .nav-right i {
         font-size: 1.45rem;
         color: #ffffff;
         transition: color 0.3s ease;
-    }
-
-    .nav-right i:hover {
-        color: #70ffcb;
     }
 
     /* === BADGE === */
@@ -378,478 +573,481 @@ body {
         transform: scale(1.1);
     }
 
-    /* === DROPDOWN === */
+    /* === DROPDOWN SYSTEM === */
     .dropdown {
         position: relative;
     }
 
-    .dropdown-menu {
+    /* Desktop Dropdowns */
+    .desktop-menu {
         display: none;
         position: absolute;
         top: 110%;
         right: 0;
         background: #ffffff;
         border-radius: 16px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
         min-width: 320px;
         max-width: 90vw;
-        max-height: 80vh;
+        max-height: 70vh;
         overflow: hidden;
+        z-index: 1001;
         animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        z-index: 999;
-        border: 1px solid rgba(27, 127, 91, 0.06);
-        /* Allow dynamic positioning adjustments */
-        left: auto;
-        bottom: auto;
     }
 
-    /* Responsive dropdown width */
-    @media (max-width: 576px) {
-        .dropdown-menu {
-            min-width: 280px;
-            max-width: 95vw;
-            right: -10px;
-            max-height: 70vh;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .dropdown-menu {
-            min-width: 260px;
-            max-width: 98vw;
-            right: -5px;
-            max-height: 65vh;
-        }
-    }
-
-    .dropdown.open .dropdown-menu {
+    .dropdown:hover .desktop-menu {
         display: block;
     }
 
-    /* Animasi dropdown yang lebih halus */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(12px) scale(0.95);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-
-    /* Positioning to prevent dropdown from going off-screen */
-    .dropdown-menu {
-        transform-origin: top right;
-    }
-
-    /* Adjust position if dropdown would go off-screen */
-    @media (max-width: 992px) {
-        .dropdown-menu {
-            left: auto;
-            right: 0;
-            transform-origin: top right;
-        }
-    }
-
-    /* Tombol Close — Desktop */
-    @media (min-width: 993px) {
-        .dropdown-menu .mobile-close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 50px;
-            height: 32px;
-            background: rgba(240, 240, 240, 0.9);
-            border: none;
-            border-radius: 50%;
-            color: #555;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            z-index: 10;
-        }
-
-
-        .dropdown-menu .mobile-close-btn:hover {
-            background: #e6f2ee;
-            color: #1b7f5b;
-            transform: scale(1.1);
-        }
-    }
-
-    .dropdown-menu li {
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    .dropdown-menu li:last-child {
-        border-bottom: none;
-    }
-
-    .dropdown-menu a,
-    .dropdown-menu span {
-        display: block;
-        padding: 12px 18px;
-        font-size: 0.9rem;
-        color: #333;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        border-radius: 8px;
-        margin: 2px 6px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .dropdown-menu a:hover {
-        background: linear-gradient(135deg, rgba(27, 127, 91, 0.08) 0%, rgba(27, 127, 91, 0.04) 100%);
-        color: #1b7f5b;
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(27, 127, 91, 0.15);
-    }
-
-    .dropdown-menu a::before {
-        content: '';
-        position: absolute;
-        left: 0;
+    /* Mobile Sidebars */
+    .mobile-sidebar {
+        position: fixed;
         top: 0;
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(90deg, rgba(27, 127, 91, 0.1) 0%, rgba(27, 127, 91, 0.05) 100%);
-        transition: width 0.3s ease;
-        z-index: -1;
-    }
-
-    .dropdown-menu a:hover::before {
-        width: 100%;
-    }
-
-    /* === USER DROPDOWN === */
-    .user-dropdown img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid rgba(27, 127, 91, 0.1);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(27, 127, 91, 0.1);
-    }
-
-    .user-dropdown img:hover {
-        border-color: rgba(27, 127, 91, 0.3);
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(27, 127, 91, 0.15);
-    }
-
-    .user-menu {
-        min-width: 300px;
-        padding: 0;
-        border-radius: 16px;
-        overflow: hidden;
+        right: -100%;
+        width: 320px;
+        height: 100vh;
         background: #ffffff;
-        box-shadow:
-            0 25px 50px -12px rgba(27, 127, 91, 0.15),
-            0 0 0 1px rgba(27, 127, 91, 0.08),
-            0 10px 25px -5px rgba(27, 127, 91, 0.1);
-        border: 1px solid rgba(27, 127, 91, 0.1);
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 24px 24px 20px;
-        background: linear-gradient(135deg, rgba(27, 127, 91, 0.03) 0%, rgba(27, 127, 91, 0.01) 100%);
-        border-bottom: 1px solid rgba(27, 127, 91, 0.08);
-        position: relative;
-    }
-
-    .user-info::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 24px;
-        right: 24px;
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, rgba(27, 127, 91, 0.15) 50%, transparent 100%);
-    }
-
-    .user-avatar {
-        position: relative;
-        flex-shrink: 0;
-    }
-
-    .user-avatar img {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #ffffff;
-        box-shadow: 0 4px 14px rgba(27, 127, 91, 0.12);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .user-avatar img:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 20px rgba(27, 127, 91, 0.18);
-    }
-
-    .user-details {
-        flex: 1;
-        min-width: 0;
+        z-index: 1100;
+        transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
     }
 
-    .user-details .user-name {
-        font-weight: 600;
-        font-size: 1.05rem;
-        color: #1b7f5b;
-        line-height: 1.3;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        letter-spacing: -0.01em;
+    .mobile-sidebar.active {
+        right: 0;
     }
 
-    .user-details .user-email {
-        font-size: 0.875rem;
-        color: #64748b;
-        font-weight: 400;
-        line-height: 1.4;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .user-menu a {
+    /* Sidebar Header */
+    .sidebar-header {
+        padding: 20px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 14px;
-        padding: 16px 24px;
-        font-size: 0.95rem;
-        color: #374151;
-        font-weight: 500;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border-bottom: 1px solid rgba(27, 127, 91, 0.04);
-        position: relative;
-        text-decoration: none;
+        border-bottom: 1px solid #e5e7eb;
+        background: linear-gradient(135deg, #1b7f5b 0%, #166749 100%);
+        color: white;
     }
 
-    .user-menu a:last-child {
-        border-bottom: none;
+    .sidebar-header h5 {
+        margin: 0;
+        font-weight: 600;
     }
 
-    .user-menu a:hover {
-        background: linear-gradient(135deg, rgba(27, 127, 91, 0.06) 0%, rgba(27, 127, 91, 0.03) 100%);
-        color: #1b7f5b;
-        transform: translateX(2px);
-        padding-left: 28px;
-    }
-
-    .user-menu a:hover::before {
-        content: '';
-        position: absolute;
-        left: 24px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 4px;
-        height: 4px;
-        background: #1b7f5b;
-        border-radius: 50%;
-        opacity: 1;
-    }
-
-    .user-menu a i {
-        font-size: 1.1rem;
-        color: #6b7280;
-        width: 18px;
-        text-align: center;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
-    }
-
-    .user-menu a:hover i {
-        color: #1b7f5b;
-        transform: scale(1.05);
-    }
-
-    .user-footer {
-        padding: 20px 24px 24px;
-        background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
-        border-top: 1px solid rgba(27, 127, 91, 0.08);
-    }
-
-    .user-footer button {
-        width: 100%;
-        padding: 12px 20px;
-        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    .sidebar-close {
+        background: rgba(255, 255, 255, 0.9);
         border: none;
-        border-radius: 8px;
-        font-weight: 500;
-        color: #ffffff;
-        font-size: 0.95rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+        color: #1b7f5b;
+        font-size: 1.5rem;
         cursor: pointer;
+        padding: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1200;
+        position: relative;
     }
 
-    .user-footer button:hover {
-        background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+    .sidebar-close:hover {
+        transform: scale(1.1);
     }
 
-    .user-footer button:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+    /* Sidebar Content */
+    .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
     }
 
-    .user-footer button i {
-        font-size: 1rem;
+    /* Sidebar Footer */
+    .sidebar-footer {
+        padding: 20px;
+        border-top: 1px solid #e5e7eb;
+        background: #f9fafb;
     }
 
-    /* === CART DROPDOWN === */
-    .cart-dropdown .dropdown-menu {
-        min-width: 320px;
-        padding-bottom: 8px;
+    /* Mobile Overlay */
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1099;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* === NOTIFICATION STYLES === */
+    .notif-menu {
+        min-width: 350px;
+    }
+
+    .notif-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .notif-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .notif-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 20px;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.2s ease;
+    }
+
+    .notif-item:hover {
+        background: #f9fafb;
+    }
+
+    .notif-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        flex-shrink: 0;
+    }
+
+    .notif-content {
+        flex: 1;
+    }
+
+    .notif-title {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .notif-time {
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+
+    .notif-indicator {
+        width: 8px;
+        height: 8px;
+        background: #ef4444;
+        border-radius: 50%;
+        margin-top: 8px;
+    }
+
+    .notif-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+    }
+
+    .notif-empty i {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    .notif-more {
+        text-align: center;
+        padding: 10px;
+        background: #f9fafb;
+    }
+
+    .notif-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .view-all-btn {
+        display: block;
+        text-align: center;
+        color: #1b7f5b;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .view-all-btn:hover {
+        color: #166749;
+    }
+
+    /* === CART STYLES === */
+    .cart-menu {
+        min-width: 350px;
+    }
+
+    .cart-header {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .cart-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 15px;
     }
 
     .cart-item {
         display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 14px 16px;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        border-radius: 10px;
-        margin: 4px 8px;
-        position: relative;
-        overflow: hidden;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
     }
 
     .cart-item:hover {
-        background: linear-gradient(135deg, rgba(27, 127, 91, 0.06) 0%, rgba(27, 127, 91, 0.03) 100%);
-        transform: translateX(4px);
-        box-shadow: 0 4px 16px rgba(27, 127, 91, 0.1);
+        background: #f9fafb;
     }
 
     .cart-item img {
-        width: 52px;
-        height: 52px;
-        border-radius: 10px;
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
         object-fit: cover;
-        border: 1px solid rgba(27, 127, 91, 0.1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s ease;
     }
 
-    .cart-item:hover img {
-        transform: scale(1.05);
+    .cart-item-details {
+        flex: 1;
     }
 
-    .cart-item strong {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #1b7f5b;
-        display: block;
-        margin-bottom: 4px;
-    }
-
-    .cart-item span {
-        font-size: 0.85rem;
-        color: #64748b;
-        margin-bottom: 4px;
-    }
-
-    .cart-item div:last-child {
-        font-size: 0.9rem;
-        color: #475569;
+    .cart-item-name {
         font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .cart-item-meta {
+        font-size: 0.85rem;
+        color: #6b7280;
     }
 
     .cart-footer {
-        padding: 14px 8px 8px;
+        padding: 15px 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .cart-total {
         display: flex;
-        gap: 8px;
-        margin: 12px 8px 0;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
     }
 
-    .cart-footer a {
+    .cart-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    /* === USER DROPDOWN === */
+    .user-menu {
+        min-width: 280px;
+    }
+
+    .user-info {
+        padding: 20px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .user-avatar img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-details {
         flex: 1;
-        text-align: center;
-        padding: 12px 0;
-        border-radius: 12px;
+    }
+
+    .user-name {
+        display: block;
         font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 4px;
     }
 
-    .cart-footer .btn-view {
-        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    .user-email {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .user-links {
+        padding: 10px 0;
+    }
+
+    .user-links a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px;
+        transition: background 0.2s ease;
+    }
+
+    .user-links a:hover {
+        background: #f9fafb;
         color: #1b7f5b;
-        border: 1px solid rgba(27, 127, 91, 0.2);
     }
 
-    .cart-footer .btn-view:hover {
-        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(27, 127, 91, 0.2);
+    .user-links a i {
+        width: 20px;
     }
 
-    .cart-footer .btn-checkout {
-        background: linear-gradient(135deg, #1b7f5b 0%, #166749 100%);
-        color: #fff;
-        border: 1px solid rgba(27, 127, 91, 0.3);
+    .user-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #e5e7eb;
     }
 
-    .cart-footer .btn-checkout:hover {
-        background: linear-gradient(135deg, #166749 0%, #14523d 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(27, 127, 91, 0.3);
+    /* Sidebar Links */
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-link:hover {
+        background: #f3f4f6;
+        color: #1b7f5b;
+    }
+
+    .sidebar-link i {
+        width: 24px;
+        font-size: 1.2rem;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .user-profile img,
+    .user-profile .user-avatar-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .user-profile img:hover,
+    .user-profile .user-avatar-img:hover {
+        border-color: rgba(255, 255, 255, 0.7);
+        transform: scale(1.05);
+    }
+
+    .user-profile h6 {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .user-profile small {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* === BUTTONS === */
+    .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: #1b7f5b;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #166749;
+        color: white;
+    }
+
+    .btn-outline-primary {
+        border: 1px solid #1b7f5b;
+        color: #1b7f5b;
+        background: transparent;
+    }
+
+    .btn-outline-primary:hover {
+        background: #1b7f5b;
+        color: white;
+    }
+
+    .btn-outline-secondary {
+        border: none;
+        color: #374151;
+        background: transparent;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #f3f4f6;
+    }
+
+    .btn-danger {
+        background: #dc2626;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #b91c1c;
+    }
+
+    .btn-outline-danger {
+        border: 1px solid #dc2626;
+        color: #dc2626;
+        background: transparent;
+    }
+
+    .btn-outline-danger:hover {
+        background: #dc2626;
+        color: white;
     }
 
     /* === MOBILE TOGGLE === */
-    #menuToggle {
+    .menu-toggle {
         display: none;
         font-size: 1.8rem;
         cursor: pointer;
-    }
-
-    /* === OVERLAY === */
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.4);
-        opacity: 0;
-        visibility: hidden;
-        z-index: 900;
-        transition: opacity 0.25s ease, visibility 0.25s;
-    }
-
-    .overlay.active {
-        opacity: 1;
-        visibility: visible;
+        color: white;
+        margin-left: 10px;
     }
 
     /* === RESPONSIVE === */
     @media (max-width: 992px) {
         .nav-container {
-            padding: 12px 20px;
+            padding: 0 20px;
         }
 
-        #menuToggle {
+        .menu-toggle {
             display: block;
         }
 
@@ -861,995 +1059,267 @@ body {
             height: 100vh;
             flex-direction: column;
             background: #ffffff;
-            background-image:
-                radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
-                radial-gradient(circle at 75% 75%, rgba(27, 127, 91, 0.03) 0%, transparent 30%),
-                radial-gradient(circle at 50% 50%, rgba(27, 127, 91, 0.02) 0%, transparent 35%),
-                linear-gradient(45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%),
-                linear-gradient(-45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%);
-            background-size: 20px 20px, 30px 30px, 40px 40px, 20px 20px, 20px 20px;
-            padding: 100px 30px 30px;
-            gap: 20px;
-            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(27, 127, 91, 0.08);
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-            border-left: 1px solid rgba(27, 127, 91, 0.1);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            padding: 80px 30px 30px;
+            gap: 0;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+            transition: right 0.3s ease;
+            z-index: 1100;
         }
 
-        .nav-links.show {
+        .nav-links.active {
             right: 0;
-            animation: slideInFromRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        @keyframes slideInFromRight {
-            0% {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: translateX(8px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .nav-links li {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
+            width: 100%;
         }
 
         .nav-links li a {
-            font-size: 1.15rem;
-            font-weight: 600;
-            padding: 16px 20px;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
             display: block;
-            color: #334155;
-            text-decoration: none;
-            border: 1px solid transparent;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
         }
 
         .nav-links li a:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-            color: #fff;
-            transform: translateX(8px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: #f3f4f6;
         }
 
-        .nav-links li a.active {
-            background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.9) 100%);
-            color: #1b7f5b;
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
+        /* Hide desktop dropdowns on mobile */
+        .desktop-menu {
+            display: none !important;
         }
 
-        .nav-links li a::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            transition: width 0.3s ease;
-            z-index: -1;
+        /* Show dropdown buttons */
+        .dropdown .icon-btn {
+            display: flex;
         }
 
-        .nav-links li a:hover::before {
+        .navbar::after {
+            width: 200px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .navbar::after {
+            width: 330px;
+            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .mobile-sidebar {
             width: 100%;
         }
+    }
 
-        /* Icon untuk setiap menu item */
-        .nav-links li a::after {
-            content: '';
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
+    @media (min-width: 993px) {
 
-        .nav-links li a:hover::after,
-        .nav-links li a.active::after {
-            opacity: 1;
-            background: #1b7f5b;
-            transform: translateY(-50%) scale(1.2);
-        }
-
-        /* === DROPDOWN NORMAL DENGAN ANIMASI SIDEBAR === */
-        .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            right: 0;
-            width: 320px;
-            max-width: 90vw;
-            background: #ffffff;
-            background-image:
-                radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
-                radial-gradient(circle at 75% 75%, rgba(27, 127, 91, 0.03) 0%, transparent 30%),
-                radial-gradient(circle at 50% 50%, rgba(27, 127, 91, 0.02) 0%, transparent 35%),
-                linear-gradient(45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%),
-                linear-gradient(-45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%);
-            background-size: 20px 20px, 30px 30px, 40px 40px, 20px 20px, 20px 20px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
-            border-radius: 16px;
-            border: 1px solid rgba(27, 127, 91, 0.06);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0;
-            transform: translateX(100%) scale(0.95);
-            visibility: hidden;
-            z-index: 1001;
-            padding: 20px;
-            max-height: 70vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            touch-action: pan-y;
-        }
-
-        /* Mobile: Dropdown seperti sidebar */
-        @media (max-width: 992px) {
-            .dropdown-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                left: auto;
-                width: min(320px, calc(100vw - 10px));
-                max-width: calc(100vw - 10px);
-                min-width: 280px;
-                height: 100vh;
-                background: #ffffff;
-                background-image:
-                    radial-gradient(circle at 25% 25%, rgba(27, 127, 91, 0.04) 0%, transparent 25%),
-                    radial-gradient(circle at 75% 75%, rgba(27, 127, 91, 0.03) 0%, transparent 30%),
-                    radial-gradient(circle at 50% 50%, rgba(27, 127, 91, 0.02) 0%, transparent 35%),
-                    linear-gradient(45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%),
-                    linear-gradient(-45deg, transparent 49%, rgba(27, 127, 91, 0.01) 49%, rgba(27, 127, 91, 0.01) 51%, transparent 51%);
-                background-size: 20px 20px, 30px 30px, 40px 40px, 20px 20px, 20px 20px;
-                box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(27, 127, 91, 0.08);
-                border-radius: 0;
-                border: none;
-                transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-                opacity: 0;
-                z-index: 1001;
-                padding: 80px 15px 20px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                touch-action: pan-y;
-                transform: none;
-                visibility: visible;
-                /* Ensure it doesn't go off-screen */
-                margin: 0;
-                box-sizing: border-box;
-            }
-        }
-
-
-
-        /* Saat terbuka */
-        .dropdown.open .dropdown-menu {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-            visibility: visible;
-            animation: fadeInUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        /* Mobile: Saat terbuka */
-        @media (max-width: 992px) {
-            .dropdown.open .dropdown-menu {
-                right: 0;
-                opacity: 1;
-                animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-                transform: none;
-                visibility: visible;
-            }
-        }
-
-        /* Animasi buka modern untuk mobile */
-        @keyframes slideInRight {
-            0% {
-                opacity: 0;
-                transform: translateX(100%) scale(0.95);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: translateX(20px) scale(0.98);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
-        }
-
-        /* Animasi tutup untuk mobile */
-        .dropdown:not(.open) .dropdown-menu {
-            animation: fadeOutDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        @keyframes fadeOutDown {
-            0% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-                visibility: visible;
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(100%) scale(0.95);
-                visibility: hidden;
-            }
-        }
-
-        /* Mobile: Animasi tutup */
-        @media (max-width: 992px) {
-            .dropdown:not(.open) .dropdown-menu {
-                animation: slideOutRight 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            }
-
-            @keyframes slideOutRight {
-                0% {
-                    opacity: 1;
-                    right: 0;
-                }
-
-                100% {
-                    opacity: 0;
-                    right: -100%;
-                }
-            }
-        }
-
-        /* Tombol Close — Umum (Desktop & Mobile) */
-        .dropdown-menu .mobile-close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 32px;
-            height: 32px;
-            background: rgba(240, 240, 240, 0.9);
-            border: none;
-            border-radius: 50%;
-            color: #555;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            z-index: 10;
-        }
-
-        .dropdown-menu .mobile-close-btn:hover {
-            background: #e6f2ee;
-            color: #1b7f5b;
-            transform: scale(1.1);
-        }
-
-        /* === SPESIFIKASI DROPDOWN === */
-        .notification-dropdown .dropdown-menu,
-        .cart-dropdown .dropdown-menu,
-
-        /* === NOTIFIKASI DROPDOWN === */
-        .notification-dropdown .dropdown-menu {
-            min-width: 320px;
-            padding: 0;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #ffffff !important;
-            box-shadow:
-                0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                0 10px 25px -5px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Header Notifikasi */
-        .notif-header {
-            background: linear-gradient(135deg, rgba(27, 127, 91, 0.08) 0%, rgba(27, 127, 91, 0.04) 100%) !important;
-            border-bottom: 1px solid rgba(27, 127, 91, 0.15) !important;
-            padding: 16px 20px;
-            margin: 0;
-        }
-
-        .notif-header h6 {
-            font-size: 1rem;
-            color: #1b7f5b !important;
-            display: flex;
-            align-items: center;
-            margin: 0;
-        }
-
-        .notif-header .badge {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-            color: #ffffff !important;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Item Notifikasi */
-        .notif-item {
-            border-bottom: 1px solid rgba(27, 127, 91, 0.08) !important;
-            padding: 0;
-            margin: 0;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .notif-item:last-child {
-            border-bottom: none;
-        }
-
-        .notif-item:hover {
-            background: linear-gradient(135deg, rgba(27, 127, 91, 0.06) 0%, rgba(27, 127, 91, 0.03) 100%) !important;
-        }
-
-        .notif-link {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 16px 20px;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .notif-link:hover {
-            background: linear-gradient(135deg, rgba(27, 127, 91, 0.08) 0%, rgba(27, 127, 91, 0.04) 100%) !important;
-            transform: translateX(2px);
-            padding-left: 24px;
-        }
-
-        .notif-icon {
-            flex-shrink: 0;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.95) !important;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-            margin-top: 2px;
-        }
-
-        .notif-icon i {
-            font-size: 1.1rem;
-            color: #1b7f5b !important;
-        }
-
-        .notif-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .notif-text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .notif-title {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #374151 !important;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .notif-time {
-            font-size: 0.75rem;
-            color: #6b7280 !important;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .notif-time i {
-            font-size: 0.7rem;
-            opacity: 0.7;
-        }
-
-        .notif-indicator {
-            position: absolute;
-            left: 16px;
-            top: 18px;
-            width: 8px;
-            height: 8px;
-            background: #ef4444 !important;
-            border-radius: 50%;
-            border: 2px solid #ffffff !important;
-            box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
-        }
-
-        /* Empty State */
-        .notif-empty {
-            padding: 24px 20px;
-            margin: 0;
-            text-align: center;
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .empty-icon {
-            font-size: 2rem;
-            color: #d1d5db !important;
-            margin-bottom: 4px;
-        }
-
-        .empty-text {
-            font-size: 0.9rem;
-            color: #6b7280 !important;
-            font-weight: 500;
-        }
-
-        .empty-subtext {
-            font-size: 0.75rem;
-            color: #9ca3af !important;
-        }
-
-        /* More Indicator */
-        .notif-more {
-            border-top: 1px solid rgba(27, 127, 91, 0.12) !important;
-            margin: 0;
-            background: rgba(27, 127, 91, 0.03) !important;
-        }
-
-        .notif-more small {
-            font-size: 0.8rem;
-            color: #6b7280 !important;
-            font-style: italic;
-        }
-
-        /* Footer Notifikasi */
-        .notif-footer {
-            border-top: 1px solid rgba(27, 127, 91, 0.12) !important;
-            padding: 0;
-            margin: 0;
-            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.7) 100%) !important;
-        }
-
-        .view-all-btn {
-            display: block;
-            padding: 14px 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #1b7f5b !important;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 0;
-        }
-
-        .view-all-btn:hover {
-            background: linear-gradient(135deg, rgba(27, 127, 91, 0.12) 0%, rgba(27, 127, 91, 0.06) 100%) !important;
-            color: #166749 !important;
-            transform: translateY(-1px);
-        }
-
-        .view-all-btn i {
-            font-size: 0.9rem;
-        }
-
-        /* === ITEM STYLING === */
-        .cart-item,
-        .user-menu li {
-            border-bottom: 1px solid #f1f1f1;
-            padding: 12px 0;
-        }
-
-        .cart-item:last-child,
-        .user-menu li:last-child {
-            border-bottom: none;
-        }
-
-
-        .user-info {
-            margin-bottom: 20px;
-        }
-
-        .user-menu a {
-            padding: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .user-menu a:hover {
-            color: #1b7f5b;
-            transform: translateX(3px);
-        }
-
-        .user-footer {
-            margin-top: 20px;
-        }
-
-        /* === RESPONSIVE === */
-        @media (max-width: 992px) {
-            .dropdown-menu {
-                width: min(320px, 90vw);
-                max-width: calc(100vw - 20px);
-                padding: 70px 20px 20px;
-                /* Kurangi padding top untuk mobile */
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .dropdown-menu .mobile-close-btn {
-                top: 15px;
-                right: 15px;
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
-
-            /* Perbesar font untuk mobile */
-            .notif-item a,
-            .cart-item,
-            .user-menu a {
-                font-size: 0.95rem;
-                padding: 14px 16px;
-            }
-
-            .notif-text span {
-                font-size: 0.9rem;
-            }
-
-            .notif-time {
-                font-size: 0.75rem;
-            }
-
-            .user-details .user-name {
-                font-size: 1rem;
-            }
-
-            .user-details .user-email {
-                font-size: 0.85rem;
-            }
-
-            .user-menu a {
-                font-size: 0.9rem;
-                padding: 14px 20px;
-            }
-
-            .user-footer button {
-                font-size: 0.9rem;
-                padding: 10px 18px;
-            }
-
-            /* Badge notifikasi mobile */
-            .notif-header .badge {
-                font-size: 0.65rem;
-                padding: 0.2rem 0.5rem;
-                border-radius: 16px;
-            }
-        }
-
-        @media (min-width: 993px) {
-
-            /* Desktop - perbesar sedikit untuk readability */
-            .notif-item a,
-            .cart-item,
-            .user-menu a {
-                font-size: 0.95rem;
-                padding: 14px 20px;
-            }
-
-            .notif-text span {
-                font-size: 0.9rem;
-            }
-
-            .user-details .user-name {
-                font-size: 1.1rem;
-            }
-
-            .user-details .user-email {
-                font-size: 0.9rem;
-            }
-
-            .user-menu a {
-                font-size: 0.95rem;
-                padding: 16px 24px;
-            }
-
-            .user-footer button {
-                font-size: 0.95rem;
-                padding: 12px 20px;
-            }
-
-            /* Icon notifikasi desktop - perbesar */
-            .notif-icon {
-                width: 40px !important;
-                height: 40px !important;
-            }
-
-            .notif-icon i {
-                font-size: 1.2rem !important;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .nav-container {
-                padding: 10px 15px;
-            }
-
-            .navbar::after {
-                width: 300px;
-            }
-
-            .dropdown-menu {
-                width: calc(100vw - 10px);
-                min-width: 260px;
-                padding: 70px 10px 20px;
-            }
-
-            .cart-dropdown .dropdown-menu {
-                min-width: 260px;
-            }
-        }
-
-        /* === ANIMASI TAMBAHAN === */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .lightbox-modal {
-            position: fixed;
+        /* Hide mobile sidebars on desktop */
+        .mobile-sidebar {
             display: none;
-            z-index: 1500;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
         }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const navbar = document.getElementById("navbar");
+    document.addEventListener("DOMContentLoaded", function() {
+        // Mobile Menu Toggle
         const menuToggle = document.getElementById("menuToggle");
         const navLinks = document.getElementById("navLinks");
-        const overlay = document.createElement("div");
-        overlay.className = "overlay";
-        document.body.appendChild(overlay);
+        const mobileOverlay = document.getElementById("mobileOverlay");
 
-        window.addEventListener("scroll", () => {
-            navbar.classList.toggle("scrolled", window.scrollY > 20);
+        menuToggle.addEventListener("click", function() {
+            navLinks.classList.toggle("active");
+            mobileOverlay.classList.toggle("active");
+            document.body.style.overflow = navLinks.classList.contains("active") ? "hidden" : "";
         });
 
-        menuToggle.addEventListener("click", () => {
-            navLinks.classList.toggle("show");
-            menuToggle.innerHTML = navLinks.classList.contains("show") ?
-                '<i class="bi bi-x-lg"></i>' :
-                '<i class="bi bi-list"></i>';
+        mobileOverlay.addEventListener("click", function() {
+            navLinks.classList.remove("active");
+            closeAllSidebars();
+            this.classList.remove("active");
+            document.body.style.overflow = "";
         });
 
+        // Dropdown and Sidebar Management
         const dropdowns = document.querySelectorAll(".dropdown");
+        const sidebars = document.querySelectorAll(".mobile-sidebar");
 
-        dropdowns.forEach(drop => {
-            const btn = drop.querySelector(".dropbtn");
+        function closeAllSidebars() {
+            sidebars.forEach(sidebar => {
+                sidebar.classList.remove("active");
+            });
+            mobileOverlay.classList.remove("active");
+            document.body.style.overflow = "";
+        }
 
-            btn.addEventListener("click", e => {
-                e.preventDefault();
-                e.stopPropagation();
+        // Desktop dropdown hover
+        dropdowns.forEach(dropdown => {
+            const btn = dropdown.querySelector(".dropbtn");
 
-                dropdowns.forEach(d => {
-                    if (d !== drop) d.classList.remove("open");
-                });
-
-                const wasOpen = drop.classList.contains("open");
-                drop.classList.toggle("open");
-                const isNowOpen = drop.classList.contains("open");
-
-                // Toggle overlay berdasarkan device - hanya untuk dropdown selain notifikasi
-                if (!drop.classList.contains("notification-dropdown")) {
-                    if (window.innerWidth <= 992) {
-                        // Mobile: gunakan overlay
-                        overlay.classList.toggle("active", isNowOpen);
-                    }
-                    // Desktop: tidak menggunakan overlay untuk dropdown normal
-                }
-
-                // Load cart items when cart dropdown is opened
-                if (!wasOpen && isNowOpen && drop.classList.contains("cart-dropdown")) {
-                    loadCartItems();
+            // Desktop hover
+            dropdown.addEventListener("mouseenter", function() {
+                if (window.innerWidth > 992) {
+                    closeAllSidebars();
                 }
             });
 
-            if (window.innerWidth > 900) {
-                drop.addEventListener("mouseenter", () => {
-                    dropdowns.forEach(d => d.classList.remove("open"));
-                    drop.classList.add("open");
-                });
-                drop.addEventListener("mouseleave", () => {
-                    drop.classList.remove("open");
-                });
-            }
-        });
+            // Mobile click
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
 
-        overlay.addEventListener("click", () => {
-            dropdowns.forEach(d => d.classList.remove("open"));
-            overlay.classList.remove("active");
-        });
+                if (window.innerWidth <= 992) {
+                    // Mobile: Open sidebar
+                    const sidebar = dropdown.querySelector(".mobile-sidebar");
+                    closeAllSidebars();
+                    navLinks.classList.remove("active");
 
+                    if (sidebar) {
+                        sidebar.classList.add("active");
+                        mobileOverlay.classList.add("active");
+                        document.body.style.overflow = "hidden";
 
-
-        // Close mobile sidebars when clicking the close button
-        document.addEventListener("click", (e) => {
-            if (e.target.classList.contains("mobile-close-btn")) {
-                const dropdown = e.target.closest(".dropdown");
-                if (dropdown) {
-                    dropdown.classList.remove("open");
-                    // Tutup overlay
-                    overlay.classList.remove("active");
-                }
-            }
-        });
-
-        // Add swipe gesture support for mobile sidebars
-        let startX = 0;
-        let startY = 0;
-        let isSwiping = false;
-
-        document.addEventListener("touchstart", (e) => {
-            if (e.target.closest(".dropdown-menu")) {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                isSwiping = true;
-            }
-        });
-
-        document.addEventListener("touchmove", (e) => {
-            if (!isSwiping) return;
-
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            const diffX = startX - currentX;
-            const diffY = startY - currentY;
-
-            // Only handle horizontal swipes (left to right)
-            if (Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
-                const dropdown = e.target.closest(".dropdown");
-                if (dropdown && dropdown.classList.contains("open")) {
-                    dropdown.classList.remove("open");
-                    // Tutup overlay
-                    overlay.classList.remove("active");
-                    isSwiping = false;
-                }
-            }
-        });
-
-        document.addEventListener("touchend", () => {
-            isSwiping = false;
-        });
-
-        const cartBadge = document.getElementById("cartBadge");
-        const cartMenu = document.getElementById("cartMenu");
-
-        // Load cart items and update badge on page load
-        updateCartBadge();
-        loadCartItems();
-
-        function updateCartBadge() {
-            fetchCart()
-                .then(data => {
-                    const count = data.total_items || 0;
-                    setBadgeCount(cartBadge, count);
-                })
-                .catch(() => {
-                    const sessionCart = sessionStorage.getItem("keranjang");
-                    if (sessionCart) {
-                        const cart = JSON.parse(sessionCart);
-                        const total = Object.values(cart).reduce((a, b) => a + (b.jumlah || 0), 0);
-                        setBadgeCount(cartBadge, total);
-                    } else {
-                        setBadgeCount(cartBadge, 0);
+                        // Load content if cart sidebar
+                        if (sidebar.classList.contains("cart-sidebar")) {
+                            loadCartItems(true);
+                        }
                     }
-                });
-        }
+                }
+            });
+        });
 
-        function setBadgeCount(badge, count) {
-            if (!badge) return;
-            badge.textContent = count;
-            badge.style.display = count > 0 ? "flex" : "none";
-        }
+        // Close sidebar buttons
+        document.querySelectorAll(".sidebar-close").forEach(btn => {
+            btn.addEventListener("click", closeAllSidebars);
+        });
+
+        // Close on escape key
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                closeAllSidebars();
+                navLinks.classList.remove("active");
+                mobileOverlay.classList.remove("active");
+                document.body.style.overflow = "";
+            }
+        });
+
+        // Cart Functions
+        const cartBadge = document.getElementById("cartBadge");
+        const cartCountBadge = document.getElementById("cartCountBadge");
+        const cartList = document.getElementById("cartList");
+        const mobileCartList = document.getElementById("mobileCartList");
+        const cartTotal = document.getElementById("cartTotal");
+        const mobileCartTotal = document.getElementById("mobileCartTotal");
 
         async function fetchCart() {
-            const response = await fetch("/keranjang/get", {
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || ""
-                },
-                credentials: "same-origin"
-            });
-            if (!response.ok) throw new Error("Failed");
-            return response.json();
+            try {
+                const response = await fetch("/keranjang/get", {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                            ?.content || ""
+                    }
+                });
+
+                if (!response.ok) throw new Error("Fetch failed");
+                return await response.json();
+            } catch (error) {
+                console.error("Error fetching cart:", error);
+                return {
+                    items: [],
+                    total_items: 0,
+                    total_price: 0
+                };
+            }
         }
 
-        async function loadCartItems() {
+        function updateCartBadge(count) {
+            if (cartBadge) {
+                cartBadge.textContent = count;
+                cartBadge.style.display = count > 0 ? "flex" : "none";
+            }
+            if (cartCountBadge) {
+                cartCountBadge.textContent = count + " item" + (count !== 1 ? "s" : "");
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0
+            }).format(price);
+        }
+
+        async function loadCartItems(isMobile = false) {
             try {
                 const data = await fetchCart();
-                if (!cartMenu) return;
+                updateCartBadge(data.total_items || 0);
 
-                // Always include close button for mobile
-                const closeBtnHtml = '<button class="mobile-close-btn" aria-label="Tutup">×</button>';
+                const totalPrice = data.total_price || 0;
+                const formattedTotal = formatPrice(totalPrice);
+
+                if (cartTotal) cartTotal.textContent = formattedTotal;
+                if (mobileCartTotal) mobileCartTotal.textContent = formattedTotal;
 
                 if (data.items && data.items.length > 0) {
-                    cartMenu.innerHTML = closeBtnHtml + data.items.map(item => `
-          <li class="cart-item">
-            <img src="${item.gambar ? "/storage/" + item.gambar : "/images/no-image.jpg"}" alt="${item.nama}">
-            <div class="cart-info">
-              <strong>${item.nama}</strong>
-              ${item.variasi ? `<small>${item.variasi}</small>` : ""}
-              <div>x${item.jumlah} &middot;
-                <span class="text-success fw-bold">Rp ${new Intl.NumberFormat('id-ID').format(item.harga * item.jumlah)}</span>
-              </div>
-            </div>
-          </li>
-        `).join('') + `
-          <li class="cart-footer">
-            <a href="/keranjang" class="btn-view">Lihat Keranjang</a>
-            <a href="/checkout" class="btn-checkout">Checkout</a>
-          </li>
-        `;
+                    const itemsHTML = data.items.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.gambar ? "/storage/" + item.gambar : "/images/no-image.jpg"}"
+                             alt="${item.nama}"
+                             onerror="this.src='/images/no-image.jpg'">
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.nama}</div>
+                            <div class="cart-item-meta">
+                                ${item.variasi ? `${item.variasi} • ` : ""}
+                                ${item.jumlah} × ${formatPrice(item.harga)}
+                            </div>
+                            <div class="cart-item-price">
+                                ${formatPrice(item.harga * item.jumlah)}
+                            </div>
+                        </div>
+                    </div>
+                `).join("");
+
+                    if (cartList) cartList.innerHTML = itemsHTML;
+                    if (mobileCartList) mobileCartList.innerHTML = itemsHTML;
                 } else {
-                    cartMenu.innerHTML = closeBtnHtml +
-                        `<li class="empty text-center p-2"><span>Keranjang kosong</span></li>`;
+                    const emptyHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x" style="font-size: 3rem; color: #9ca3af;"></i>
+                        <p class="mt-3 text-muted">Keranjang belanja kosong</p>
+                    </div>
+                `;
+
+                    if (cartList) cartList.innerHTML = emptyHTML;
+                    if (mobileCartList) mobileCartList.innerHTML = emptyHTML;
                 }
-            } catch (e) {
-                console.error(e);
-                cartMenu.innerHTML = '<button class="mobile-close-btn" aria-label="Tutup">×</button>' +
-                    `<li class="empty text-center p-2"><span>Keranjang kosong</span></li>`;
+            } catch (error) {
+                console.error("Error loading cart items:", error);
             }
         }
 
-        // Remove duplicate cart button handler since it's now handled in the main dropdown loop
+        // Initial load
+        loadCartItems();
 
-        // Remove duplicate button handlers since they're now handled in the main dropdown loop
+        // Listen for cart updates
+        document.addEventListener("cartUpdated", loadCartItems);
 
-        document.addEventListener("click", e => {
-            if (!e.target.closest(".dropdown") && !e.target.closest("#menuToggle")) {
-                dropdowns.forEach(d => d.classList.remove("open"));
-                overlay.classList.remove("active");
-            }
-        });
-
-        window.addEventListener("resize", () => {
-            if (window.innerWidth > 900) {
-                navLinks.classList.remove("show");
-                menuToggle.innerHTML = '<i class="bi bi-list"></i>';
-            }
-        });
-
-        // Listen for cart updates from other pages (like keranjang page)
-        document.addEventListener('cartUpdated', () => {
-            updateCartBadge();
-        });
-
-        // Function to adjust dropdown position to prevent going off-screen
-        function adjustDropdownPosition(dropdown) {
-            const menu = dropdown.querySelector('.dropdown-menu');
-            if (!menu) return;
-
-            // For mobile fixed dropdowns, no position adjustment needed as they slide in from right
-            if (window.innerWidth <= 992 && menu.style.position === 'fixed') {
-                return;
-            }
-
-            // Reset any previous adjustments
-            menu.style.left = '';
-            menu.style.right = '';
-            menu.style.top = '';
-            menu.style.bottom = '';
-            menu.style.transformOrigin = '';
-
-            const rect = menu.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-
-            // Check if dropdown goes off the right edge
-            if (rect.right > viewportWidth) {
-                menu.style.left = 'auto';
-                menu.style.right = '0';
-                menu.style.transformOrigin = 'top right';
-            }
-
-            // Check if dropdown goes off the left edge
-            if (rect.left < 0) {
-                menu.style.left = '0';
-                menu.style.right = 'auto';
-                menu.style.transformOrigin = 'top left';
-            }
-
-            // Check if dropdown goes off the bottom edge
-            if (rect.bottom > viewportHeight) {
-                // Position above the trigger instead
-                menu.style.top = 'auto';
-                menu.style.bottom = '110%';
-                menu.style.transformOrigin = 'bottom right';
-            }
-        }
-
-        // Modify existing dropdown click handlers to include position adjustment
-        const adjustPositionAfterOpen = (dropdown) => {
-            setTimeout(() => {
-                if (dropdown.classList.contains('open')) {
-                    adjustDropdownPosition(dropdown);
-                }
-            }, 10);
-        };
-
-        // Add position adjustment to existing notification dropdown handler
-        if (notifBtn) {
-            const originalNotifHandler = notifBtn.onclick;
-            notifBtn.onclick = function(e) {
-                if (originalNotifHandler) originalNotifHandler.call(this, e);
-                adjustPositionAfterOpen(this.parentElement);
-            };
-        }
-
-        // Add position adjustment to existing cart dropdown handler
-        if (cartBtn) {
-            const originalCartHandler = cartBtn.onclick;
-            cartBtn.onclick = function(e) {
-                if (originalCartHandler) originalCartHandler.call(this, e);
-                adjustPositionAfterOpen(this.parentElement);
-            };
-        }
-
-        // Add position adjustment to existing user dropdown handler
-        if (userBtn) {
-            const originalUserHandler = userBtn.onclick;
-            userBtn.onclick = function(e) {
-                if (originalUserHandler) originalUserHandler.call(this, e);
-                adjustPositionAfterOpen(this.parentElement);
-            };
-        }
-
-        // Adjust position on window resize
-        window.addEventListener('resize', () => {
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                adjustDropdownPosition(dropdown);
-            });
+        // Prevent dropdown clicks from propagating
+        document.querySelectorAll(".dropdown-menu, .mobile-sidebar").forEach(el => {
+            el.addEventListener("click", e => e.stopPropagation());
         });
     });
 </script>
