@@ -58,6 +58,8 @@ Route::middleware('throttle:global')->group(function () {
     /* ----------------------- PRODUK ----------------------- */
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/{slug}', [ProdukController::class, 'show'])->name('produk.show');
+    
+
 
     /* ----------------------- GALERI ----------------------- */
     Route::get('/galeri', [GaleriController::class, 'foto'])->name('galeri.index');

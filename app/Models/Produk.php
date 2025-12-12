@@ -100,4 +100,9 @@ class Produk extends Model
     {
         return $this->stok > 0;
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
