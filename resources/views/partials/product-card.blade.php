@@ -30,7 +30,7 @@
                 </button>
             @endif
 
-            <a href="{{ route('produk.show', $product->slug ?? $product->id) }}" class="btn btn-sm btn-outline-success">
+            <a href="{{ route('produk.show', $product->slug) }}" class="btn btn-sm btn-outline-success">
                 <i class="fas fa-eye"></i> Lihat
             </a>
         </div>

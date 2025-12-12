@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Galeri;
-use App\Models\Banner; // ⬅️ Tambahkan ini
-use App\Models\User; // ⬅️ Tambahkan untuk hitung anggota aktif
+use App\Models\Banner;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

@@ -177,4 +177,10 @@ class ProdukController extends Controller
 
         return view('pages.produk', compact('produk'));
     }
+    public function showById($id)
+{
+    $produk = Produk::findOrFail($id);
+    return view('pages.detailProduk', compact('produk'));
+}
+
 }

@@ -91,7 +91,62 @@
                 <div class="swiper-wrapper">
                     @foreach ($produk as $item)
                     <div class="swiper-slide">
-                        @include('partials.product-card', ['product' => $item])
+                        <div class="product-card" data-aos="fade-up">
+                            <div class="product-image-wrapper">
+                                <img src="{{ asset('storage/' . $item->gambar) }}"
+                                     alt="{{ $item->nama }}"
+                                     class="product-image"
+                                     loading="lazy">
+                                <div class="product-overlay">
+                                    <button class="btn btn-sm btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#productModal"
+                                            onclick="showProductDetail({{ $item->id }}, '{{ $item->nama }}', '{{ $item->harga }}', '{{ asset('storage/' . $item->gambar) }}', '{{ $item->deskripsi }}')">
+                                        <i class="fas fa-eye"></i> Lihat Detail
+                                    </button>
+                                </div>
+                                @if($item->diskon > 0)
+                                <div class="product-discount">
+                                    -{{ $item->diskon }}%
+                                </div>
+                                @endif
+                            </div>
+
+                            <div class="product-content">
+                                <h5 class="product-name">{{ Str::limit($item->nama, 25) }}</h5>
+                                <p class="product-desc">{{ Str::limit($item->deskripsi, 50) }}</p>
+
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>4.5</span>
+                                    <small>(12 ulasan)</small>
+                                </div>
+
+                                <div class="product-price">
+                                    @if($item->diskon > 0)
+                                        <span class="price-original">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                        <span class="price-current">Rp {{ number_format($item->harga - ($item->harga * $item->diskon / 100), 0, ',', '.') }}</span>
+                                    @else
+                                        <span class="price-current">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="product-actions">
+                                    <button class="btn btn-sm btn-outline-success btn-keranjang-home"
+                                            data-id="{{ $item->id }}"
+                                            data-nama="{{ $item->nama }}"
+                                            data-harga="{{ $item->harga }}">
+                                        <i class="fas fa-shopping-cart"></i> Keranjang
+                                    </button>
+                                    <button class="btn btn-sm btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#productModal"
+                                            onclick="showProductDetail({{ $item->id }}, '{{ $item->nama }}', '{{ $item->harga }}', '{{ asset('storage/' . $item->gambar) }}', '{{ $item->deskripsi }}')">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     @endforeach
                 </div>
@@ -108,6 +163,181 @@
             @endif
         </div>
     </section>
+
+    <style>
+    /* PRODUCT CARD STYLES */
+    .product-card {
+        background: white;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: var(--light);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
+
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+
+    .product-discount {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #dc3545;
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.85rem;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-content {
+        padding: 1.25rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-name {
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .product-desc {
+        color: var(--gray);
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .product-rating i {
+        color: #ffc107;
+    }
+
+    .product-rating span {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .product-rating small {
+        color: var(--gray);
+    }
+
+    .product-price {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .price-original {
+        color: var(--gray);
+        text-decoration: line-through;
+        font-size: 0.85rem;
+    }
+
+    .price-current {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: auto;
+    }
+
+    .product-actions .btn {
+        flex: 1;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 576px) {
+        .product-image-wrapper {
+            height: 180px;
+        }
+
+        .product-content {
+            padding: 1rem;
+        }
+
+        .product-actions {
+            flex-direction: column;
+        }
+
+        .product-actions .btn {
+            width: 100%;
+        }
+    }
+    </style>
+
+    <script>
+    function showProductDetail(id, nama, harga, gambar, deskripsi) {
+        document.getElementById('detailProductId').value = id;
+        document.getElementById('detailProductImage').src = gambar;
+        document.getElementById('detailProductName').textContent = nama;
+        document.getElementById('detailProductPrice').textContent = 'Rp ' + parseInt(harga).toLocaleString('id-ID');
+        document.getElementById('detailProductDesc').textContent = deskripsi;
+    }
+    </script>
 
     {{-- BERITA --}}
     <section class="news-section">

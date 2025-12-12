@@ -41,14 +41,6 @@
                         </button>
                     @endauth
                 </div>
-
-                <!-- Hover Overlay -->
-                <div class="product-overlay">
-                    <button class="view-details-btn"
-                        onclick="window.location.href='{{ route('produk.show', $item->slug) }}'">
-                        Lihat Detail
-                    </button>
-                </div>
             </div>
 
             <!-- Product Info -->

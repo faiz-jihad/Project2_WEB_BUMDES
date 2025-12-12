@@ -225,7 +225,7 @@
                                             </div>
 
                                             <div class="produk-actions d-flex gap-2">
-                                                <a href="{{ route('produk.show', $item->id) }}"
+                                                <a href="{{ route('produk.show', $item->slug) }}"
                                                     class="btn btn-outline-success flex-fill rounded-pill btn-sm">
                                                     <i class="fas fa-eye me-1"></i>Detail
                                                 </a>
