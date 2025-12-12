@@ -220,7 +220,7 @@
 
             <!-- User Login -->
             @guest
-                <a href="{{ route('login') }}" class="login-btn">Masuk</a>
+                <a href="{{ route('login') }}" class="login-btn" style="color: #ffff">Masuk</a>
             @endguest
 
             @auth
@@ -231,11 +231,9 @@
                             $avatarUrl = null;
 
                             if ($avatar) {
-                                // Jika avatar adalah URL (Google/Facebook)
                                 if (filter_var($avatar, FILTER_VALIDATE_URL)) {
                                     $avatarUrl = $avatar;
                                 }
-                                // Jika avatar adalah path relatif
                                 elseif (strpos($avatar, 'http') === false && strpos($avatar, '//') === false) {
                                     $avatarUrl = asset('storage/' . $avatar);
                                 }
